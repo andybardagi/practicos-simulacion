@@ -23,18 +23,20 @@ export class LinearCongruentGenerator implements IRandomGenerator {
 
     generateRandom(): number {
         const futurePreLast = this.lastRandomGenerated;
-        this.lastRandomGenerated = (this.lastRandomGenerated + this.preLastRandomGenerated) % this.valueM;
+        this.lastRandomGenerated =
+            (this.lastRandomGenerated + this.preLastRandomGenerated) %
+            this.valueM;
         this.preLastRandomGenerated = futurePreLast;
-        return this.lastRandomGenerated;
+        return this.lastSequenceToNumber();
     }
 
     getLastGenerated(): number {
-        return this.lastRandomGenerated;
+        return this.lastSequenceToNumber();
     }
 
     generateRandomInRange(min: number, max: number): number {
-        this.lastRandomGenerated = this.generateRandom() * (max - min) + min;
-        return this.lastRandomGenerated;
+        this.lastRandomGenerated = this.generateRandom();
+        return this.lastSequenceToNumber() * (max - min) + min;
     }
 
     generateManyRandoms(amount: number): number[] {
@@ -43,5 +45,9 @@ export class LinearCongruentGenerator implements IRandomGenerator {
             generatedRandoms.push(this.generateRandom());
         }
         return generatedRandoms;
+    }
+
+    lastSequenceToNumber() {
+        return this.lastRandomGenerated / this.valueM;
     }
 }

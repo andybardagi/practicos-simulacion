@@ -20,16 +20,16 @@ export class CombinedCongruentGenerator implements IRandomGenerator {
         this.lastRandomGenerated =
             (this.valueA * this.lastRandomGenerated + this.valueC) %
             this.valueM;
-        return this.lastRandomGenerated / (this.valueM - 1);
+        return this.lastSequenceToNumber();
     }
 
     getLastGenerated(): number {
-        return this.lastRandomGenerated;
+        return this.lastSequenceToNumber();
     }
 
     generateRandomInRange(min: number, max: number): number {
-        this.lastRandomGenerated = this.generateRandom() * (max - min) + min;
-        return this.lastRandomGenerated;
+        this.lastRandomGenerated = this.generateRandom();
+        return (this.lastSequenceToNumber() * (max - min)) + min;
     }
 
     generateManyRandoms(amount: number): number[] {
@@ -38,5 +38,9 @@ export class CombinedCongruentGenerator implements IRandomGenerator {
             generatedRandoms.push(this.generateRandom());
         }
         return generatedRandoms;
+    }
+
+    lastSequenceToNumber() {
+        return this.lastRandomGenerated / this.valueM;
     }
 }

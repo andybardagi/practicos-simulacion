@@ -1,6 +1,8 @@
 //x_{n+1} = (aX_n) mod m
 
-export class MultiplicativeCongruentGenerator {
+import { IRandomGenerator } from './GeneratorInterface';
+
+export class MultiplicativeCongruentGenerator implements IRandomGenerator {
     private valueA: number;
     private valueM: number;
     private seed: number;
@@ -14,17 +16,18 @@ export class MultiplicativeCongruentGenerator {
     }
 
     generateRandom(): number {
-        this.lastRandomGenerated = (this.valueA * this.lastRandomGenerated) % this.valueM;
-        return this.lastRandomGenerated;
+        this.lastRandomGenerated =
+            (this.valueA * this.lastRandomGenerated) % this.valueM;
+        return this.lastSequenceToNumber();
     }
 
     getLastGenerated(): number {
-        return this.lastRandomGenerated;
+        return this.lastSequenceToNumber();
     }
 
     generateRandomInRange(min: number, max: number): number {
-        this.lastRandomGenerated = (this.generateRandom() * (max - min)) + min;
-        return this.lastRandomGenerated;
+        this.lastRandomGenerated = this.generateRandom();
+        return this.lastSequenceToNumber() * (max - min) + min;
     }
 
     generateManyRandoms(amount: number): number[] {
@@ -35,4 +38,7 @@ export class MultiplicativeCongruentGenerator {
         return generatedRandoms;
     }
 
+    lastSequenceToNumber() {
+        return this.lastRandomGenerated / this.valueM;
+    }
 }
