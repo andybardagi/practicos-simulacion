@@ -20,7 +20,7 @@ function App() {
             <Box>
                 <Flex direction={'row'} height={'100vh'}>
                     <Sidebar />
-                    <Box py={2} px={4}>
+                    <Box py={2} px={4} w="85%" >
                         <TP1></TP1>
                     </Box>
                 </Flex>
