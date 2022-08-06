@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Flex,
     Input,
@@ -6,6 +7,8 @@ import {
     InputLeftAddon,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { number, object } from 'yup';
+import ErrorBox from '../ErrorBox';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
@@ -13,6 +16,25 @@ export default function CombinedCongruent() {
         c: '0',
         m: '0',
         x0: '0',
+    });
+    const [error, setError] = useState({
+        error: false,
+        message: [],
+    });
+
+    const validationSchema = object().shape({
+        a: number()
+            .min(1, 'El valor de A no puede ser menor a 1')
+            .required('Debe ingresar un valor para a'),
+        c: number()
+            .min(1, 'El valor de C no puede ser menor a 1')
+            .required('Debe ingresar un valor para c'),
+        m: number()
+            .min(1, 'El valor de M no puede ser menor a 1')
+            .required('Debe ingresar un valor para m'),
+        x0: number()
+            .min(0, 'El valor de la semilla no puede ser negativo')
+            .required('Debe ingresar un valor para la semilla (x0)'),
     });
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +45,29 @@ export default function CombinedCongruent() {
                     ? parseInt(e.target.value, 10).toString()
                     : '0',
         });
+    };
+
+    const handleGenerateClick = async (
+        e: React.MouseEvent<HTMLButtonElement>,
+    ) => {
+        setError({
+            error: false,
+            message: [],
+        })
+        validationSchema
+            .validate(formValues, { abortEarly: false })
+            .then(() => {
+                console.log('formValues', formValues);
+            })
+            .catch((err) => {
+                setError({
+                    error: true,
+                    message: err.inner.map(
+                        (innerError: { path: string; message: string }) =>
+                            innerError.message,
+                    ),
+                });
+            });
     };
 
     return (
@@ -67,8 +112,12 @@ export default function CombinedCongruent() {
                 </InputGroup>
             </Flex>
             <Flex direction={'row'} justifyContent="end" py={2}>
-                <Button colorScheme={'linkedin'}>Generar</Button>
+                <Button colorScheme={'linkedin'} onClick={handleGenerateClick}>
+                    Generar
+                </Button>
             </Flex>
+
+            < ErrorBox errorMsg={error.message}/>
         </>
     );
 }
