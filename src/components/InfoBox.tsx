@@ -16,8 +16,8 @@ export default function InfoBox({ infoMsg }: { infoMsg: string[] }) {
             borderRadius={8}
             fontWeight="bold"
         >
-            {infoMsg.map((message) => (
-                <p>{message}</p>
+            {infoMsg.map((message, i) => (
+                <p key={i}>{message}</p>
             ))}
         </Box>
     );

@@ -16,8 +16,8 @@ export default function ErrorBox({ errorMsg }: { errorMsg: string[] }) {
             borderRadius={8}
             fontWeight="bold"
         >
-            {errorMsg.map((message) => (
-                <p> - {message}</p>
+            {errorMsg.map((message, i) => (
+                <p key={i}> - {message}</p>
             ))}
         </Box>
     );

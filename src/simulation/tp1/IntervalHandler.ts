@@ -33,7 +33,11 @@ export class IntervalHandler {
 
     public getIntervalIndex(number: number): number {
         if (this.minValue != undefined && this.maxValue != undefined) {
-            return Math.floor((number - this.minValue) / this.intervalRange);
+            return number === 0
+                ? 0
+                : number == this.maxValue
+                ? this.intervals.length - 1 //to avoid the maxValue from launching index out of range
+                : Math.floor((number - this.minValue) / this.intervalRange);
         } else {
             throw Error(
                 'The method getIntervalIndex was invocated before simulation',
@@ -46,6 +50,16 @@ export class IntervalHandler {
             throw Error(
                 'The methos processIntervals was invocated before simulation',
             );
+        }
+
+        if (this.numbers.every((number) => number == 0)) {
+            this.intervals.push({
+                lowerLimit: 0,
+                upperLimit: 0,
+                quantity: this.totalCounter,
+                numbers: this.numbers,
+            });
+            return;
         }
         // Calculate the interval range
         this.intervalRange =
@@ -63,6 +77,7 @@ export class IntervalHandler {
 
         // Process the simulated numbers and add it into the intervals
         for (let i = 0; i < this.numbers.length; i++) {
+            console.log(this.numbers);
             const intervalIndex = this.getIntervalIndex(this.numbers[i]);
             this.intervals[intervalIndex].quantity++;
             this.intervals[intervalIndex].numbers.push(this.numbers[i]);
@@ -75,5 +90,9 @@ export class IntervalHandler {
 
     public getCounter(): number {
         return this.totalCounter;
+    }
+
+    public getUniformWaitedValues(): number {
+        return this.totalCounter / this.intervalQuantity;
     }
 }

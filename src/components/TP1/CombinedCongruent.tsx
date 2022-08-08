@@ -9,10 +9,11 @@ import {
 import React, { useState } from 'react';
 import { number, object } from 'yup';
 import { IInterval } from '../../simulation/tp1/IIntervals';
-import { generateNumbersTP1 } from '../../simulation/tp1/main';
+import { generateNumbers } from '../../simulation/tp1/generateNumbersTP1';
 import { randomGenerationMethods } from '../../simulation/tp1/method.enum';
 import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
+import IntervalShower from '../IntervalShower';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
@@ -25,13 +26,14 @@ export default function CombinedCongruent() {
     });
     const [error, setError] = useState({
         error: false,
-        message: [],
+        message: [] as string[],
     });
 
     const [result, setResult] = useState({
         generated: false,
         intervals: [] as IInterval[],
         generatedNumbersCount: 0,
+        uniformWaitedPerInterval: 0,
     });
 
     const validationSchema = object().shape({
@@ -53,6 +55,7 @@ export default function CombinedCongruent() {
     });
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setResult((prevValue) => ({ ...prevValue, generated: false }));
         SetformValues({
             ...formValues,
             [e.target.name]:
@@ -60,6 +63,39 @@ export default function CombinedCongruent() {
                     ? parseInt(e.target.value, 10).toString()
                     : '0',
         });
+    };
+
+    const simulate = async () => {
+        setResult((prevValue) => ({ ...prevValue, generated: false }));
+        try {
+            const simulationResult = generateNumbers(
+                randomGenerationMethods.combinedCongruent,
+                {
+                    a: parseInt(formValues.a, 10),
+                    c: parseInt(formValues.c, 10),
+                    m: parseInt(formValues.m, 10),
+                    x0: parseInt(formValues.x0, 10),
+                },
+                parseInt(formValues.intervalQuantity, 10),
+                parseInt(formValues.quantity, 10),
+            );
+            console.log(simulationResult);
+            setResult({
+                generated: true,
+                intervals: simulationResult.intervals,
+                generatedNumbersCount: simulationResult.totalCounter,
+                uniformWaitedPerInterval: simulationResult.waitedPerInterval,
+            });
+        } catch (error) {
+            setResult((prevValue) => ({ ...prevValue, generated: true }));
+            setError({
+                error: true,
+                message:
+                    error instanceof Error
+                        ? [error.message]
+                        : ['Error en la simulación. Revisar consola.'],
+            });
+        }
     };
 
     const handleGenerateClick = async (
@@ -71,29 +107,12 @@ export default function CombinedCongruent() {
         });
         validationSchema
             .validate(formValues, { abortEarly: false })
-            .then(() => {
+            .then(async () => {
                 console.log('formValues', formValues);
-
-                const simulationResult = generateNumbersTP1(
-                    randomGenerationMethods.combinedCongruent,
-                    {
-                        a: parseInt(formValues.a, 10),
-                        c: parseInt(formValues.c, 10),
-                        m: parseInt(formValues.m, 10),
-                        x0: parseInt(formValues.x0, 10),
-                    },
-                    parseInt(formValues.intervalQuantity, 10),
-                    parseInt(formValues.quantity, 10),
-                );
-
-                setResult({
-                    generated: true,
-                    intervals: simulationResult.intervals,
-                    generatedNumbersCount: simulationResult.totalCounter,
-                });
+                await simulate();
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err);
                 setError({
                     error: true,
                     message: err.inner.map(
@@ -176,9 +195,17 @@ export default function CombinedCongruent() {
 
             <ErrorBox errorMsg={error.message} />
 
-            {result.generated ? <Box>
-                Generados!
-            </Box> : <InfoBox infoMsg={['Simulación pendiente']}/>}
+            {result.generated ? (
+                <Box>
+                    <IntervalShower
+                        intervals={result.intervals}
+                        waitedUniform={result.uniformWaitedPerInterval}
+                        totalNumbers={result.generatedNumbersCount}
+                    />
+                </Box>
+            ) : (
+                <InfoBox infoMsg={['Simulación pendiente']} />
+            )}
         </Box>
     );
 }

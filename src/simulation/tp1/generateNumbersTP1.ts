@@ -4,8 +4,7 @@ import { randomGenerationMethods } from './method.enum';
 import { MultiplicativeCongruentGenerator } from './Generators/MultiplicativeCongruentGenerator';
 import { IntervalHandler } from './IntervalHandler';
 
-
-export const generateNumbersTP1 = (
+export const generateNumbers = (
     method: randomGenerationMethods,
     data: {
         a: number;
@@ -18,7 +17,7 @@ export const generateNumbersTP1 = (
 ) => {
     // Create the random number generator based on the method
     let generator: IRandomGenerator | null =
-        method === randomGenerationMethods.linearCongruent
+        method === randomGenerationMethods.combinedCongruent
             ? new CombinedCongruentGenerator(data.a, data.c, data.m, data.x0)
             : method == randomGenerationMethods.multiplicativeCongruent
             ? new MultiplicativeCongruentGenerator(data.a, data.m, data.x0)
@@ -43,6 +42,7 @@ export const generateNumbersTP1 = (
     const result = {
         intervals: intervalHandler.getIntervals(),
         totalCounter: intervalHandler.getCounter(),
+        waitedPerInterval: intervalHandler.getUniformWaitedValues(),
     };
 
     return result;
