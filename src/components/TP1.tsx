@@ -18,15 +18,11 @@ import { test } from '../simulation/tp1/consoleTest';
 import CombinedCongruent from './TP1/CombinedCongruent';
 
 export default function TP1() {
-    useEffect(() => {
-        test();
-    }, []);
-
     return (
         <Box m={4} w="100%">
             <Heading>Trabajo Práctico 1</Heading>
-
-            <Tabs variant="enclosed" mt={4} w="100%">
+            {/*With the defaultIndex = 1 starts in the second tab: CombinedCongruent*/}
+            <Tabs variant="enclosed" mt={4} w="100%" defaultIndex={1}>
                 <TabList>
                     <Tab>Congruencial Lineal</Tab>
                     <Tab>Congruencial Mixto</Tab>
@@ -34,7 +30,7 @@ export default function TP1() {
                 </TabList>
                 <TabPanels>
                     <TabPanel>
-                        <p>one!</p>
+                        <p>Desarollo pendiente</p>
                     </TabPanel>
                     <TabPanel>
                         <CombinedCongruent />

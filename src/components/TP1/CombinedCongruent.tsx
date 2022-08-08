@@ -8,7 +8,11 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { number, object } from 'yup';
+import { IInterval } from '../../simulation/tp1/IIntervals';
+import { generateNumbersTP1 } from '../../simulation/tp1/main';
+import { randomGenerationMethods } from '../../simulation/tp1/method.enum';
 import ErrorBox from '../ErrorBox';
+import InfoBox from '../InfoBox';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
@@ -16,10 +20,18 @@ export default function CombinedCongruent() {
         c: '0',
         m: '0',
         x0: '0',
+        quantity: '0',
+        intervalQuantity: '0',
     });
     const [error, setError] = useState({
         error: false,
         message: [],
+    });
+
+    const [result, setResult] = useState({
+        generated: false,
+        intervals: [] as IInterval[],
+        generatedNumbersCount: 0,
     });
 
     const validationSchema = object().shape({
@@ -35,6 +47,9 @@ export default function CombinedCongruent() {
         x0: number()
             .min(0, 'El valor de la semilla no puede ser negativo')
             .required('Debe ingresar un valor para la semilla (x0)'),
+        quantity: number()
+            .min(1, 'La cantidad de valores a generar debe ser mayor a 0')
+            .required('Debe ingresar un valor para la cantidad'),
     });
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,13 +68,32 @@ export default function CombinedCongruent() {
         setError({
             error: false,
             message: [],
-        })
+        });
         validationSchema
             .validate(formValues, { abortEarly: false })
             .then(() => {
                 console.log('formValues', formValues);
+
+                const simulationResult = generateNumbersTP1(
+                    randomGenerationMethods.combinedCongruent,
+                    {
+                        a: parseInt(formValues.a, 10),
+                        c: parseInt(formValues.c, 10),
+                        m: parseInt(formValues.m, 10),
+                        x0: parseInt(formValues.x0, 10),
+                    },
+                    parseInt(formValues.intervalQuantity, 10),
+                    parseInt(formValues.quantity, 10),
+                );
+
+                setResult({
+                    generated: true,
+                    intervals: simulationResult.intervals,
+                    generatedNumbersCount: simulationResult.totalCounter,
+                });
             })
             .catch((err) => {
+                console.log(err)
                 setError({
                     error: true,
                     message: err.inner.map(
@@ -71,9 +105,9 @@ export default function CombinedCongruent() {
     };
 
     return (
-        <>
-            <Flex direction={'row'} gap={4} mt={4}>
-                <InputGroup>
+        <Box>
+            <Flex direction={'row'} gap={4} mt={4} flexWrap="wrap" maxW="100%">
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="A" />
                     <Input
                         type="number"
@@ -83,7 +117,8 @@ export default function CombinedCongruent() {
                         placeholder="Ingrese el valor de A"
                     />
                 </InputGroup>
-                <InputGroup>
+
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="M" />
                     <Input
                         onChange={handleValueChange}
@@ -92,7 +127,8 @@ export default function CombinedCongruent() {
                         placeholder="Ingrese el valor de M"
                     />
                 </InputGroup>
-                <InputGroup>
+
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="C" />
                     <Input
                         onChange={handleValueChange}
@@ -101,13 +137,34 @@ export default function CombinedCongruent() {
                         placeholder="Ingrese el valor de C"
                     />
                 </InputGroup>
-                <InputGroup>
+
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="Semilla" />
                     <Input
                         onChange={handleValueChange}
                         name="x0"
                         value={formValues.x0}
                         placeholder="Ingrese el valor semilla"
+                    />
+                </InputGroup>
+
+                <InputGroup minWidth={'200px'} maxWidth="23%">
+                    <InputLeftAddon children="Cantidad" />
+                    <Input
+                        onChange={handleValueChange}
+                        name="quantity"
+                        value={formValues.quantity}
+                        placeholder="Ingrese la cantidad de valores a generar"
+                    />
+                </InputGroup>
+
+                <InputGroup minWidth={'200px'} maxWidth="23%">
+                    <InputLeftAddon children="Intervalos" />
+                    <Input
+                        onChange={handleValueChange}
+                        name="intervalQuantity"
+                        value={formValues.intervalQuantity}
+                        placeholder="Ingrese la cantidad de valores a generar"
                     />
                 </InputGroup>
             </Flex>
@@ -117,7 +174,11 @@ export default function CombinedCongruent() {
                 </Button>
             </Flex>
 
-            < ErrorBox errorMsg={error.message}/>
-        </>
+            <ErrorBox errorMsg={error.message} />
+
+            {result.generated ? <Box>
+                Generados!
+            </Box> : <InfoBox infoMsg={['Simulación pendiente']}/>}
+        </Box>
     );
 }

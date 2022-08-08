@@ -16,9 +16,7 @@ export default function Navbar() {
                     alignItems="center"
                     color={'#fff'}
                 >
-                    <Text>TP1</Text>
-                    <Text>TP2</Text>
-                    <Text>TP3</Text>
+                    
                 </Flex>
             </Flex>
             <div></div>
