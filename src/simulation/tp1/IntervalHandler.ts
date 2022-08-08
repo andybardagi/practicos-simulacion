@@ -46,24 +46,25 @@ export class IntervalHandler {
     }
 
     public processIntervals(): void {
-        if (this.minValue == undefined || this.maxValue == undefined) {
+        if (this.minValue == undefined || this.maxValue == undefined || this.numbers.length == 0) {
             throw Error(
                 'The methos processIntervals was invocated before simulation',
             );
         }
 
-        if (this.numbers.every((number) => number == 0)) {
+        // Calculate the interval range
+        this.intervalRange =
+            (this.maxValue - this.minValue) / this.intervalQuantity;
+
+        if (this.intervalRange == 0) {
             this.intervals.push({
-                lowerLimit: 0,
-                upperLimit: 0,
+                lowerLimit: this.minValue,
+                upperLimit: this.maxValue,
                 quantity: this.totalCounter,
                 numbers: this.numbers,
             });
             return;
         }
-        // Calculate the interval range
-        this.intervalRange =
-            (this.maxValue - this.minValue) / this.intervalQuantity;
 
         // Calculate the intervals and creates them into the interval array
         for (let i = 0; i < this.intervalQuantity; i++) {
