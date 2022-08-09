@@ -62,6 +62,7 @@ export class IntervalHandler {
                 upperLimit: this.maxValue,
                 quantity: this.totalCounter,
                 numbers: this.numbers,
+                expected: 0,
             });
             return;
         }
@@ -73,12 +74,12 @@ export class IntervalHandler {
                 upperLimit: this.minValue + (i + 1) * this.intervalRange,
                 quantity: 0,
                 numbers: [],
+                expected: 0,
             });
         }
 
         // Process the simulated numbers and add it into the intervals
         for (let i = 0; i < this.numbers.length; i++) {
-            console.log(this.numbers);
             const intervalIndex = this.getIntervalIndex(this.numbers[i]);
             this.intervals[intervalIndex].quantity++;
             this.intervals[intervalIndex].numbers.push(this.numbers[i]);
@@ -95,5 +96,11 @@ export class IntervalHandler {
 
     public getUniformWaitedValues(): number {
         return this.totalCounter / this.intervalQuantity;
+    }
+
+    public setUniformExpectedValues(): void {
+        for (let i = 0; i < this.intervals.length; i++) {
+            this.intervals[i].expected = this.totalCounter / this.intervalQuantity;
+        }
     }
 }

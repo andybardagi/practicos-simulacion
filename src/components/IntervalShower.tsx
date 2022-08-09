@@ -34,10 +34,14 @@ export default function IntervalShower({
             <Tbody>
                 {intervals.map((interval, index) => (
                     <Tr key={index}>
-                        <Td>{interval.lowerLimit}</Td>
-                        <Td>{interval.upperLimit}</Td>
+                        <Td>{interval.lowerLimit.toFixed(4)}</Td>
+                        <Td>{interval.upperLimit.toFixed(4)}</Td>
                         <Td>{interval.quantity}</Td>
-                        <Td>{waitedUniform}</Td>
+                        <Td>
+                            {interval.expected % 1 == 0
+                                ? interval.expected
+                                : interval.expected.toFixed(4)}
+                        </Td>
                     </Tr>
                 ))}
             </Tbody>

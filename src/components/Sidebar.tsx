@@ -4,7 +4,6 @@ const SidebarItem = ({ name, navLink }: { name: string; navLink: string }) => {
     return (
         <Box
             p={3}
-            borderBottom="2px solid #12ADC188"
             _hover={{
                 backgroundColor: '#12ADC1',
                 color: '#fff',

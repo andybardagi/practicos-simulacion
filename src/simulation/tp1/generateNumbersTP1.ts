@@ -1,3 +1,4 @@
+import { ChiTester } from './ChiTester';
 import { CombinedCongruentGenerator } from './Generators/CombinedCongruentGenerator';
 import { IRandomGenerator } from './Generators/GeneratorInterface';
 import { randomGenerationMethods } from './method.enum';
@@ -16,15 +17,26 @@ export const generateNumbers = (
     quantity: number,
 ) => {
     // Create the random number generator based on the method
-    let generator: IRandomGenerator | null =
-        method === randomGenerationMethods.combinedCongruent
-            ? new CombinedCongruentGenerator(data.a, data.c, data.m, data.x0)
-            : method == randomGenerationMethods.multiplicativeCongruent
-            ? new MultiplicativeCongruentGenerator(data.a, data.m, data.x0)
-            : null;
+    let generator: IRandomGenerator;
 
-    if (generator == null) {
-        throw Error('Invalid method');
+    switch (method) {
+        case randomGenerationMethods.combinedCongruent:
+            generator = new CombinedCongruentGenerator(
+                data.a,
+                data.c,
+                data.m,
+                data.x0,
+            );
+            break;
+        case randomGenerationMethods.multiplicativeCongruent:
+            generator = new MultiplicativeCongruentGenerator(
+                data.a,
+                data.m,
+                data.x0,
+            );
+            break;
+        default:
+            throw Error('Invalid method');
     }
 
     // Create the interval handler
@@ -39,10 +51,20 @@ export const generateNumbers = (
     // Process the intervals on the intervalHandler.
     intervalHandler.processIntervals();
 
+    // Set the expected value for each interval
+    intervalHandler.setUniformExpectedValues();
+
+    const chiTester = new ChiTester(intervalHandler.getIntervals());
+    const c = chiTester.calculateC();
+    const { chiValue, isAccepted } = chiTester.makeTest();
+
     const result = {
         intervals: intervalHandler.getIntervals(),
         totalCounter: intervalHandler.getCounter(),
         waitedPerInterval: intervalHandler.getUniformWaitedValues(),
+        chiValue,
+        c,
+        isAccepted,
     };
 
     return result;

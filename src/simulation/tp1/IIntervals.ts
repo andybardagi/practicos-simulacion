@@ -3,4 +3,5 @@ export interface IInterval {
     upperLimit: number;
     quantity: number;
     numbers: number[];
+    expected: number;
 }

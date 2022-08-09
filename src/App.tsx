@@ -18,7 +18,7 @@ function App() {
         <ChakraProvider>
             <Navbar />
             <Box>
-                <Flex direction={'row'} height={'100vh'}>
+                <Flex direction={'row'} minHeight={'100vh'}>
                     <Sidebar />
                     <Box py={2} px={4} w="85%" >
                         <TP1></TP1>

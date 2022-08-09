@@ -17,12 +17,12 @@ import IntervalShower from '../IntervalShower';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
-        a: '0',
-        c: '0',
-        m: '0',
-        x0: '0',
+        a: '11',
+        c: '7',
+        m: (2 ** 61).toString(),
+        x0: '3',
         quantity: '0',
-        intervalQuantity: '0',
+        intervalQuantity: '100',
     });
     const [error, setError] = useState({
         error: false,
@@ -34,6 +34,9 @@ export default function CombinedCongruent() {
         intervals: [] as IInterval[],
         generatedNumbersCount: 0,
         uniformWaitedPerInterval: 0,
+        c: 0,
+        chiValue: 0,
+        isAccepted: false,
     });
 
     const validationSchema = object().shape({
@@ -85,6 +88,9 @@ export default function CombinedCongruent() {
                 intervals: simulationResult.intervals,
                 generatedNumbersCount: simulationResult.totalCounter,
                 uniformWaitedPerInterval: simulationResult.waitedPerInterval,
+                c: simulationResult.c,
+                chiValue: simulationResult.chiValue,
+                isAccepted: simulationResult.isAccepted,
             });
         } catch (error) {
             setResult((prevValue) => ({ ...prevValue, generated: true }));
@@ -122,6 +128,10 @@ export default function CombinedCongruent() {
                 });
             });
     };
+
+    const handleTestClick = async (
+        e: React.MouseEvent<HTMLButtonElement>,
+    ) => {};
 
     return (
         <Box>
@@ -197,10 +207,31 @@ export default function CombinedCongruent() {
 
             {result.generated ? (
                 <Box>
+                    <Flex direction={'row'} mt={4} justifyContent="end">
+                        <a id="arriba" href="#resultado">
+                            Ir al resultado
+                        </a>
+                    </Flex>
                     <IntervalShower
                         intervals={result.intervals}
                         waitedUniform={result.uniformWaitedPerInterval}
                         totalNumbers={result.generatedNumbersCount}
+                    />
+                    <Flex direction={'row'} mt={4} mb={4} justifyContent="end">
+                        <a id="resultado" href="#arriba">
+                            Ir al inicio
+                        </a>
+                    </Flex>
+                    <InfoBox
+                        infoMsg={[
+                            `Con un p-valor de 0,99`,
+                            `${result.intervals.length - 1} grados de libertad`,
+                            `c = ${result.c.toFixed(4)}`,
+                            `Valor Chi = ${result.chiValue.toFixed(4)}`,
+                            `Se ${
+                                result.isAccepted ? 'acepta' : 'rechaza'
+                            } la hipótesis`,
+                        ]}
                     />
                 </Box>
             ) : (

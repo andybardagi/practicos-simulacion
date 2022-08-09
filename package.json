@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite --debug",
+        "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
         "test": "ts-node-dev --respawn ./src/simulation/tp1/consoleTest.ts"
@@ -13,7 +13,11 @@
         "@chakra-ui/react": "^2.2.4",
         "@emotion/react": "^11.10.0",
         "@emotion/styled": "^11.10.0",
+        "@stdlib/ndarray-array": "^0.0.9",
+        "@stdlib/stats-chi2test": "^0.0.8",
+        "buffer": "^6.0.3",
         "framer-motion": "^7.0.0",
+        "lib-r-math.js": "^1.0.89",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "ts-node": "^10.9.1",
