@@ -7,7 +7,7 @@ import {
     InputLeftAddon,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { number, object } from 'yup';
+import { number, object, ref } from 'yup';
 import { IInterval } from '../../simulation/tp1/IIntervals';
 import { generateNumbers } from '../../simulation/tp1/generateNumbersTP1';
 import { randomGenerationMethods } from '../../simulation/tp1/method.enum';
@@ -17,10 +17,10 @@ import IntervalShower from '../IntervalShower';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
-        a: '11',
+        a: '19',
         c: '7',
         m: (2 ** 61).toString(),
-        x0: '3',
+        x0: '37',
         quantity: '0',
         intervalQuantity: '100',
     });
@@ -51,7 +51,11 @@ export default function CombinedCongruent() {
             .required('Debe ingresar un valor para m'),
         x0: number()
             .min(0, 'El valor de la semilla no puede ser negativo')
-            .required('Debe ingresar un valor para la semilla (x0)'),
+            .required('Debe ingresar un valor para la semilla (x0)')
+            .lessThan(
+                ref('m'),
+                'El valor de la semilla no puede ser mayor a m',
+            ),
         quantity: number()
             .min(1, 'La cantidad de valores a generar debe ser mayor a 0')
             .required('Debe ingresar un valor para la cantidad'),
