@@ -16,6 +16,7 @@ import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
 import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
+import { CombinedCongruentGenerator } from '../../simulation/tp1/generators/CombinedCongruentGenerator';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
@@ -40,6 +41,9 @@ export default function CombinedCongruent() {
         chiValue: 0,
         isAccepted: false,
     });
+
+    var generator: CombinedCongruentGenerator;
+    var intervalHandler: CombinedCongruentGenerator;
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setResult((prevValue) => ({ ...prevValue, generated: false }));
@@ -96,8 +100,12 @@ export default function CombinedCongruent() {
             abortEarly: false,
         })
             .then(async () => {
-                console.log('formValues', formValues);
-                await simulate();
+                generator = new CombinedCongruentGenerator(
+                    parseInt(formValues.a, 10),
+                    parseInt(formValues.c, 10),
+                    parseInt(formValues.m, 10),
+                    parseInt(formValues.x0, 10),
+                );
             })
             .catch((err) => {
                 console.log(err);
