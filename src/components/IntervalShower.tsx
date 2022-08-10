@@ -5,7 +5,6 @@ import { number } from 'yup';
 
 type Props = {
     intervals: IInterval[];
-    waitedUniform: number;
     totalNumbers?: number;
 };
 

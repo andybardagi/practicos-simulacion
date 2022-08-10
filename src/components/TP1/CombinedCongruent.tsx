@@ -17,6 +17,10 @@ import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
 import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
 import { CombinedCongruentGenerator } from '../../simulation/tp1/generators/CombinedCongruentGenerator';
+import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
+import GenerationDisplay from '../GenerationDisplay';
+import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
+import { IntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
@@ -24,26 +28,25 @@ export default function CombinedCongruent() {
         c: '7',
         m: '53',
         x0: '37',
-        quantity: '0',
-        intervalQuantity: '100',
     });
     const [error, setError] = useState({
         error: false,
         message: [] as string[],
     });
 
+    const [generations, setGenerations] = useState(
+        [] as IGenerationIteration[],
+    );
+
     const [result, setResult] = useState({
         generated: false,
         intervals: [] as IInterval[],
         generatedNumbersCount: 0,
-        uniformWaitedPerInterval: 0,
-        c: 0,
-        chiValue: 0,
-        isAccepted: false,
+        numbers: [] as number[],
     });
 
-    var generator: CombinedCongruentGenerator;
-    var intervalHandler: CombinedCongruentGenerator;
+    let generator: CombinedCongruentGenerator;
+    let intervalHandler: UniformIntervalHandler;
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setResult((prevValue) => ({ ...prevValue, generated: false }));
@@ -53,29 +56,42 @@ export default function CombinedCongruent() {
         }));
     };
 
-    const simulate = async () => {
-        setResult((prevValue) => ({ ...prevValue, generated: false }));
+    const simulate = async (rounds: number) => {
         try {
-            const simulationResult = generateNumbers(
-                randomGenerationMethods.combinedCongruent,
-                {
-                    a: parseInt(formValues.a, 10),
-                    c: parseInt(formValues.c, 10),
-                    m: parseInt(formValues.m, 10),
-                    x0: parseInt(formValues.x0, 10),
-                },
-                parseInt(formValues.intervalQuantity, 10),
-                parseInt(formValues.quantity, 10),
-            );
-            console.log(simulationResult);
+            //Create generator and interval handler if not exits
+            if (!generator) {
+                generator = new CombinedCongruentGenerator(
+                    Number(formValues.a),
+                    Number(formValues.c),
+                    Number(formValues.m),
+                    Number(formValues.x0),
+                );
+                intervalHandler = new UniformIntervalHandler(10);
+            }
+
+            const arrGenerations = generations.map((x) => x);
+            //For loop to make the simulation
+            let numberGenerated: number;
+            let intervalsIteration: IntervalWithPercentage[];
+
+            for (var i = 0; i < rounds; i++) {
+                //Generate random number
+                numberGenerated = generator.generateRandom();
+                //Add generated number to the handler of generated numbers
+                await intervalHandler.addNumber(numberGenerated);
+                intervalsIteration = await intervalHandler.getIntervals();
+                arrGenerations.push({
+                    number: numberGenerated,
+                    intervals: intervalsIteration,
+                });
+            }
+
+            setGenerations(arrGenerations);
             setResult({
                 generated: true,
-                intervals: simulationResult.intervals,
-                generatedNumbersCount: simulationResult.totalCounter,
-                uniformWaitedPerInterval: simulationResult.waitedPerInterval,
-                c: simulationResult.c,
-                chiValue: simulationResult.chiValue,
-                isAccepted: simulationResult.isAccepted,
+                intervals: arrGenerations[arrGenerations.length - 1].intervals,
+                generatedNumbersCount: intervalHandler.getCounter(),
+                numbers: intervalHandler.getNumbers(),
             });
         } catch (error) {
             setResult((prevValue) => ({ ...prevValue, generated: true }));
@@ -100,12 +116,7 @@ export default function CombinedCongruent() {
             abortEarly: false,
         })
             .then(async () => {
-                generator = new CombinedCongruentGenerator(
-                    parseInt(formValues.a, 10),
-                    parseInt(formValues.c, 10),
-                    parseInt(formValues.m, 10),
-                    parseInt(formValues.x0, 10),
-                );
+                simulate(20);
             })
             .catch((err) => {
                 console.log(err);
@@ -174,29 +185,46 @@ export default function CombinedCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Cantidad" />
-                    <Input
-                        onChange={handleValueChange}
-                        name="quantity"
-                        value={formValues.quantity}
-                        placeholder="Ingrese la cantidad de valores a generar"
-                    />
-                </InputGroup>
-
-                <InputGroup width={widthForms} mb={2}>
                     <InputLeftAddon children="Intervalos" />
                     <Input
-                        onChange={handleValueChange}
                         name="intervalQuantity"
-                        value={formValues.intervalQuantity}
+                        value={10}
+                        readOnly={true}
+                        bgColor="#efefef"
                         placeholder="Ingrese la cantidad de valores a generar"
                     />
                 </InputGroup>
             </Flex>
-            <Flex direction={'row'} justifyContent="end" py={2}>
-                <Button colorScheme={'linkedin'} onClick={handleGenerateClick}>
-                    Generar
-                </Button>
+            <Flex direction={'row'} justifyContent="end" py={2} gap={4}>
+                {!result.generated ? (
+                    <Button
+                        colorScheme={'linkedin'}
+                        onClick={handleGenerateClick}
+                    >
+                        Generar primeros 20 valores
+                    </Button>
+                ) : (
+                    <>
+                        <Button
+                            colorScheme={'linkedin'}
+                            onClick={handleGenerateClick}
+                        >
+                            Generar 20 valores
+                        </Button>
+                        <Button
+                            colorScheme={'linkedin'}
+                            onClick={handleGenerateClick}
+                        >
+                            Generar uno
+                        </Button>
+                        <Button
+                            colorScheme={'linkedin'}
+                            onClick={handleGenerateClick}
+                        >
+                            Completar 10.000
+                        </Button>
+                    </>
+                )}
             </Flex>
 
             <ErrorBox errorMsg={error.message} />
@@ -208,9 +236,9 @@ export default function CombinedCongruent() {
                             Ir al resultado
                         </a>
                     </Flex>
+                    <GenerationDisplay generationIteration={generations} />
                     <IntervalShower
                         intervals={result.intervals}
-                        waitedUniform={result.uniformWaitedPerInterval}
                         totalNumbers={result.generatedNumbersCount}
                     />
                     <Flex direction={'row'} mt={4} mb={4} justifyContent="end">
@@ -218,7 +246,7 @@ export default function CombinedCongruent() {
                             Ir al inicio
                         </a>
                     </Flex>
-                    <InfoBox
+                    {/* <InfoBox
                         infoMsg={[
                             `Con un p-valor de 0,99`,
                             `${result.intervals.length - 1} grados de libertad`,
@@ -228,7 +256,7 @@ export default function CombinedCongruent() {
                                 result.isAccepted ? 'acepta' : 'rechaza'
                             } la hipótesis`,
                         ]}
-                    />
+                    /> */}
                 </Box>
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />

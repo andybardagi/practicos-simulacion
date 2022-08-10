@@ -19,8 +19,8 @@ function App() {
             <Navbar />
             <Box>
                 <Flex direction={'row'} minHeight={'100vh'}>
-                    <Sidebar />
-                    <Box py={2} px={4} w="85%" >
+                    {/* <Sidebar /> */}
+                    <Box py={2} px={4} w="100%" >
                         <TP1></TP1>
                     </Box>
                 </Flex>

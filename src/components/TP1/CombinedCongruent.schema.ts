@@ -22,18 +22,4 @@ export const CombinedCongruentValidationSchema = object().shape({
         .min(0, 'El valor de la semilla no puede ser negativo')
         .required('Debe ingresar un valor para la semilla (x0)')
         .lessThan(ref('m'), 'El valor de la semilla no puede ser mayor a m'),
-    quantity: number()
-        .integer()
-        .typeError(
-            'El valor de la cantidad de números a generar debe ser un número entero',
-        )
-        .min(1, 'La cantidad de valores a generar debe ser mayor a 0')
-        .required('Debe ingresar un valor para la cantidad'),
-    intervalQuantity: number()
-        .integer()
-        .typeError(
-            'El valor de la cantidad de intervalos debe ser un número entero',
-        )
-        .min(1, 'La cantidad de intervalos debe ser mayor a 0')
-        .required('Debe ingresar un valor para la cantidad de intervalos'),
 });
