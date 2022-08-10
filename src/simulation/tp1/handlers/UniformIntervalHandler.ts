@@ -35,7 +35,7 @@ export class UniformIntervalHandler {
         }
     }
 
-    public async addNumber(number: number): Promise<void> {
+    public addNumber(number: number) {
         //Update the controller state
         this.totalCounter++;
         this.numbers.push(number);
@@ -45,6 +45,8 @@ export class UniformIntervalHandler {
         this.intervals[index].numbers.push(number);
         //Recalculate intervals percentage and expected value.
         this.updatePercentagesAndExpected();
+        return this.intervals;
+        
     }
 
     private getIntervalIndex(number: number): number {
@@ -56,7 +58,7 @@ export class UniformIntervalHandler {
             : Math.floor((number - this.minValue) / this.intervalRange);
     }
 
-    private updatePercentagesAndExpected(): void {
+    public updatePercentagesAndExpected(): void {
         const uniformExpected = this.getUniformWaitedValues();
         for (let i = 0; i < this.intervalQuantity; i++) {
             this.intervals[i].percentage =
@@ -66,7 +68,7 @@ export class UniformIntervalHandler {
         }
     }
 
-    public async getIntervals() {
+    public getIntervals() {
         return this.intervals;
     }
 

@@ -17,7 +17,9 @@ type Props = {
 };
 
 export default function GenerationDisplay({ generationIteration }: Props) {
-    console.log(generationIteration);
+    if (!generationIteration.length) {
+        return null;
+    }
     return (
         <Table>
             <Thead>

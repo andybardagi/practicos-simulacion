@@ -34,9 +34,7 @@ export default function CombinedCongruent() {
         message: [] as string[],
     });
 
-    const [generations, setGenerations] = useState(
-        [] as IGenerationIteration[],
-    );
+    let [generations, setGeneration] = useState([] as IGenerationIteration[]);
 
     const [result, setResult] = useState({
         generated: false,
@@ -56,7 +54,7 @@ export default function CombinedCongruent() {
         }));
     };
 
-    const simulate = async (rounds: number) => {
+    const simulate = (rounds: number) => {
         try {
             //Create generator and interval handler if not exits
             if (!generator) {
@@ -69,27 +67,27 @@ export default function CombinedCongruent() {
                 intervalHandler = new UniformIntervalHandler(10);
             }
 
-            const arrGenerations = generations.map((x) => x);
             //For loop to make the simulation
-            let numberGenerated: number;
-            let intervalsIteration: IntervalWithPercentage[];
-
-            for (var i = 0; i < rounds; i++) {
+            let i = 0;
+            while (i < rounds) {
                 //Generate random number
-                numberGenerated = generator.generateRandom();
+                let numberGenerated = generator.generateRandom();
                 //Add generated number to the handler of generated numbers
-                await intervalHandler.addNumber(numberGenerated);
-                intervalsIteration = await intervalHandler.getIntervals();
-                arrGenerations.push({
-                    number: numberGenerated,
-                    intervals: intervalsIteration,
-                });
+                let intervalsIteration =
+                    intervalHandler.addNumber(numberGenerated);
+                setGeneration((prevValue) => [
+                    ...prevValue,
+                    {
+                        number: numberGenerated,
+                        intervals: intervalsIteration,
+                    },
+                ]);
+                i++;
             }
 
-            setGenerations(arrGenerations);
             setResult({
                 generated: true,
-                intervals: arrGenerations[arrGenerations.length - 1].intervals,
+                intervals: intervalHandler.getIntervals(),
                 generatedNumbersCount: intervalHandler.getCounter(),
                 numbers: intervalHandler.getNumbers(),
             });
