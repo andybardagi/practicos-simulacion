@@ -24,14 +24,10 @@ export default function TP1() {
             {/*With the defaultIndex = 1 starts in the second tab: CombinedCongruent*/}
             <Tabs variant="enclosed" mt={4} w="100%" defaultIndex={1}>
                 <TabList>
-                    <Tab>Congruencial Lineal</Tab>
                     <Tab>Congruencial Mixto</Tab>
                     <Tab>Congruencial Aditivo</Tab>
                 </TabList>
-                <TabPanels>
-                    <TabPanel>
-                        <p>Desarollo pendiente</p>
-                    </TabPanel>
+                <TabPanels border="1px solid #efefef">
                     <TabPanel>
                         <CombinedCongruent />
                     </TabPanel>
