@@ -9,7 +9,7 @@ export const generateNumbers = (
     method: randomGenerationMethods,
     data: {
         a: number;
-        c: number;
+        c?: number;
         m: number;
         x0: number;
     },
@@ -23,7 +23,7 @@ export const generateNumbers = (
         case randomGenerationMethods.combinedCongruent:
             generator = new CombinedCongruentGenerator(
                 data.a,
-                data.c,
+                data.c ? data.c : 0,
                 data.m,
                 data.x0,
             );

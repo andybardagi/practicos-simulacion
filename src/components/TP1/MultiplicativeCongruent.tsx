@@ -5,7 +5,6 @@ import {
     Input,
     InputGroup,
     InputLeftAddon,
-    Tooltip,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { number, object, ref } from 'yup';
@@ -16,10 +15,9 @@ import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
 
-export default function CombinedCongruent() {
+export default function MultiplicativeCongruent() {
     const [formValues, SetformValues] = useState({
         a: '19',
-        c: '7',
         m: (2 ** 61).toString(),
         x0: '37',
         quantity: '0',
@@ -44,9 +42,6 @@ export default function CombinedCongruent() {
         a: number()
             .min(1, 'El valor de A no puede ser menor a 1')
             .required('Debe ingresar un valor para a'),
-        c: number()
-            .min(1, 'El valor de C no puede ser menor a 1')
-            .required('Debe ingresar un valor para c'),
         m: number()
             .min(1, 'El valor de M no puede ser menor a 1')
             .required('Debe ingresar un valor para m'),
@@ -77,10 +72,9 @@ export default function CombinedCongruent() {
         setResult((prevValue) => ({ ...prevValue, generated: false }));
         try {
             const simulationResult = generateNumbers(
-                randomGenerationMethods.combinedCongruent,
+                randomGenerationMethods.multiplicativeCongruent,
                 {
                     a: parseInt(formValues.a, 10),
-                    c: parseInt(formValues.c, 10),
                     m: parseInt(formValues.m, 10),
                     x0: parseInt(formValues.x0, 10),
                 },
@@ -138,18 +132,10 @@ export default function CombinedCongruent() {
         e: React.MouseEvent<HTMLButtonElement>,
     ) => {};
 
-    const widthForms = ['45%', '45%', '45%', '21.25%'];
-
     return (
         <Box>
-            <Flex
-                direction={'row'}
-                mt={4}
-                flexWrap="wrap"
-                maxW="100%"
-                gap={'5%'}
-            >
-                <InputGroup width={widthForms} mb={2}>
+            <Flex direction={'row'} gap={4} mt={4} flexWrap="wrap" maxW="100%">
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="A" />
                     <Input
                         type="number"
@@ -160,10 +146,8 @@ export default function CombinedCongruent() {
                     />
                 </InputGroup>
 
-                <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon>
-                        <Tooltip label="Módulo">M</Tooltip>
-                    </InputLeftAddon>
+                <InputGroup minWidth={'200px'} maxWidth="23%">
+                    <InputLeftAddon children="M" />
                     <Input
                         onChange={handleValueChange}
                         name="m"
@@ -172,17 +156,7 @@ export default function CombinedCongruent() {
                     />
                 </InputGroup>
 
-                <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="C" />
-                    <Input
-                        onChange={handleValueChange}
-                        name="c"
-                        value={formValues.c}
-                        placeholder="Ingrese el valor de C"
-                    />
-                </InputGroup>
-
-                <InputGroup width={widthForms} mb={2}>
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="Semilla" />
                     <Input
                         onChange={handleValueChange}
@@ -192,7 +166,7 @@ export default function CombinedCongruent() {
                     />
                 </InputGroup>
 
-                <InputGroup width={widthForms} mb={2}>
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="Cantidad" />
                     <Input
                         onChange={handleValueChange}
@@ -202,7 +176,7 @@ export default function CombinedCongruent() {
                     />
                 </InputGroup>
 
-                <InputGroup width={widthForms} mb={2}>
+                <InputGroup minWidth={'200px'} maxWidth="23%">
                     <InputLeftAddon children="Intervalos" />
                     <Input
                         onChange={handleValueChange}
