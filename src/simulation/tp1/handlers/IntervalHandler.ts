@@ -1,4 +1,4 @@
-import { IInterval } from './IIntervals';
+import { IInterval } from '../interfaces/IIntervals';
 export class IntervalHandler {
     private minValue?: number;
     private maxValue?: number;

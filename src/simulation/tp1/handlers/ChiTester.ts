@@ -1,4 +1,4 @@
-import { IInterval } from './IIntervals';
+import { IInterval } from '../interfaces/IIntervals';
 import {ChiSquared, R} from 'lib-r-math.js';
 
 const { seq, multiplex, numberPrecision} = R

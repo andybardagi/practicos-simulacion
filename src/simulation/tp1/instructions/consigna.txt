@@ -1,0 +1,27 @@
+2022-Tarea a entregar 1: Generación de Números Aleatorios
+
+PARA ESTA TAREA RECUERDE INCLUIR  EL/LOS  ARCHIVO/S  EJECUTABLE/S  Y  FUENTES, SI ES POSIBLE COMPRIMIDO.
+
+ADEMAS DEBERA INCLUIR UNA IMPRESION DE PANTALLA DEL SOFTWARE FUNCIONANDO DONDE SE VEAN LAS SIMULACIONES BASADAS EN LOS DATOS PROPUESTOS POR EL PROFESOR PARA VERIFICAR SU CORRECTO FUNCIONAMIENTO.
+
+a) Realizar un programa de genere una serie de 20 números aleatorios entre 0 y 0,9999 (4 dígitos decimales) a partir de un valor numérico indicado como raíz, utilizando los métodos congruenciales mixto y multiplicativo. 
+
+Las constantes a utilizar por los métodos deben ser ingresadas por el usuario. 
+
+Debe usar por defecto como propuesta los siguientes datos:  Semilla: 37 ;  Constante independiente (c): 7 ;  Constante multiplicadora (a): 19 ; Modulo (m): 53
+
+Una vez que se listan los 20 números, debe permitir tres opciones: "seguir la serie de a un valor por vez" , "nuevamente 20 numeros" y " "simular hasta 10000 y mostrar solo el ultimo vector".
+
+Debe usar un vector de estado donde esten los numeros e ademas identifique 10 intermalos uniformes entre  [0 ; 1) donde se actualice automaticamente el porcentaje de valores que ingresarion en ese intervalo.      inicializando desde cero usar para este calculo lo siguiente: ( ( (valor anterior * num.sim anterior) + num.objetos que acumula ) / num. simul actual )
+
+b) Realizar un programa que efectúe la prueba de frecuencia (Test de Chi Cuadrado) sobre una serie generada a través del mecanismo provisto por el lenguaje utilizado para generar números pseudo-aleatorios. La cantidad de números a generar y de subintervalos debe ser recibida como parámetro y la salida generada deberá incluir una gráfica que represente las frecuencias observadas y esperadas (la gráfica se aceptará que se genere en base a un archivo de salida del programa, en Excel). La serie generada debe por ser vista (bajar a archivo o visualizar en pantalla).
+
+c) Lo mismo que el punto anterior, pero utilizando el método congruencial mixto.
+
+*****************************
+
+Enviar todo en un archivo comprimido (preferido aunque no necesario) y el limite es un poco mas de 5 megas aunque se puede extender hasta 10.
+
+Ejecutable Funcionando y Fuentes. Indicar como ejecutarlo. El nombre de los integrantes en la pantalla cuando se ejecuta.
+
+De ser enlace o link a direccion compartida publica, incluir archivo con archivos fuente.

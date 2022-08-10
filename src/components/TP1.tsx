@@ -23,7 +23,7 @@ export default function TP1() {
         <Box m={4} w="100%">
             <Heading>Trabajo Práctico 1</Heading>
             {/*With the defaultIndex = 1 starts in the second tab: CombinedCongruent*/}
-            <Tabs variant="enclosed" mt={4} w="100%" defaultIndex={1}>
+            <Tabs variant="enclosed" mt={4} w="100%" defaultIndex={0}>
                 <TabList>
                     <Tab>Congruencial Mixto</Tab>
                     <Tab>Congruencial Multiplicativo</Tab>

@@ -1,9 +1,9 @@
-import { ChiTester } from './ChiTester';
-import { CombinedCongruentGenerator } from './Generators/CombinedCongruentGenerator';
-import { IRandomGenerator } from './Generators/GeneratorInterface';
-import { randomGenerationMethods } from './method.enum';
-import { MultiplicativeCongruentGenerator } from './Generators/MultiplicativeCongruentGenerator';
-import { IntervalHandler } from './IntervalHandler';
+import { ChiTester } from './handlers/ChiTester';
+import { CombinedCongruentGenerator } from './generators/CombinedCongruentGenerator';
+import { IRandomGenerator } from './interfaces/GeneratorInterface';
+import { randomGenerationMethods } from './enums/method.enum';
+import { MultiplicativeCongruentGenerator } from './generators/MultiplicativeCongruentGenerator';
+import { IntervalHandler } from './handlers/IntervalHandler';
 
 export const generateNumbers = (
     method: randomGenerationMethods,

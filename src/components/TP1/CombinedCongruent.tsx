@@ -9,18 +9,19 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { number, object, ref } from 'yup';
-import { IInterval } from '../../simulation/tp1/IIntervals';
+import { IInterval } from '../../simulation/tp1/interfaces/IIntervals';
 import { generateNumbers } from '../../simulation/tp1/generateNumbersTP1';
-import { randomGenerationMethods } from '../../simulation/tp1/method.enum';
+import { randomGenerationMethods } from '../../simulation/tp1/enums/method.enum';
 import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
+import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
 
 export default function CombinedCongruent() {
     const [formValues, SetformValues] = useState({
         a: '19',
         c: '7',
-        m: (2 ** 61).toString(),
+        m: '53',
         x0: '37',
         quantity: '0',
         intervalQuantity: '100',
@@ -40,37 +41,12 @@ export default function CombinedCongruent() {
         isAccepted: false,
     });
 
-    const validationSchema = object().shape({
-        a: number()
-            .min(1, 'El valor de A no puede ser menor a 1')
-            .required('Debe ingresar un valor para a'),
-        c: number()
-            .min(1, 'El valor de C no puede ser menor a 1')
-            .required('Debe ingresar un valor para c'),
-        m: number()
-            .min(1, 'El valor de M no puede ser menor a 1')
-            .required('Debe ingresar un valor para m'),
-        x0: number()
-            .min(0, 'El valor de la semilla no puede ser negativo')
-            .required('Debe ingresar un valor para la semilla (x0)')
-            .lessThan(
-                ref('m'),
-                'El valor de la semilla no puede ser mayor a m',
-            ),
-        quantity: number()
-            .min(1, 'La cantidad de valores a generar debe ser mayor a 0')
-            .required('Debe ingresar un valor para la cantidad'),
-    });
-
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setResult((prevValue) => ({ ...prevValue, generated: false }));
-        SetformValues({
-            ...formValues,
-            [e.target.name]:
-                e.target.value != ''
-                    ? parseInt(e.target.value, 10).toString()
-                    : '0',
-        });
+        SetformValues((prevValue) => ({
+            ...prevValue,
+            [e.target.name]: e.target.value,
+        }));
     };
 
     const simulate = async () => {
@@ -116,8 +92,9 @@ export default function CombinedCongruent() {
             error: false,
             message: [],
         });
-        validationSchema
-            .validate(formValues, { abortEarly: false })
+        CombinedCongruentValidationSchema.validate(formValues, {
+            abortEarly: false,
+        })
             .then(async () => {
                 console.log('formValues', formValues);
                 await simulate();
@@ -133,10 +110,6 @@ export default function CombinedCongruent() {
                 });
             });
     };
-
-    const handleTestClick = async (
-        e: React.MouseEvent<HTMLButtonElement>,
-    ) => {};
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
 

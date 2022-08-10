@@ -1,6 +1,6 @@
 //x_{n+1} = (aX_n) mod m
 
-import { IRandomGenerator } from './GeneratorInterface';
+import { IRandomGenerator } from '../interfaces/GeneratorInterface';
 
 export class MultiplicativeCongruentGenerator implements IRandomGenerator {
     private valueA: number;

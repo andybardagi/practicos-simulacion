@@ -1,5 +1,5 @@
-import { IRandomGenerator } from './GeneratorInterface';
 // x_{n+1} = (aX_n + c) mod m → combinedCongruent
+import { IRandomGenerator } from '../interfaces/GeneratorInterface';
 
 export class CombinedCongruentGenerator implements IRandomGenerator {
     private valueA: number;
@@ -29,7 +29,7 @@ export class CombinedCongruentGenerator implements IRandomGenerator {
 
     generateRandomInRange(min: number, max: number): number {
         this.lastRandomGenerated = this.generateRandom();
-        return (this.lastSequenceToNumber() * (max - min)) + min;
+        return this.lastSequenceToNumber() * (max - min) + min;
     }
 
     generateManyRandoms(amount: number): number[] {

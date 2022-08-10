@@ -1,19 +1,15 @@
 import { Table, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import React from 'react';
-import { IInterval } from '../simulation/tp1/IIntervals';
+import { IInterval } from '../simulation/tp1/interfaces/IIntervals';
 import { number } from 'yup';
 
 type Props = {
     intervals: IInterval[];
     waitedUniform: number;
-    totalNumbers: number;
+    totalNumbers?: number;
 };
 
-export default function IntervalShower({
-    intervals,
-    waitedUniform,
-    totalNumbers,
-}: Props) {
+export default function IntervalShower({ intervals, totalNumbers }: Props) {
     const getTotal = () => {
         const sum = intervals.reduce((accumulator, object) => {
             return accumulator + object.quantity;
@@ -21,6 +17,12 @@ export default function IntervalShower({
         return sum;
     };
 
+    const getTotalWaited = () => {
+        const sum = intervals.reduce((accumulator, object) => {
+            return accumulator + object.expected;
+        }, 0);
+        return sum;
+    };
     return (
         <Table>
             <Thead>
@@ -52,7 +54,7 @@ export default function IntervalShower({
                     </Td>
                     <Td></Td>
                     <Td>{getTotal()}</Td>
-                    <Td>{waitedUniform * intervals.length}</Td>
+                    <Td>{getTotalWaited()}</Td>
                 </Tr>
             </Tfoot>
         </Table>
