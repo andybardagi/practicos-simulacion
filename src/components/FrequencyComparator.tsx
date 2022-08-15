@@ -25,11 +25,21 @@ const options = {
     responsive: true,
     plugins: {
         legend: {
-            position: 'top' as const,
+            labels: {
+                position: 'top',
+                font: {
+                    size: 16,
+                    family: 'Segoe UI',
+                },
+            },
         },
         title: {
             display: true,
             text: 'Comparación frecuencias observadas vs frecuencias esperadas',
+            font: {
+                size: 18,
+                family: 'Segoe UI',
+            },
         },
     },
 };
@@ -53,7 +63,7 @@ export default function FrequencyComparator({ intervals, total }: Props) {
 
     return (
         <Box maxW={'1000px'} mx="auto">
-            <Bar data={data} options={options} />;
+            <Bar data={data} options={options} />
         </Box>
     );
 }
