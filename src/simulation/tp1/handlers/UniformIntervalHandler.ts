@@ -55,20 +55,23 @@ export class UniformIntervalHandler {
     public updatePercentagesAndExpected(): void {
         const uniformExpected = this.getUniformWaitedValues();
         for (let i = 0; i < this.intervalQuantity; i++) {
+            /*
             //  ( ( (valor anterior * num.sim anterior) + num.objetos que acumula ) / num. simul actual )
             this.intervals[i].percentage =
-                (this.intervals[i].percentage * (this.totalCounter - 1) +
-                    this.intervals[i].quantity) /
-                this.totalCounter;
-
+            (this.intervals[i].percentage * (this.totalCounter - 1) +
+            this.intervals[i].quantity) /
+            this.totalCounter;
+            
+            */
+            this.intervals[i].percentage = this.intervals[i].quantity / this.totalCounter;
             this.intervals[i].expected = uniformExpected;
         }
     }
 
     public getPercentagesState(): number[] {
-        return this.intervals.map(interval => interval.percentage);
+        return this.intervals.map((interval) => interval.percentage);
     }
-    
+
     public getIntervals() {
         return this.intervals;
     }

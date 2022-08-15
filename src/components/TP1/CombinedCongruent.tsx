@@ -1,11 +1,12 @@
 import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { CombinedCongruentGenerator } from '../../simulation/tp1/generators/CombinedCongruentGenerator';
+import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
 import ErrorBox from '../ErrorBox';
+import GenerationDisplay from '../GenerationDisplay';
+import InfoBox from '../InfoBox';
 import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
-import { IntervalHandler } from '../../simulation/tp1/handlers/IntervalHandler';
-import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 
 export default function CombinedCongruent() {
     // Form handling functions
@@ -19,9 +20,10 @@ export default function CombinedCongruent() {
     const intervalHandler = useRef({} as UniformIntervalHandler);
     const [generations, setGenerations] = useState([] as IGenerationIteration[]);
 
-    const simulate = (rounds: number) => {
+    const simulate = (rounds: number, hideResult = false) => {
         try {
             //Check if CombinedCongruentGenerator and UniformIntervalHandler already exists. If not, create them.
+            console.log(new Date());
             generator.current =
                 generator.current instanceof CombinedCongruentGenerator
                     ? generator.current
@@ -38,6 +40,7 @@ export default function CombinedCongruent() {
 
             //Simulate the generator
             const thisGenerations: IGenerationIteration[] = [];
+            let line: number = generations.length === 0 ? 1 : generations[generations.length - 1].line + 1;
             for (let i = 0; i < rounds; i++) {
                 let roundSeed: number = generator.current.getLastXi();
                 let n: number = generator.current.generateRandom();
@@ -46,9 +49,19 @@ export default function CombinedCongruent() {
                     number: n,
                     intervals: structuredClone(intervalHandler.current.getIntervals()),
                     x_i: roundSeed,
+                    line: line,
                 });
+                line++;
             }
-            setGenerations((prevValue) => [...prevValue, ...thisGenerations]);
+            if (!hideResult) {
+                setGenerations((prevValue) => [...prevValue, ...thisGenerations]);
+            } else {
+                setGenerations((prevValue) => [
+                    ...prevValue,
+                    ...thisGenerations.slice(Math.max(thisGenerations.length - 5, 0)),
+                ]);
+            }
+            console.log(new Date());
         } catch (error: any) {
             console.log(error);
             setError({
@@ -86,6 +99,8 @@ export default function CombinedCongruent() {
 
     return (
         <Box>
+            {/* Input values form*/}
+
             <Flex direction={'row'} mt={4} flexWrap="wrap" maxW="100%" gap={'5%'}>
                 <InputGroup width={widthForms} mb={2}>
                     <InputLeftAddon children="A" />
@@ -141,12 +156,61 @@ export default function CombinedCongruent() {
                     />
                 </InputGroup>
             </Flex>
+            {/* Simulation generation buttons */}
+
             <Flex direction={'row'} justifyContent="end" py={2} gap={4}>
-                <Button colorScheme={'linkedin'} onClick={handleGenerateClick}>
-                    Generar primeros 20 valores
-                </Button>
+                {generations.length === 0 ? (
+                    <Button colorScheme={'linkedin'} onClick={handleGenerateClick}>
+                        Generar primeros 20 valores
+                    </Button>
+                ) : (
+                    <>
+                        <Button colorScheme={'linkedin'} onClick={() => simulate(20)}>
+                            Generar 20 valores
+                        </Button>
+                        <Button colorScheme={'linkedin'} onClick={() => simulate(1)}>
+                            Generar uno
+                        </Button>
+                        <Button
+                            colorScheme={'linkedin'}
+                            onClick={() => simulate(10_000 - generations.length, true)}
+                        >
+                            Completar 10.000
+                        </Button>
+                    </>
+                )}
             </Flex>
 
+            <ErrorBox errorMsg={error.message} />
+
+            {generations.length !== 0 ? (
+                <Box>
+                    <Flex direction={'row'} mt={4} justifyContent="end">
+                        <a id="arriba" href="#resultado">
+                            Ir al resultado
+                        </a>
+                    </Flex>
+                    <GenerationDisplay generationIteration={generations} />
+                    <Flex direction={'row'} mt={4} mb={4} justifyContent="end">
+                        <a id="resultado" href="#arriba">
+                            Ir al inicio
+                        </a>
+                    </Flex>
+                    {/* <InfoBox
+                        infoMsg={[
+                            `Con un p-valor de 0,99`,
+                            `${result.intervals.length - 1} grados de libertad`,
+                            `c = ${result.c.toFixed(4)}`,
+                            `Valor Chi = ${result.chiValue.toFixed(4)}`,
+                            `Se ${
+                                result.isAccepted ? 'acepta' : 'rechaza'
+                            } la hipótesis`,
+                        ]}
+                    /> */}
+                </Box>
+            ) : (
+                <InfoBox infoMsg={['Simulación pendiente']} />
+            )}
             <ErrorBox errorMsg={error.message} />
         </Box>
     );

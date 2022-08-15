@@ -1,16 +1,5 @@
-import {
-    Table,
-    TableCaption,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-} from '@chakra-ui/react';
-import React from 'react';
+import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { IGenerationIteration } from '../simulation/tp1/interfaces/IGenerationIteration';
-import { IInterval } from '../simulation/tp1/interfaces/IIntervals';
-import { IntervalWithPercentage } from '../simulation/tp1/interfaces/IIntervalWithPercentage';
 
 type Props = {
     generationIteration: IGenerationIteration[];
@@ -36,10 +25,10 @@ export default function GenerationDisplay({ generationIteration }: Props) {
             <Tbody>
                 {generationIteration.map((gen, index) => (
                     <Tr key={index}>
-                        <Td>{index}</Td>
+                        <Td>{gen.line}</Td>
                         <Td>{gen.number}</Td>
                         {gen.intervals.map((i, index) => (
-                            <Td key={index}>{`${i.percentage * 100}%`}</Td>
+                            <Td key={index}>{`${(i.percentage * 100).toFixed(2)}%`}</Td>
                         ))}
                     </Tr>
                 ))}
