@@ -39,17 +39,24 @@ export default function CombinedCongruent() {
             //Simulate the generator
             const thisGenerations: IGenerationIteration[] = [];
             for (let i = 0; i < rounds; i++) {
+                let roundSeed: number = generator.current.getLastXi();
                 let n: number = generator.current.generateRandom();
                 intervalHandler.current.addNumber(n);
                 thisGenerations.push({
                     number: n,
                     intervals: structuredClone(intervalHandler.current.getIntervals()),
+                    x_i: roundSeed,
                 });
             }
-            setGenerations(prevValue => [...prevValue, ...thisGenerations]);
-
-        } catch (error) {
+            setGenerations((prevValue) => [...prevValue, ...thisGenerations]);
+        } catch (error: any) {
             console.log(error);
+            setError({
+                error: true,
+                message: [
+                    error.message ? error.message : 'Error en la simulación, revisar consola',
+                ],
+            });
         }
     };
 
