@@ -1,4 +1,13 @@
-import { Box, Button, Divider, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Divider,
+    Flex,
+    Input,
+    InputGroup,
+    InputLeftAddon,
+    Tooltip,
+} from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { CombinedCongruentGenerator } from '../../simulation/tp1/generators/CombinedCongruentGenerator';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
@@ -22,11 +31,12 @@ export default function CombinedCongruent() {
     const generator = useRef({} as CombinedCongruentGenerator);
     const intervalHandler = useRef({} as UniformIntervalHandler);
     const [generations, setGenerations] = useState([] as IGenerationIteration[]);
+    const [graphUpdate, setGraphUpdate] = useState(0);
 
     const simulate = (rounds: number, hideResult = false) => {
         try {
             //Check if CombinedCongruentGenerator and UniformIntervalHandler already exists. If not, create them.
-            console.log(new Date());
+
             generator.current =
                 generator.current instanceof CombinedCongruentGenerator
                     ? generator.current
@@ -65,7 +75,7 @@ export default function CombinedCongruent() {
                     ...thisGenerations.slice(Math.max(thisGenerations.length - 5, 0)),
                 ]);
             }
-            console.log(new Date());
+            setGraphUpdate(graphUpdate + 1);
         } catch (error: any) {
             console.log(error);
             setError({
@@ -195,10 +205,11 @@ export default function CombinedCongruent() {
                         </a>
                     </Flex>
                     <GenerationDisplay generationIteration={generations} />
-                    <Divider my={4}/>
+                    <Divider my={4} />
                     <FrequencyComparator
                         intervals={generations[generations.length - 1].intervals}
                         total={generations[generations.length - 1].line}
+                        key={graphUpdate}
                     />
                     <Flex direction={'row'} mt={4} mb={4} justifyContent="end">
                         <a id="resultado" href="#arriba">
