@@ -1,6 +1,6 @@
-import { IntervalWithPercentage } from "./IIntervalWithPercentage";
+import { IIntervalWithPercentage } from "./IIntervalWithPercentage";
 
 export interface IGenerationIteration {
-    intervals: IntervalWithPercentage[];
+    intervals: IIntervalWithPercentage[];
     number: number;
 };

@@ -1,8 +1,4 @@
-import { number } from 'yup';
-
-
-import { IInterval } from '../interfaces/IIntervals';
-import { IntervalWithPercentage } from '../interfaces/IIntervalWithPercentage';
+import { IIntervalWithPercentage } from '../interfaces/IIntervalWithPercentage';
 export class UniformIntervalHandler {
     private minValue: number;
     private maxValue: number;
@@ -10,7 +6,7 @@ export class UniformIntervalHandler {
     private intervalRange: number;
     private totalCounter: number = 0;
     public numbers: number[] = [];
-    private intervals: IntervalWithPercentage[];
+    private intervals: IIntervalWithPercentage[];
 
     constructor(intervalQuantity: number, minValue = 0, maxValue = 1) {
         this.intervalQuantity = intervalQuantity;
@@ -59,13 +55,20 @@ export class UniformIntervalHandler {
     public updatePercentagesAndExpected(): void {
         const uniformExpected = this.getUniformWaitedValues();
         for (let i = 0; i < this.intervalQuantity; i++) {
+            //  ( ( (valor anterior * num.sim anterior) + num.objetos que acumula ) / num. simul actual )
             this.intervals[i].percentage =
-                this.intervals[i].quantity / this.totalCounter;
+                (this.intervals[i].percentage * (this.totalCounter - 1) +
+                    this.intervals[i].quantity) /
+                this.totalCounter;
 
             this.intervals[i].expected = uniformExpected;
         }
     }
 
+    public getPercentagesState(): number[] {
+        return this.intervals.map(interval => interval.percentage);
+    }
+    
     public getIntervals() {
         return this.intervals;
     }
@@ -74,7 +77,7 @@ export class UniformIntervalHandler {
         return this.totalCounter;
     }
 
-    getNumbers() {
+    public getNumbers() {
         return this.numbers;
     }
 

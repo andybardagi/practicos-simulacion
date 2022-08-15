@@ -1,5 +1,5 @@
 import { IInterval } from "./IIntervals";
 
-export interface IntervalWithPercentage extends IInterval {
+export interface IIntervalWithPercentage extends IInterval {
     percentage: number;
 }

@@ -1,18 +1,11 @@
 import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import { number, object, ref } from 'yup';
-import { IInterval } from '../../simulation/tp1/interfaces/IIntervals';
-import { generateNumbers } from '../../simulation/tp1/generateNumbersTP1';
-import { randomGenerationMethods } from '../../simulation/tp1/enums/method.enum';
-import ErrorBox from '../ErrorBox';
-import InfoBox from '../InfoBox';
-import IntervalShower from '../IntervalShower';
-import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
 import { CombinedCongruentGenerator } from '../../simulation/tp1/generators/CombinedCongruentGenerator';
-import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
-import GenerationDisplay from '../GenerationDisplay';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
-import { IntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
+import ErrorBox from '../ErrorBox';
+import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
+import { IntervalHandler } from '../../simulation/tp1/handlers/IntervalHandler';
+import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 
 export default function CombinedCongruent() {
     // Form handling functions
@@ -21,10 +14,14 @@ export default function CombinedCongruent() {
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         SetformValues((prevValue) => ({ ...prevValue, [e.target.name]: e.target.value }));
     };
+
     const generator = useRef({} as CombinedCongruentGenerator);
+    const intervalHandler = useRef({} as UniformIntervalHandler);
+    const [generations, setGenerations] = useState([] as IGenerationIteration[]);
 
     const simulate = (rounds: number) => {
         try {
+            //Check if CombinedCongruentGenerator and UniformIntervalHandler already exists. If not, create them.
             generator.current =
                 generator.current instanceof CombinedCongruentGenerator
                     ? generator.current
@@ -34,11 +31,23 @@ export default function CombinedCongruent() {
                           Number(formValues.m),
                           Number(formValues.x0),
                       );
-            console.log(generator.current);
+            intervalHandler.current =
+                intervalHandler.current instanceof UniformIntervalHandler
+                    ? intervalHandler.current
+                    : new UniformIntervalHandler(10);
+
+            //Simulate the generator
+            const thisGenerations: IGenerationIteration[] = [];
             for (let i = 0; i < rounds; i++) {
                 let n: number = generator.current.generateRandom();
-                console.log(n);
+                intervalHandler.current.addNumber(n);
+                thisGenerations.push({
+                    number: n,
+                    intervals: structuredClone(intervalHandler.current.getIntervals()),
+                });
             }
+            setGenerations(prevValue => [...prevValue, ...thisGenerations]);
+
         } catch (error) {
             console.log(error);
         }
