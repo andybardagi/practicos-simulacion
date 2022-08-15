@@ -18,8 +18,7 @@ export class CombinedCongruentGenerator implements IRandomGenerator {
 
     generateRandom(): number {
         this.lastRandomGenerated =
-            (this.valueA * this.lastRandomGenerated + this.valueC) %
-            this.valueM;
+            (this.valueA * this.lastRandomGenerated + this.valueC) % this.valueM;
         return this.lastSequenceToNumber();
     }
 
@@ -42,5 +41,9 @@ export class CombinedCongruentGenerator implements IRandomGenerator {
 
     lastSequenceToNumber() {
         return this.lastRandomGenerated / this.valueM;
+    }
+
+    getLastXi(): number {
+        return this.lastRandomGenerated;
     }
 }
