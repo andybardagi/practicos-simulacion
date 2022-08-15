@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { CombinedCongruentGenerator } from '../../simulation/tp1/generators/CombinedCongruentGenerator';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
@@ -7,6 +7,9 @@ import ErrorBox from '../ErrorBox';
 import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
 import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
+
+import { Line } from 'react-chartjs-2';
+import FrequencyComparator from '../FrequencyComparator';
 
 export default function CombinedCongruent() {
     // Form handling functions
@@ -40,7 +43,8 @@ export default function CombinedCongruent() {
 
             //Simulate the generator
             const thisGenerations: IGenerationIteration[] = [];
-            let line: number = generations.length === 0 ? 1 : generations[generations.length - 1].line + 1;
+            let line: number =
+                generations.length === 0 ? 1 : generations[generations.length - 1].line + 1;
             for (let i = 0; i < rounds; i++) {
                 let roundSeed: number = generator.current.getLastXi();
                 let n: number = generator.current.generateRandom();
@@ -191,6 +195,11 @@ export default function CombinedCongruent() {
                         </a>
                     </Flex>
                     <GenerationDisplay generationIteration={generations} />
+                    <Divider my={4}/>
+                    <FrequencyComparator
+                        intervals={generations[generations.length - 1].intervals}
+                        total={generations[generations.length - 1].line}
+                    />
                     <Flex direction={'row'} mt={4} mb={4} justifyContent="end">
                         <a id="resultado" href="#arriba">
                             Ir al inicio
