@@ -1,12 +1,4 @@
-import {
-    Box,
-    Button,
-    Flex,
-    Input,
-    InputGroup,
-    InputLeftAddon,
-    Tooltip,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { number, object, ref } from 'yup';
 import { IInterval } from '../../simulation/tp1/interfaces/IIntervals';
@@ -34,6 +26,17 @@ export default function CombinedCongruent() {
         message: [] as string[],
     });
 
+    var simulationHandlers = {
+        intervalHandler: new UniformIntervalHandler(10),
+        generator: new CombinedCongruentGenerator(
+            Number(formValues.a),
+            Number(formValues.c),
+            Number(formValues.m),
+            Number(formValues.x0),
+        ),
+        created: false,
+    };
+
     let [generations, setGeneration] = useState([] as IGenerationIteration[]);
 
     const [result, setResult] = useState({
@@ -42,9 +45,6 @@ export default function CombinedCongruent() {
         generatedNumbersCount: 0,
         numbers: [] as number[],
     });
-
-    let generator: CombinedCongruentGenerator;
-    let intervalHandler: UniformIntervalHandler;
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setResult((prevValue) => ({ ...prevValue, generated: false }));
@@ -57,39 +57,40 @@ export default function CombinedCongruent() {
     const simulate = (rounds: number) => {
         try {
             //Create generator and interval handler if not exits
-            if (!generator) {
-                generator = new CombinedCongruentGenerator(
+            console.log(simulationHandlers.generator);
+            console.log(simulationHandlers.generator.getLastGenerated());
+            if (!simulationHandlers.created) {
+                simulationHandlers.generator = new CombinedCongruentGenerator(
                     Number(formValues.a),
                     Number(formValues.c),
                     Number(formValues.m),
                     Number(formValues.x0),
                 );
-                intervalHandler = new UniformIntervalHandler(10);
+                simulationHandlers.created = true;
             }
-
+            let intervalsIteration: IntervalWithPercentage[] = [];
             //For loop to make the simulation
-            let i = 0;
-            while (i < rounds) {
+            for (let i = 0; i < rounds; i++) {
                 //Generate random number
-                let numberGenerated = generator.generateRandom();
+                let numberGenerated = simulationHandlers.generator.generateRandom();
+                simulationHandlers.intervalHandler.addNumber(numberGenerated);
                 //Add generated number to the handler of generated numbers
-                let intervalsIteration =
-                    intervalHandler.addNumber(numberGenerated);
                 setGeneration((prevValue) => [
                     ...prevValue,
                     {
                         number: numberGenerated,
-                        intervals: intervalsIteration,
+                        intervals: [
+                            ...simulationHandlers.intervalHandler.getIntervals().map((x) => x),
+                        ],
                     },
                 ]);
-                i++;
             }
 
             setResult({
                 generated: true,
-                intervals: intervalHandler.getIntervals(),
-                generatedNumbersCount: intervalHandler.getCounter(),
-                numbers: intervalHandler.getNumbers(),
+                intervals: simulationHandlers.intervalHandler.getIntervals().map((x) => x),
+                generatedNumbersCount: simulationHandlers.intervalHandler.getCounter(),
+                numbers: simulationHandlers.intervalHandler.getNumbers(),
             });
         } catch (error) {
             setResult((prevValue) => ({ ...prevValue, generated: true }));
@@ -103,9 +104,7 @@ export default function CombinedCongruent() {
         }
     };
 
-    const handleGenerateClick = async (
-        e: React.MouseEvent<HTMLButtonElement>,
-    ) => {
+    const handleGenerateClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         setError({
             error: false,
             message: [],
@@ -121,8 +120,7 @@ export default function CombinedCongruent() {
                 setError({
                     error: true,
                     message: err.inner.map(
-                        (innerError: { path: string; message: string }) =>
-                            innerError.message,
+                        (innerError: { path: string; message: string }) => innerError.message,
                     ),
                 });
             });
@@ -132,13 +130,7 @@ export default function CombinedCongruent() {
 
     return (
         <Box>
-            <Flex
-                direction={'row'}
-                mt={4}
-                flexWrap="wrap"
-                maxW="100%"
-                gap={'5%'}
-            >
+            <Flex direction={'row'} mt={4} flexWrap="wrap" maxW="100%" gap={'5%'}>
                 <InputGroup width={widthForms} mb={2}>
                     <InputLeftAddon children="A" />
                     <Input
@@ -195,30 +187,18 @@ export default function CombinedCongruent() {
             </Flex>
             <Flex direction={'row'} justifyContent="end" py={2} gap={4}>
                 {!result.generated ? (
-                    <Button
-                        colorScheme={'linkedin'}
-                        onClick={handleGenerateClick}
-                    >
+                    <Button colorScheme={'linkedin'} onClick={handleGenerateClick}>
                         Generar primeros 20 valores
                     </Button>
                 ) : (
                     <>
-                        <Button
-                            colorScheme={'linkedin'}
-                            onClick={handleGenerateClick}
-                        >
+                        <Button colorScheme={'linkedin'} onClick={() => simulate(20)}>
                             Generar 20 valores
                         </Button>
-                        <Button
-                            colorScheme={'linkedin'}
-                            onClick={handleGenerateClick}
-                        >
+                        <Button colorScheme={'linkedin'} onClick={() => simulate(1)}>
                             Generar uno
                         </Button>
-                        <Button
-                            colorScheme={'linkedin'}
-                            onClick={handleGenerateClick}
-                        >
+                        <Button colorScheme={'linkedin'} onClick={() => simulate(10_000)}>
                             Completar 10.000
                         </Button>
                     </>

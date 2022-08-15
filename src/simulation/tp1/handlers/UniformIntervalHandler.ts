@@ -45,8 +45,6 @@ export class UniformIntervalHandler {
         this.intervals[index].numbers.push(number);
         //Recalculate intervals percentage and expected value.
         this.updatePercentagesAndExpected();
-        return this.intervals;
-        
     }
 
     private getIntervalIndex(number: number): number {
