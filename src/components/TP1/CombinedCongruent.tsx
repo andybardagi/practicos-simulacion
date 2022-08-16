@@ -6,7 +6,7 @@ import {
     Input,
     InputGroup,
     InputLeftAddon,
-    Tooltip,
+    Tooltip
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { CombinedCongruentGenerator } from '../../simulation/tp1/Generators/CombinedCongruentGenerator';
@@ -16,23 +16,26 @@ import ErrorBox from '../ErrorBox';
 import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
 import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
-
-import { Line } from 'react-chartjs-2';
-import FrequencyComparator from '../FrequencyComparator';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
-import { IntervalHandler } from '../../simulation/tp1/handlers/IntervalHandler';
+import FrequencyComparator from '../FrequencyComparator';
 
 export default function CombinedCongruent() {
     // Form handling functions
     const [formValues, SetformValues] = useState({ a: '19', c: '7', m: '53', x0: '37' });
     const [error, setError] = useState({ error: false, message: [] as string[] });
+
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         SetformValues((prevValue) => ({ ...prevValue, [e.target.name]: e.target.value }));
+        generator.current = {} as CombinedCongruentGenerator;
+        intervalHandler.current = {} as UniformIntervalHandler;
+        chiTester.current = {} as ChiTester;
+        setGenerations([]);
     };
 
     const generator = useRef({} as CombinedCongruentGenerator);
     const intervalHandler = useRef({} as UniformIntervalHandler);
     const chiTester = useRef({} as ChiTester);
+
     const [generations, setGenerations] = useState([] as IGenerationIteration[]);
     const [graphUpdate, setGraphUpdate] = useState(0);
     const [chiTest, setChiTest] = useState({} as {c: number; chiValue: number; isAccepted: boolean});
@@ -256,7 +259,6 @@ export default function CombinedCongruent() {
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />
             )}
-            <ErrorBox errorMsg={error.message} />
         </Box>
     );
 }
