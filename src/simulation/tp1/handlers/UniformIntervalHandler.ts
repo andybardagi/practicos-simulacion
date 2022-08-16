@@ -87,4 +87,10 @@ export class UniformIntervalHandler {
     public getUniformWaitedValues(): number {
         return this.totalCounter / this.intervalQuantity;
     }
+
+    public getLimitsStrings(): string[] {
+        return this.intervals.map(
+            (interval) => `[${interval.lowerLimit} - ${interval.upperLimit})`,
+        );
+    }
 }

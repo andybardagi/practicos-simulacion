@@ -17,7 +17,8 @@ import {
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 type Props = {
-    intervals: IIntervalWithPercentage[];
+    intervals: number[];
+    limits: string[];
     total: number;
 };
 
@@ -44,9 +45,9 @@ const options = {
     },
 };
 
-export default function FrequencyComparator({ intervals, total }: Props) {
+export default function FrequencyComparator({ intervals, total, limits }: Props) {
     const [data, setData] = useState({
-        labels: intervals.map((i) => `[${i.lowerLimit.toFixed(2)};${i.upperLimit.toFixed(2)})`),
+        labels: limits,
         datasets: [
             {
                 label: 'Frec. esperada',
@@ -55,7 +56,7 @@ export default function FrequencyComparator({ intervals, total }: Props) {
             },
             {
                 label: 'Frec. observada',
-                data: intervals.map((i) => i.percentage),
+                data: intervals,
                 backgroundColor: '#FDD037',
             },
         ],

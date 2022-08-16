@@ -3,9 +3,10 @@ import { IGenerationIteration } from '../simulation/tp1/interfaces/IGenerationIt
 
 type Props = {
     generationIteration: IGenerationIteration[];
+    limits: string[];
 };
 
-export default function GenerationDisplay({ generationIteration }: Props) {
+export default function GenerationDisplay({ generationIteration, limits }: Props) {
     if (!generationIteration.length) {
         return null;
     }
@@ -18,10 +19,8 @@ export default function GenerationDisplay({ generationIteration }: Props) {
                         X<Text as="sub">i</Text>
                     </Th>
                     <Th>Número</Th>
-                    {generationIteration[0].intervals.map((interval, index) => (
-                        <Th key={index}>{`[${interval.lowerLimit.toFixed(
-                            2,
-                        )}; ${interval.upperLimit.toFixed(2)})`}</Th>
+                    {limits.map((lim, index) => (
+                        <Th key={index}>{lim}</Th>
                     ))}
                 </Tr>
             </Thead>
@@ -32,16 +31,7 @@ export default function GenerationDisplay({ generationIteration }: Props) {
                         <Td>{gen.x_i}</Td>
                         <Td>{Math.round(gen.number * 10000) / 10000}</Td>
                         {gen.intervals.map((i, index) => (
-                            <Td
-                                key={index}
-                                color={
-                                    i.lowerLimit < gen.number && gen.number < i.upperLimit
-                                        ? '#0295A9'
-                                        : 'black'
-                                }
-                            >
-                                {`${(i.percentage * 100).toFixed(2)}%`}
-                            </Td>
+                            <Td key={index}>{`${(i * 100).toFixed(2)}%`}</Td>
                         ))}
                     </Tr>
                 ))}
@@ -53,10 +43,8 @@ export default function GenerationDisplay({ generationIteration }: Props) {
                         X<Text as="sub">i</Text>
                     </Th>
                     <Th>Número</Th>
-                    {generationIteration[0].intervals.map((interval, index) => (
-                        <Th key={index}>{`[${interval.lowerLimit.toFixed(
-                            2,
-                        )}; ${interval.upperLimit.toFixed(2)})`}</Th>
+                    {limits.map((lim, index) => (
+                        <Th key={index}>{lim}</Th>
                     ))}
                 </Tr>
             </Tfoot>

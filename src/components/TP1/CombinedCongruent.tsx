@@ -36,7 +36,10 @@ export default function CombinedCongruent() {
     const simulate = (rounds: number, hideResult = false) => {
         try {
             //Check if CombinedCongruentGenerator and UniformIntervalHandler already exists. If not, create them.
-
+            if (rounds < 0) {
+                console.error('Se ingresó una cantidad negativa de simulaciones');
+                return;
+            }
             generator.current =
                 generator.current instanceof CombinedCongruentGenerator
                     ? generator.current
@@ -61,7 +64,7 @@ export default function CombinedCongruent() {
                 intervalHandler.current.addNumber(n);
                 thisGenerations.push({
                     number: n,
-                    intervals: structuredClone(intervalHandler.current.getIntervals()),
+                    intervals: intervalHandler.current.getPercentagesState(),
                     x_i: roundSeed,
                     line: line,
                 });
@@ -187,7 +190,9 @@ export default function CombinedCongruent() {
                         </Button>
                         <Button
                             colorScheme={'linkedin'}
-                            onClick={() => simulate(10_000 - generations.length, true)}
+                            onClick={() =>
+                                simulate(10_000 - generations[generations.length - 1].line, true)
+                            }
                         >
                             Completar 10.000
                         </Button>
@@ -204,9 +209,13 @@ export default function CombinedCongruent() {
                             Ir al resultado
                         </a>
                     </Flex>
-                    <GenerationDisplay generationIteration={generations} />
+                    <GenerationDisplay
+                        generationIteration={generations}
+                        limits={intervalHandler.current.getLimitsStrings()}
+                        />
                     <Divider my={4} />
                     <FrequencyComparator
+                        limits={intervalHandler.current.getLimitsStrings()}
                         intervals={generations[generations.length - 1].intervals}
                         total={generations[generations.length - 1].line}
                         key={graphUpdate}
