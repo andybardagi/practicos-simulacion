@@ -14,13 +14,12 @@ import {
     TabPanel,
     TabPanels,
 } from '@chakra-ui/react';
-import { test } from '../simulation/tp1/consoleTest';
 import CombinedCongruent from './TP1/CombinedCongruent';
 import AditiveCongruent from './TP1/MultiplicativeCongruent';
 
 export default function TP1() {
     return (
-        <Box m={4} w="100%">
+        <Box p={4} w="100%">
             <Heading>Trabajo Práctico 1</Heading>
             {/*With the defaultIndex = 1 starts in the second tab: CombinedCongruent*/}
             <Tabs variant="enclosed" mt={4} w="100%" defaultIndex={0}>

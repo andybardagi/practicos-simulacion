@@ -88,9 +88,12 @@ export class UniformIntervalHandler {
         return this.totalCounter / this.intervalQuantity;
     }
 
-    public getLimitsStrings(): string[] {
+    public getLimitsStrings(fixLength: number = 2): string[] {
         return this.intervals.map(
-            (interval) => `[${interval.lowerLimit.toFixed(2)} - ${interval.upperLimit.toFixed(2)})`,
+            (interval) =>
+                `[${interval.lowerLimit.toFixed(fixLength)} - ${interval.upperLimit.toFixed(
+                    fixLength,
+                )})`,
         );
     }
 }
