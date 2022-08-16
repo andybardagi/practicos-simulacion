@@ -90,7 +90,7 @@ export class UniformIntervalHandler {
 
     public getLimitsStrings(): string[] {
         return this.intervals.map(
-            (interval) => `[${interval.lowerLimit} - ${interval.upperLimit})`,
+            (interval) => `[${interval.lowerLimit.toFixed(2)} - ${interval.upperLimit.toFixed(2)})`,
         );
     }
 }
