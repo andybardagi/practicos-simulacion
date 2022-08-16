@@ -41,4 +41,8 @@ export class MultiplicativeCongruentGenerator implements IRandomGenerator {
     lastSequenceToNumber() {
         return this.lastRandomGenerated / this.valueM;
     }
+
+    getLastXi(): number {
+        return this.lastRandomGenerated;
+    }
 }

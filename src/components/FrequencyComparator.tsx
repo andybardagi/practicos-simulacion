@@ -30,7 +30,6 @@ const options = {
                 position: 'top',
                 font: {
                     size: 16,
-                    family: 'Segoe UI',
                 },
             },
         },
@@ -39,7 +38,6 @@ const options = {
             text: 'Comparación frecuencias observadas vs frecuencias esperadas',
             font: {
                 size: 18,
-                family: 'Segoe UI',
             },
         },
     },

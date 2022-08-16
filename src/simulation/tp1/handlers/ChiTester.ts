@@ -18,6 +18,10 @@ export class ChiTester{
         this.intervals = intervals;
     }
 
+    public setIntervals(intervals: IInterval[]){
+        this.intervals = intervals;
+    }
+
     public calculateC(){
         let sum = 0;
         for(let i = 0; i < this.intervals.length; i++){

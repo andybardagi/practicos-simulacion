@@ -4,4 +4,5 @@ export interface IRandomGenerator {
     generateRandomInRange(min: number, max: number): number;
     generateManyRandoms(amount: number): number[];
     lastSequenceToNumber(): number;
+    getLastXi(): number;
 }

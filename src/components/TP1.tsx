@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import CombinedCongruent from './TP1/CombinedCongruent';
 import AditiveCongruent from './TP1/MultiplicativeCongruent';
+import LinearCongruent from './TP1/LinearCongruent';
 
 export default function TP1() {
     return (
@@ -26,6 +27,7 @@ export default function TP1() {
                 <TabList>
                     <Tab>Congruencial Mixto</Tab>
                     <Tab>Congruencial Multiplicativo</Tab>
+                    <Tab>Congruencial Aditivo</Tab>
                 </TabList>
                 <TabPanels border="1px solid #efefef">
                     <TabPanel>
@@ -33,6 +35,9 @@ export default function TP1() {
                     </TabPanel>
                     <TabPanel>
                         <AditiveCongruent/>
+                    </TabPanel>
+                    <TabPanel>
+                        <LinearCongruent/>
                     </TabPanel>
                 </TabPanels>
             </Tabs>

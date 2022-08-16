@@ -16,25 +16,25 @@ import { randomGenerationMethods } from '../../simulation/tp1/enums/method.enum'
 import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
-import { MultiplicativeCongruentGenerator } from '../../simulation/tp1/generators/MultiplicativeCongruentGenerator';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
-import { MultiplicativeCongruentValidationSchema } from './MultiplicativeCongruent.schema';
 import GenerationDisplay from '../GenerationDisplay';
 import FrequencyComparator from '../FrequencyComparator';
+import { LinearCongruentGenerator } from '../../simulation/tp1/Generators/LinearCongruentGenerator';
+import { LinearCongruentValidationSchema } from './LinearCongruent.schema';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 
-export default function MultiplicativeCongruent() {
+export default function LinearCongruent() {
     // Form handling functions
-    const [formValues, SetformValues] = useState({ a: '19', m: '53', x0: '37' });
+    const [formValues, SetformValues] = useState({ a: '19', c: '7', x0: '37', x1: '29' });
     const [error, setError] = useState({ error: false, message: [] as string[] });
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         SetformValues((prevValue) => ({ ...prevValue, [e.target.name]: e.target.value }));
     };
 
-    const generator = useRef({} as MultiplicativeCongruentGenerator);
-    const intervalHandler = useRef({} as UniformIntervalHandler);
+    const generator = useRef({} as LinearCongruentGenerator);
     const chiTester = useRef({} as ChiTester);
+    const intervalHandler = useRef({} as UniformIntervalHandler);
     const [generations, setGenerations] = useState([] as IGenerationIteration[]);
     const [graphUpdate, setGraphUpdate] = useState(0);
     const [chiTest, setChiTest] = useState(
@@ -49,12 +49,13 @@ export default function MultiplicativeCongruent() {
                 return;
             }
             generator.current =
-                generator.current instanceof MultiplicativeCongruentGenerator
+                generator.current instanceof LinearCongruentGenerator
                     ? generator.current
-                    : new MultiplicativeCongruentGenerator(
+                    : new LinearCongruentGenerator(
                           Number(formValues.a),
-                          Number(formValues.m),
+                          Number(formValues.c),
                           Number(formValues.x0),
+                          Number(formValues.x1),
                       );
             intervalHandler.current =
                 intervalHandler.current instanceof UniformIntervalHandler
@@ -90,7 +91,6 @@ export default function MultiplicativeCongruent() {
                 ]);
             }
             setGraphUpdate(graphUpdate + 1);
-            chiTester.current.setIntervals(intervalHandler.current.getIntervals());
             setChiTest({
                 c: chiTester.current.calculateC(),
                 ...chiTester.current.makeTest(),
@@ -111,7 +111,7 @@ export default function MultiplicativeCongruent() {
             error: false,
             message: [],
         });
-        MultiplicativeCongruentValidationSchema.validate(formValues, {
+        LinearCongruentValidationSchema.validate(formValues, {
             abortEarly: false,
         })
             .then(async () => {
@@ -147,24 +147,32 @@ export default function MultiplicativeCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon>
-                        <Tooltip label="Módulo">M</Tooltip>
-                    </InputLeftAddon>
+                    <InputLeftAddon children="C" />
                     <Input
                         onChange={handleValueChange}
-                        name="m"
-                        value={formValues.m}
-                        placeholder="Ingrese el valor de M"
+                        name="c"
+                        value={formValues.c}
+                        placeholder="Ingrese el valor de C"
                     />
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Semilla" />
+                    <InputLeftAddon children="Primer semilla" />
                     <Input
                         onChange={handleValueChange}
                         name="x0"
                         value={formValues.x0}
-                        placeholder="Ingrese el valor semilla"
+                        placeholder="Ingrese el primer valor semilla"
+                    />
+                </InputGroup>
+
+                <InputGroup width={widthForms} mb={2}>
+                    <InputLeftAddon children="Segunda semilla" />
+                    <Input
+                        onChange={handleValueChange}
+                        name="x1"
+                        value={formValues.x1}
+                        placeholder="Ingrese el segundo valor semilla"
                     />
                 </InputGroup>
 
@@ -211,7 +219,7 @@ export default function MultiplicativeCongruent() {
             {generations.length !== 0 ? (
                 <Box>
                     <Flex direction={'row'} mt={4} justifyContent="end">
-                        <a id="arriba2" href="#resultado2">
+                        <a id="arriba1" href="#resultado1">
                             Ir al resultado
                         </a>
                     </Flex>
@@ -227,7 +235,7 @@ export default function MultiplicativeCongruent() {
                         key={graphUpdate}
                     />
                     <Flex direction={'row'} mt={4} mb={4} justifyContent="end">
-                        <a id="resultado2" href="#arriba2">
+                        <a id="resultado1" href="#arriba1">
                             Ir al inicio
                         </a>
                     </Flex>

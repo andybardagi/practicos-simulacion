@@ -50,4 +50,8 @@ export class LinearCongruentGenerator implements IRandomGenerator {
     lastSequenceToNumber() {
         return this.lastRandomGenerated / this.valueM;
     }
+
+    getLastXi(): number {
+        return this.lastRandomGenerated;
+    }
 }

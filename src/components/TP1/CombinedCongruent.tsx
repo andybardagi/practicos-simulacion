@@ -9,7 +9,7 @@ import {
     Tooltip,
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import { CombinedCongruentGenerator } from '../../simulation/tp1/generators/CombinedCongruentGenerator';
+import { CombinedCongruentGenerator } from '../../simulation/tp1/Generators/CombinedCongruentGenerator';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
 import ErrorBox from '../ErrorBox';
@@ -19,6 +19,8 @@ import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
 
 import { Line } from 'react-chartjs-2';
 import FrequencyComparator from '../FrequencyComparator';
+import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
+import { IntervalHandler } from '../../simulation/tp1/handlers/IntervalHandler';
 
 export default function CombinedCongruent() {
     // Form handling functions
@@ -30,8 +32,10 @@ export default function CombinedCongruent() {
 
     const generator = useRef({} as CombinedCongruentGenerator);
     const intervalHandler = useRef({} as UniformIntervalHandler);
+    const chiTester = useRef({} as ChiTester);
     const [generations, setGenerations] = useState([] as IGenerationIteration[]);
     const [graphUpdate, setGraphUpdate] = useState(0);
+    const [chiTest, setChiTest] = useState({} as {c: number; chiValue: number; isAccepted: boolean});
 
     const simulate = (rounds: number, hideResult = false) => {
         try {
@@ -53,6 +57,10 @@ export default function CombinedCongruent() {
                 intervalHandler.current instanceof UniformIntervalHandler
                     ? intervalHandler.current
                     : new UniformIntervalHandler(10);
+            chiTester.current =
+                chiTester.current instanceof ChiTester
+                    ? chiTester.current
+                    : new ChiTester(intervalHandler.current.getIntervals());
 
             //Simulate the generator
             const thisGenerations: IGenerationIteration[] = [];
@@ -79,6 +87,12 @@ export default function CombinedCongruent() {
                 ]);
             }
             setGraphUpdate(graphUpdate + 1);
+            chiTester.current.setIntervals(intervalHandler.current.getIntervals());
+            setChiTest({
+                c: chiTester.current.calculateC(),
+                ...chiTester.current.makeTest()
+            });
+            
         } catch (error: any) {
             console.log(error);
             setError({
@@ -212,7 +226,7 @@ export default function CombinedCongruent() {
                     <GenerationDisplay
                         generationIteration={generations}
                         limits={intervalHandler.current.getLimitsStrings()}
-                        />
+                    />
                     <Divider my={4} />
                     <FrequencyComparator
                         limits={intervalHandler.current.getLimitsStrings()}
@@ -225,17 +239,19 @@ export default function CombinedCongruent() {
                             Ir al inicio
                         </a>
                     </Flex>
-                    {/* <InfoBox
-                        infoMsg={[
-                            `Con un p-valor de 0,99`,
-                            `${result.intervals.length - 1} grados de libertad`,
-                            `c = ${result.c.toFixed(4)}`,
-                            `Valor Chi = ${result.chiValue.toFixed(4)}`,
-                            `Se ${
-                                result.isAccepted ? 'acepta' : 'rechaza'
-                            } la hipótesis`,
-                        ]}
-                    /> */}
+                    {
+                        <InfoBox
+                            infoMsg={[
+                                `Con un p-valor de 0,99`,
+                                `${
+                                    intervalHandler.current.getIntervals().length - 1
+                                } grados de libertad`,
+                                `c = ${chiTest.c.toFixed(4)}`,
+                                `Valor Chi = ${chiTest.chiValue.toFixed(4)}`,
+                                `Se ${chiTest.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
+                            ]}
+                        />
+                    }
                 </Box>
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />
