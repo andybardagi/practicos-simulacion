@@ -9,7 +9,6 @@ export default class LinearCongruentGenerator implements IRandomGenerator {
     private preLastRandomGenerated: number;
 
     constructor(
-        valueC: number,
         valueM: number,
         firstSeed: number,
         secondSeed: number,

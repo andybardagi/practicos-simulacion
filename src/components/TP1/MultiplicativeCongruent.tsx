@@ -6,25 +6,35 @@ import {
     Input,
     InputGroup,
     InputLeftAddon,
-    Tooltip
+    Tooltip,
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import MultiplicativeCongruentGenerator from '../../simulation/tp1/random-generators/MultiplicativeCongruentGenerator';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
+import MultiplicativeCongruentGenerator from '../../simulation/tp1/random-generators/MultiplicativeCongruentGenerator';
 import ErrorBox from '../ErrorBox';
 import FrequencyComparator from '../FrequencyComparator';
 import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
+import FormulaDisplay from './FormulaDisplay';
 import { MultiplicativeCongruentValidationSchema } from './MultiplicativeCongruent.schema';
 
 export default function MultiplicativeCongruent() {
     // Form handling functions
-    const [formValues, SetformValues] = useState({ a: '19', m: '53', x0: '37' });
+    const [formValues, SetformValues] = useState({
+        a: '19',
+        m: '53',
+        x0: '37',
+        intervalQuantity: '10',
+    });
     const [error, setError] = useState({ error: false, message: [] as string[] });
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         SetformValues((prevValue) => ({ ...prevValue, [e.target.name]: e.target.value }));
+        generator.current = {} as MultiplicativeCongruentGenerator;
+        intervalHandler.current = {} as UniformIntervalHandler;
+        chiTester.current = {} as ChiTester;
+        setGenerations([]);
     };
 
     const generator = useRef({} as MultiplicativeCongruentGenerator);
@@ -54,7 +64,7 @@ export default function MultiplicativeCongruent() {
             intervalHandler.current =
                 intervalHandler.current instanceof UniformIntervalHandler
                     ? intervalHandler.current
-                    : new UniformIntervalHandler(10);
+                    : new UniformIntervalHandler(Number(formValues.intervalQuantity));
             chiTester.current =
                 chiTester.current instanceof ChiTester
                     ? chiTester.current
@@ -127,11 +137,14 @@ export default function MultiplicativeCongruent() {
 
     return (
         <Box>
+            <FormulaDisplay formula="multiplicative" />
             {/* Input values form*/}
 
             <Flex direction={'row'} mt={4} flexWrap="wrap" maxW="100%" gap={'5%'}>
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="A" />
+                    <InputLeftAddon>
+                        <Tooltip label="Constante multiplicativa">A</Tooltip>
+                    </InputLeftAddon>
                     <Input
                         type="number"
                         onChange={handleValueChange}
@@ -154,7 +167,13 @@ export default function MultiplicativeCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Semilla" />
+                    <InputLeftAddon>
+                        <Tooltip label="Semilla">
+                            <span>
+                                X<sub>i</sub>
+                            </span>
+                        </Tooltip>
+                    </InputLeftAddon>
                     <Input
                         onChange={handleValueChange}
                         name="x0"
@@ -164,13 +183,15 @@ export default function MultiplicativeCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Intervalos" />
+                    <InputLeftAddon>
+                        <Tooltip label="Cantidad de intervalos a utilizar">n</Tooltip>
+                    </InputLeftAddon>
                     <Input
                         name="intervalQuantity"
                         value={10}
                         readOnly={true}
                         bgColor="#efefef"
-                        placeholder="Ingrese la cantidad de valores a generar"
+                        placeholder="Ingrese la cantidad de intervalos"
                     />
                 </InputGroup>
             </Flex>
@@ -241,7 +262,6 @@ export default function MultiplicativeCongruent() {
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />
             )}
-            <ErrorBox errorMsg={error.message} />
         </Box>
     );
 }

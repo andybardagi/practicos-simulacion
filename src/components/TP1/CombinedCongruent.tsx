@@ -9,15 +9,16 @@ import {
     Tooltip
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import CombinedCongruentGenerator from '../../simulation/tp1/random-generators/CombinedCongruentGenerator';
+import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
+import CombinedCongruentGenerator from '../../simulation/tp1/random-generators/CombinedCongruentGenerator';
 import ErrorBox from '../ErrorBox';
+import FrequencyComparator from '../FrequencyComparator';
 import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
 import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
-import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
-import FrequencyComparator from '../FrequencyComparator';
+import FormulaDisplay from './FormulaDisplay';
 
 export default function CombinedCongruent() {
     // Form handling functions
@@ -38,7 +39,9 @@ export default function CombinedCongruent() {
 
     const [generations, setGenerations] = useState([] as IGenerationIteration[]);
     const [graphUpdate, setGraphUpdate] = useState(0);
-    const [chiTest, setChiTest] = useState({} as {c: number; chiValue: number; isAccepted: boolean});
+    const [chiTest, setChiTest] = useState(
+        {} as { c: number; chiValue: number; isAccepted: boolean },
+    );
 
     const simulate = (rounds: number, hideResult = false) => {
         try {
@@ -93,9 +96,8 @@ export default function CombinedCongruent() {
             chiTester.current.setIntervals(intervalHandler.current.getIntervals());
             setChiTest({
                 c: chiTester.current.calculateC(),
-                ...chiTester.current.makeTest()
+                ...chiTester.current.makeTest(),
             });
-            
         } catch (error: any) {
             console.log(error);
             setError({
@@ -133,11 +135,14 @@ export default function CombinedCongruent() {
 
     return (
         <Box>
+            <FormulaDisplay formula="combined" />
             {/* Input values form*/}
 
             <Flex direction={'row'} mt={4} flexWrap="wrap" maxW="100%" gap={'5%'}>
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="A" />
+                    <InputLeftAddon>
+                        <Tooltip label="Constante multiplicativa">A</Tooltip>
+                    </InputLeftAddon>
                     <Input
                         type="number"
                         onChange={handleValueChange}
@@ -160,7 +165,9 @@ export default function CombinedCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="C" />
+                    <InputLeftAddon>
+                        <Tooltip label="Constante aditiva">C</Tooltip>
+                    </InputLeftAddon>
                     <Input
                         onChange={handleValueChange}
                         name="c"
@@ -170,7 +177,13 @@ export default function CombinedCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Semilla" />
+                    <InputLeftAddon>
+                        <Tooltip label="Semilla">
+                            <span>
+                                X<sub>i</sub>
+                            </span>
+                        </Tooltip>
+                    </InputLeftAddon>
                     <Input
                         onChange={handleValueChange}
                         name="x0"
@@ -180,13 +193,15 @@ export default function CombinedCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Intervalos" />
+                    <InputLeftAddon>
+                        <Tooltip label="Cantidad de intervalos a utilizar">n</Tooltip>
+                    </InputLeftAddon>
                     <Input
                         name="intervalQuantity"
                         value={10}
                         readOnly={true}
                         bgColor="#efefef"
-                        placeholder="Ingrese la cantidad de valores a generar"
+                        placeholder="Ingrese la cantidad de intervalos"
                     />
                 </InputGroup>
             </Flex>
@@ -226,10 +241,12 @@ export default function CombinedCongruent() {
                             Ir al resultado
                         </a>
                     </Flex>
-                    <GenerationDisplay
-                        generationIteration={generations}
-                        limits={intervalHandler.current.getLimitsStrings()}
-                    />
+                    <Box w={'100%'} overflowX={'scroll'}>
+                        <GenerationDisplay
+                            generationIteration={generations}
+                            limits={intervalHandler.current.getLimitsStrings()}
+                        />
+                    </Box>
                     <Divider my={4} />
                     <FrequencyComparator
                         limits={intervalHandler.current.getLimitsStrings()}

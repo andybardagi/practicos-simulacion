@@ -5,7 +5,8 @@ import {
     Flex,
     Input,
     InputGroup,
-    InputLeftAddon
+    InputLeftAddon,
+    Tooltip,
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import LinearCongruentGenerator from '../../simulation/tp1/random-generators/LinearCongruentGenerator';
@@ -17,13 +18,22 @@ import FrequencyComparator from '../FrequencyComparator';
 import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
 import { LinearCongruentValidationSchema } from './LinearCongruent.schema';
+import FormulaDisplay from './FormulaDisplay';
 
 export default function LinearCongruent() {
     // Form handling functions
-    const [formValues, SetformValues] = useState({ a: '19', c: '7', x0: '37', x1: '29' });
+    const [formValues, SetformValues] = useState({
+        m: '7',
+        x0: '37',
+        x1: '29',
+    });
     const [error, setError] = useState({ error: false, message: [] as string[] });
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         SetformValues((prevValue) => ({ ...prevValue, [e.target.name]: e.target.value }));
+        generator.current = {} as LinearCongruentGenerator;
+        intervalHandler.current = {} as UniformIntervalHandler;
+        chiTester.current = {} as ChiTester;
+        setGenerations([]);
     };
 
     const generator = useRef({} as LinearCongruentGenerator);
@@ -46,8 +56,7 @@ export default function LinearCongruent() {
                 generator.current instanceof LinearCongruentGenerator
                     ? generator.current
                     : new LinearCongruentGenerator(
-                          Number(formValues.a),
-                          Number(formValues.c),
+                          Number(formValues.m),
                           Number(formValues.x0),
                           Number(formValues.x1),
                       );
@@ -126,58 +135,61 @@ export default function LinearCongruent() {
 
     return (
         <Box>
+            <FormulaDisplay formula="linear" />
             {/* Input values form*/}
 
             <Flex direction={'row'} mt={4} flexWrap="wrap" maxW="100%" gap={'5%'}>
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="A" />
-                    <Input
-                        type="number"
-                        onChange={handleValueChange}
-                        name="a"
-                        value={formValues.a}
-                        placeholder="Ingrese el valor de A"
-                    />
-                </InputGroup>
-
-                <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="C" />
-                    <Input
-                        onChange={handleValueChange}
-                        name="c"
-                        value={formValues.c}
-                        placeholder="Ingrese el valor de C"
-                    />
-                </InputGroup>
-
-                <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Primer semilla" />
+                    <InputLeftAddon>
+                        <Tooltip label="Semilla">
+                            <span>
+                                X<sub>i</sub>
+                            </span>
+                        </Tooltip>
+                    </InputLeftAddon>
                     <Input
                         onChange={handleValueChange}
                         name="x0"
                         value={formValues.x0}
-                        placeholder="Ingrese el primer valor semilla"
+                        placeholder="Ingrese el valor de la primer semilla"
                     />
                 </InputGroup>
-
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Segunda semilla" />
+                    <InputLeftAddon>
+                        <Tooltip label="Semilla">
+                            <span>
+                                X<sub>i-1</sub>
+                            </span>
+                        </Tooltip>
+                    </InputLeftAddon>
                     <Input
                         onChange={handleValueChange}
                         name="x1"
-                        value={formValues.x1}
-                        placeholder="Ingrese el segundo valor semilla"
+                        value={formValues.x0}
+                        placeholder="Ingrese el valor de la segunda semilla"
                     />
                 </InputGroup>
-
                 <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon children="Intervalos" />
+                    <InputLeftAddon>
+                        <Tooltip label="Módulo">M</Tooltip>
+                    </InputLeftAddon>
+                    <Input
+                        onChange={handleValueChange}
+                        name="m"
+                        value={formValues.m}
+                        placeholder="Ingrese el valor de M"
+                    />
+                </InputGroup>
+                <InputGroup width={widthForms} mb={2}>
+                    <InputLeftAddon>
+                        <Tooltip label="Cantidad de intervalos a utilizar">n</Tooltip>
+                    </InputLeftAddon>
                     <Input
                         name="intervalQuantity"
                         value={10}
                         readOnly={true}
                         bgColor="#efefef"
-                        placeholder="Ingrese la cantidad de valores a generar"
+                        placeholder="Ingrese la cantidad de intervalos"
                     />
                 </InputGroup>
             </Flex>

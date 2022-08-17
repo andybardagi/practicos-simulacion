@@ -1,17 +1,8 @@
-import {
-    Box,
-    Text,
-    ChakraProvider,
-    Flex,
-    List,
-    ListItem,
-} from '@chakra-ui/react';
+import { Box, ChakraProvider, Flex, Text } from '@chakra-ui/react';
+import '@fontsource/roboto';
 import Navbar from './components/Navbar';
 import TP1 from './components/TP1';
-import Sidebar from './components/Sidebar';
 import { theme } from './theme';
-import '@fontsource/public-sans';
-import '@fontsource/roboto';
 
 // #0295A9
 // #12ADC1
@@ -24,7 +15,7 @@ function App() {
             <Box>
                 <Flex direction={'row'} minHeight={'100vh'}>
                     {/* <Sidebar /> */}
-                    <Box py={2} px={4} w="100%" >
+                    <Box py={2} px={4} w="100%">
                         <TP1></TP1>
                     </Box>
                 </Flex>

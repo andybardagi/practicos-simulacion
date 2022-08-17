@@ -11,7 +11,7 @@ export default function GenerationDisplay({ generationIteration, limits }: Props
         return null;
     }
     return (
-        <Table>
+        <Table overflow={'scroll'}>
             <Thead>
                 <Tr>
                     <Th>#</Th>
