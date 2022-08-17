@@ -2,10 +2,7 @@ import { extendTheme } from '@chakra-ui/react';
 
 export const theme = extendTheme({
     fonts: {
-        heading: {
-            family: 'Public Sans',
-            weight: 'bold',
-        },
-        body: 'Public Sans',
+        heading: 'Montserrat, sans-serif',
+        body: 'Roboto',
     },
 });

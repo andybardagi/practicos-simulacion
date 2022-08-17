@@ -11,6 +11,7 @@ import TP1 from './components/TP1';
 import Sidebar from './components/Sidebar';
 import { theme } from './theme';
 import '@fontsource/public-sans';
+import '@fontsource/roboto';
 
 // #0295A9
 // #12ADC1
