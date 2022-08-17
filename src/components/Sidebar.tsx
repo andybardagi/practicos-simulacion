@@ -57,7 +57,7 @@ export default function Sidebar() {
             <List>
                 {tpList.map((tp, index) => {
                     return (
-                        <Link to={tp.navLink}>
+                        <Link to={tp.navLink} key={index}>
                             <ListItem key={index}>
                                 <SidebarItem name={tp.name} navLink={tp.navLink} />
                             </ListItem>
