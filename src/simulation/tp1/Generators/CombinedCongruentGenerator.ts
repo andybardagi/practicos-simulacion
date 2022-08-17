@@ -1,7 +1,7 @@
 // x_{n+1} = (aX_n + c) mod m → combinedCongruent
 import { IRandomGenerator } from '../interfaces/GeneratorInterface';
 
-export class CombinedCongruentGenerator implements IRandomGenerator {
+export default class CombinedCongruentGenerator implements IRandomGenerator {
     private valueA: number;
     private valueC: number;
     private valueM: number;

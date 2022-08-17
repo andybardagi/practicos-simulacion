@@ -2,7 +2,7 @@
 
 import { IRandomGenerator } from '../interfaces/GeneratorInterface';
 
-export class MultiplicativeCongruentGenerator implements IRandomGenerator {
+export default class MultiplicativeCongruentGenerator implements IRandomGenerator {
     private valueA: number;
     private valueM: number;
     private seed: number;

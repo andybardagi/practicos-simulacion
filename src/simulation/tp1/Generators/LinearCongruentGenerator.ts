@@ -1,7 +1,7 @@
 import { IRandomGenerator } from '../interfaces/GeneratorInterface';
 // x_{n+1} = (x_n + x_{n-1}) mod m → linearCongruent
 
-export class LinearCongruentGenerator implements IRandomGenerator {
+export default class LinearCongruentGenerator implements IRandomGenerator {
     private firstSeed: number;
     private secondSeed: number;
     private valueM: number;

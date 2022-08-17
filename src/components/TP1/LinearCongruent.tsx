@@ -8,7 +8,7 @@ import {
     InputLeftAddon
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import { LinearCongruentGenerator } from '../../simulation/tp1/generators/LinearCongruentGenerator';
+import LinearCongruentGenerator from '../../simulation/tp1/generators/LinearCongruentGenerator';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
