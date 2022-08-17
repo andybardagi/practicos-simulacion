@@ -27,10 +27,6 @@ export default function Integrantes() {
                         <Td>Cáceres Lautaro</Td>
                     </Tr>
                     <Tr>
-                        <Td>72905</Td>
-                        <Td>Flores Jorge Martín</Td>
-                    </Tr>
-                    <Tr>
                         <Td>86570</Td>
                         <Td>Tamosaitis Juan Ezequiel</Td>
                     </Tr>
