@@ -5,24 +5,18 @@ import {
     Flex,
     Input,
     InputGroup,
-    InputLeftAddon,
-    Tooltip,
+    InputLeftAddon
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import { number, object, ref } from 'yup';
-import { IInterval } from '../../simulation/tp1/interfaces/IIntervals';
-import { generateNumbers } from '../../simulation/tp1/generateNumbersTP1';
-import { randomGenerationMethods } from '../../simulation/tp1/enums/method.enum';
-import ErrorBox from '../ErrorBox';
-import InfoBox from '../InfoBox';
-import IntervalShower from '../IntervalShower';
+import { LinearCongruentGenerator } from '../../simulation/tp1/generators/LinearCongruentGenerator';
+import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
-import GenerationDisplay from '../GenerationDisplay';
+import ErrorBox from '../ErrorBox';
 import FrequencyComparator from '../FrequencyComparator';
-import { LinearCongruentGenerator } from '../../simulation/tp1/Generators/LinearCongruentGenerator';
+import GenerationDisplay from '../GenerationDisplay';
+import InfoBox from '../InfoBox';
 import { LinearCongruentValidationSchema } from './LinearCongruent.schema';
-import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 
 export default function LinearCongruent() {
     // Form handling functions

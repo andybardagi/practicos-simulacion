@@ -6,23 +6,18 @@ import {
     Input,
     InputGroup,
     InputLeftAddon,
-    Tooltip,
+    Tooltip
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import { number, object, ref } from 'yup';
-import { IInterval } from '../../simulation/tp1/interfaces/IIntervals';
-import { generateNumbers } from '../../simulation/tp1/generateNumbersTP1';
-import { randomGenerationMethods } from '../../simulation/tp1/enums/method.enum';
-import ErrorBox from '../ErrorBox';
-import InfoBox from '../InfoBox';
-import IntervalShower from '../IntervalShower';
 import { MultiplicativeCongruentGenerator } from '../../simulation/tp1/generators/MultiplicativeCongruentGenerator';
+import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
-import { MultiplicativeCongruentValidationSchema } from './MultiplicativeCongruent.schema';
-import GenerationDisplay from '../GenerationDisplay';
+import ErrorBox from '../ErrorBox';
 import FrequencyComparator from '../FrequencyComparator';
-import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
+import GenerationDisplay from '../GenerationDisplay';
+import InfoBox from '../InfoBox';
+import { MultiplicativeCongruentValidationSchema } from './MultiplicativeCongruent.schema';
 
 export default function MultiplicativeCongruent() {
     // Form handling functions
