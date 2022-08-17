@@ -1,30 +1,17 @@
 import {
-    Box,
-    Flex,
-    InputGroup,
-    InputLeftAddon,
-    Tooltip,
-    Input,
-    Button,
-    Divider,
-    Thead,
-    Th,
-    Tr,
-    Tbody,
-    Td,
+  Box, Button,
+  Divider, Flex, Input, InputGroup,
+  InputLeftAddon, Table, Tbody,
+  Td, Th, Thead, Tooltip, Tr
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
-import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
 import ErrorBox from '../ErrorBox';
 import FrequencyComparator from '../FrequencyComparator';
-import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
 import FormulaDisplay from './FormulaDisplay';
 import { LanguageGeneratorSchema } from './LanguageGenerator.schema';
-import { number } from 'yup';
-import { Table } from '@chakra-ui/react';
 
 type CustomTypeGen = { number: number; intervals: number[]; line: number };
 
@@ -127,7 +114,6 @@ export default function LanguageGenerator() {
 
     return (
         <Box>
-            <FormulaDisplay formula="combined" />
             {/* Input values form*/}
 
             <InputGroup width={widthForms} mb={2}>

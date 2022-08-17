@@ -22,7 +22,13 @@ import FormulaDisplay from './FormulaDisplay';
 
 export default function CombinedCongruent() {
     // Form handling functions
-    const [formValues, SetformValues] = useState({ a: '19', c: '7', m: '53', x0: '37', max:'10000' });
+    const [formValues, SetformValues] = useState({
+        a: '19',
+        c: '7',
+        m: '53',
+        x0: '37',
+        max: '10000',
+    });
     const [error, setError] = useState({ error: false, message: [] as string[] });
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -233,7 +239,11 @@ export default function CombinedCongruent() {
                         <Button
                             colorScheme={'linkedin'}
                             onClick={() =>
-                                simulate(Number(formValues.max) - generations[generations.length - 1].line, true)
+                                simulate(
+                                    Number(formValues.max) -
+                                        generations[generations.length - 1].line,
+                                    true,
+                                )
                             }
                         >
                             Completar {formValues.max}
