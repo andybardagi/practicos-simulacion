@@ -17,6 +17,7 @@ import ErrorBox from '../ErrorBox';
 import FrequencyComparator from '../FrequencyComparator';
 import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
+import StringDownloader from '../StringDownloader';
 import { CombinedCongruentValidationSchema } from './CombinedCongruent.schema';
 import FormulaDisplay from './FormulaDisplay';
 
@@ -292,6 +293,14 @@ export default function CombinedCongruent() {
                             ]}
                         />
                     }
+                    <Flex direction={'row'} justifyContent="end" mt={4}>
+                        <StringDownloader
+                            strToDownload={intervalHandler.current.getNumbers().join('\n')}
+                            fileName={'simulacion.txt'}
+                        >
+                            Descargar serie
+                        </StringDownloader>
+                    </Flex>
                 </Box>
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />

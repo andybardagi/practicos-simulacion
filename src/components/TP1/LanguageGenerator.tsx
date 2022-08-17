@@ -1,8 +1,18 @@
 import {
-  Box, Button,
-  Divider, Flex, Input, InputGroup,
-  InputLeftAddon, Table, Tbody,
-  Td, Th, Thead, Tooltip, Tr
+    Box,
+    Button,
+    Divider,
+    Flex,
+    Input,
+    InputGroup,
+    InputLeftAddon,
+    Table,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tooltip,
+    Tr
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
@@ -10,7 +20,7 @@ import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformInt
 import ErrorBox from '../ErrorBox';
 import FrequencyComparator from '../FrequencyComparator';
 import InfoBox from '../InfoBox';
-import FormulaDisplay from './FormulaDisplay';
+import StringDownloader from '../StringDownloader';
 import { LanguageGeneratorSchema } from './LanguageGenerator.schema';
 
 type CustomTypeGen = { number: number; intervals: number[]; line: number };
@@ -221,6 +231,14 @@ export default function LanguageGenerator() {
                             ]}
                         />
                     }
+                    <Flex direction={'row'} justifyContent="end" mt={4}>
+                        <StringDownloader
+                            strToDownload={intervalHandler.current.getNumbers().join('\n')}
+                            fileName={'simulacion.txt'}
+                        >
+                            Descargar serie
+                        </StringDownloader>
+                    </Flex>
                 </Box>
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />

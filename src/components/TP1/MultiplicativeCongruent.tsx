@@ -6,7 +6,7 @@ import {
     Input,
     InputGroup,
     InputLeftAddon,
-    Tooltip,
+    Tooltip
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
@@ -17,6 +17,7 @@ import ErrorBox from '../ErrorBox';
 import FrequencyComparator from '../FrequencyComparator';
 import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
+import StringDownloader from '../StringDownloader';
 import FormulaDisplay from './FormulaDisplay';
 import { MultiplicativeCongruentValidationSchema } from './MultiplicativeCongruent.schema';
 
@@ -260,6 +261,14 @@ export default function MultiplicativeCongruent() {
                             `Se ${chiTest.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
                         ]}
                     />
+                    <Flex direction={'row'} justifyContent="end" mt={4}>
+                        <StringDownloader
+                            strToDownload={intervalHandler.current.getNumbers().join('\n')}
+                            fileName={'simulacion.txt'}
+                        >
+                            Descargar serie
+                        </StringDownloader>
+                    </Flex>
                 </Box>
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />

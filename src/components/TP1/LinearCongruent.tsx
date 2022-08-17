@@ -19,6 +19,7 @@ import GenerationDisplay from '../GenerationDisplay';
 import InfoBox from '../InfoBox';
 import { LinearCongruentValidationSchema } from './LinearCongruent.schema';
 import FormulaDisplay from './FormulaDisplay';
+import StringDownloader from '../StringDownloader';
 
 export default function LinearCongruent() {
     // Form handling functions
@@ -262,6 +263,14 @@ export default function LinearCongruent() {
                             `Se ${chiTest.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
                         ]}
                     />
+                    <Flex direction={'row'} justifyContent="end" mt={4}>
+                        <StringDownloader
+                            strToDownload={intervalHandler.current.getNumbers().join('\n')}
+                            fileName={'simulacion.txt'}
+                        >
+                            Descargar serie
+                        </StringDownloader>
+                    </Flex>
                 </Box>
             ) : (
                 <InfoBox infoMsg={['Simulación pendiente']} />
