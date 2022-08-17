@@ -229,10 +229,12 @@ export default function LinearCongruent() {
                             Ir al resultado
                         </a>
                     </Flex>
-                    <GenerationDisplay
-                        generationIteration={generations}
-                        limits={intervalHandler.current.getLimitsStrings()}
-                    />
+                    <Box w={'100%'} overflowX={'scroll'}>
+                        <GenerationDisplay
+                            generationIteration={generations}
+                            limits={intervalHandler.current.getLimitsStrings()}
+                        />
+                    </Box>
                     <Divider my={4} />
                     <FrequencyComparator
                         limits={intervalHandler.current.getLimitsStrings()}
