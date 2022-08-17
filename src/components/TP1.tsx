@@ -1,23 +1,13 @@
-import React, { useEffect } from 'react';
 import {
-    Heading,
-    Box,
-    Input,
-    Text,
-    InputGroup,
-    InputLeftElement,
-    InputLeftAddon,
-    Flex,
-    Tabs,
-    Tab,
+    Box, Heading, Tab,
     TabList,
     TabPanel,
-    TabPanels,
+    TabPanels, Tabs
 } from '@chakra-ui/react';
 import CombinedCongruent from './TP1/CombinedCongruent';
-import AditiveCongruent from './TP1/MultiplicativeCongruent';
-import LinearCongruent from './TP1/LinearCongruent';
 import LanguageGenerator from './TP1/LanguageGenerator';
+import LinearCongruent from './TP1/LinearCongruent';
+import AditiveCongruent from './TP1/MultiplicativeCongruent';
 
 export default function TP1() {
     return (
