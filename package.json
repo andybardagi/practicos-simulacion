@@ -28,6 +28,7 @@
         "react-chartjs-2": "^4.3.1",
         "react-dom": "^18.2.0",
         "react-latex": "^2.0.0",
+        "react-router-dom": "^6.3.0",
         "serve": "^14.0.1",
         "ts-node": "^10.9.1",
         "ts-node-dev": "^2.0.0",

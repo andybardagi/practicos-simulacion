@@ -1,8 +1,11 @@
 import { Box, ChakraProvider, Flex, Text } from '@chakra-ui/react';
 import '@fontsource/roboto';
+import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import TP1 from './components/TP1';
 import { theme } from './theme';
+import Integrantes from './components/Integrantes';
 
 // #0295A9
 // #12ADC1
@@ -14,9 +17,18 @@ function App() {
             <Navbar />
             <Box>
                 <Flex direction={'row'} minHeight={'100vh'}>
-                    {/* <Sidebar /> */}
+                    <Sidebar />
                     <Box py={2} px={4} w="100%">
-                        <TP1></TP1>
+                        <Routes>
+                            <Route path="/" element={<Integrantes />} />
+                            <Route path="/tp1" element={<TP1 />} />
+                            <Route path="/tp2" element={<Text>Trabajo práctico N° 2 pendiente :)</Text>} />
+                            <Route path="/tp3" element={<Text>Trabajo práctico N° 3 pendiente :)</Text>} />
+                            <Route path="/tp4" element={<Text>Trabajo práctico N° 4 pendiente :)</Text>} />
+                            <Route path="/tp5" element={<Text>Trabajo práctico N° 5 pendiente :)</Text>} />
+                            <Route path="/tp6" element={<Text>Trabajo práctico N° 6 pendiente :)</Text>} />
+                            <Route path="/tp7" element={<Text>Trabajo práctico N° 7 pendiente :)</Text>} />
+                        </Routes>
                     </Box>
                 </Flex>
             </Box>

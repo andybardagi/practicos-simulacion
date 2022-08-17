@@ -53,4 +53,7 @@ export default class LinearCongruentGenerator implements IRandomGenerator {
     getLastXi(): number {
         return this.lastRandomGenerated;
     }
+    getPreLastXi(): number {
+        return this.preLastRandomGenerated;
+    }
 }

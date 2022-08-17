@@ -1,4 +1,5 @@
 import { Box, List, ListItem, Text } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
 const SidebarItem = ({ name, navLink }: { name: string; navLink: string }) => {
     return (
@@ -7,7 +8,7 @@ const SidebarItem = ({ name, navLink }: { name: string; navLink: string }) => {
             _hover={{
                 backgroundColor: '#12ADC1',
                 color: '#fff',
-                textDecoration: 'underline'
+                textDecoration: 'underline',
             }}
         >
             <Text fontWeight={'bold'}>{name}</Text>
@@ -17,6 +18,10 @@ const SidebarItem = ({ name, navLink }: { name: string; navLink: string }) => {
 
 export default function Sidebar() {
     const tpList = [
+        {
+            name: 'Integrantes',
+            navLink: '/',
+        },
         {
             name: 'Trabajo Práctico 1',
             navLink: '/tp1',
@@ -52,9 +57,11 @@ export default function Sidebar() {
             <List>
                 {tpList.map((tp, index) => {
                     return (
-                        <ListItem key={index}>
-                            <SidebarItem name={tp.name} navLink={tp.navLink} />
-                        </ListItem>
+                        <Link to={tp.navLink}>
+                            <ListItem key={index}>
+                                <SidebarItem name={tp.name} navLink={tp.navLink} />
+                            </ListItem>
+                        </Link>
                     );
                 })}
             </List>

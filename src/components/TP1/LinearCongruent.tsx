@@ -75,12 +75,14 @@ export default function LinearCongruent() {
                 generations.length === 0 ? 1 : generations[generations.length - 1].line + 1;
             for (let i = 0; i < rounds; i++) {
                 let roundSeed: number = generator.current.getLastXi();
+                let preRoundSeed: number = generator.current.getPreLastXi();
                 let n: number = generator.current.generateRandom();
                 intervalHandler.current.addNumber(n);
                 thisGenerations.push({
                     number: n,
                     intervals: intervalHandler.current.getPercentagesState(),
                     x_i: roundSeed,
+                    x_i_1: preRoundSeed,
                     line: line,
                 });
                 line++;
