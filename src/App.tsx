@@ -9,13 +9,16 @@ import {
 import Navbar from './components/Navbar';
 import TP1 from './components/TP1';
 import Sidebar from './components/Sidebar';
+import { theme } from './theme';
+import '@fontsource/public-sans';
+
 // #0295A9
 // #12ADC1
 // #FDD037
 // #FFFFFF
 function App() {
     return (
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
             <Navbar />
             <Box>
                 <Flex direction={'row'} minHeight={'100vh'}>
