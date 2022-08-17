@@ -9,7 +9,7 @@ import {
     Tooltip
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import MultiplicativeCongruentGenerator from '../../simulation/tp1/generators/MultiplicativeCongruentGenerator';
+import MultiplicativeCongruentGenerator from '../../simulation/tp1/random-generators/MultiplicativeCongruentGenerator';
 import { ChiTester } from '../../simulation/tp1/handlers/ChiTester';
 import { UniformIntervalHandler } from '../../simulation/tp1/handlers/UniformIntervalHandler';
 import { IGenerationIteration } from '../../simulation/tp1/interfaces/IGenerationIteration';
