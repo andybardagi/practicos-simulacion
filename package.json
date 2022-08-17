@@ -3,9 +3,13 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "engines": {
+        "node": "16.9.1"
+    },
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "start": "serve -s dist",
         "preview": "vite preview",
         "test": "ts-node-dev --respawn ./src/simulation/tp1/consoleTest.ts"
     },
