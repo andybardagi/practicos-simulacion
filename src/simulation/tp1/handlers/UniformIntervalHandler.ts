@@ -38,9 +38,9 @@ export class UniformIntervalHandler {
         //Update the intervals state
         const index = this.getIntervalIndex(number);
         this.intervals[index].quantity++;
-        this.intervals[index].numbers.push(number);
+        //this.intervals[index].numbers.push(number);
         //Recalculate intervals percentage and expected value.
-        this.updatePercentagesAndExpected();
+        this.updatePercentagesAndExpected(index);
     }
 
     private getIntervalIndex(number: number): number {
@@ -52,18 +52,16 @@ export class UniformIntervalHandler {
             : Math.floor((number - this.minValue) / this.intervalRange);
     }
 
-    public updatePercentagesAndExpected(): void {
+    private updatePercentagesAndExpected(index: number): void {
         const uniformExpected = this.getUniformWaitedValues();
         for (let i = 0; i < this.intervalQuantity; i++) {
-            /*
             //  ( ( (valor anterior * num.sim anterior) + num.objetos que acumula ) / num. simul actual )
             this.intervals[i].percentage =
-            (this.intervals[i].percentage * (this.totalCounter - 1) +
-            this.intervals[i].quantity) /
-            this.totalCounter;
-            
-            */
-            this.intervals[i].percentage = this.intervals[i].quantity / this.totalCounter;
+                index === i
+                    ? (this.intervals[i].percentage * (this.totalCounter - 1) + 1) /
+                      this.totalCounter
+                    : (this.intervals[i].percentage * (this.totalCounter - 1) + 0) /
+                      this.totalCounter;
             this.intervals[i].expected = uniformExpected;
         }
     }
