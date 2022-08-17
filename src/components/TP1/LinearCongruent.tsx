@@ -23,9 +23,9 @@ import FormulaDisplay from './FormulaDisplay';
 export default function LinearCongruent() {
     // Form handling functions
     const [formValues, SetformValues] = useState({
-        m: '7',
+        m: '53',
+        x_1: '29',
         x0: '37',
-        x1: '29',
     });
     const [error, setError] = useState({ error: false, message: [] as string[] });
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +57,8 @@ export default function LinearCongruent() {
                     ? generator.current
                     : new LinearCongruentGenerator(
                           Number(formValues.m),
+                          Number(formValues.x_1),
                           Number(formValues.x0),
-                          Number(formValues.x1),
                       );
             intervalHandler.current =
                 intervalHandler.current instanceof UniformIntervalHandler
@@ -143,6 +143,22 @@ export default function LinearCongruent() {
                     <InputLeftAddon>
                         <Tooltip label="Semilla">
                             <span>
+                                X<sub>i-1</sub>
+                            </span>
+                        </Tooltip>
+                    </InputLeftAddon>
+                    <Input
+                        onChange={handleValueChange}
+                        name="x_1"
+                        value={formValues.x_1}
+                        placeholder="Ingrese el valor de la primera semilla"
+                    />
+                </InputGroup>
+
+                <InputGroup width={widthForms} mb={2}>
+                    <InputLeftAddon>
+                        <Tooltip label="Semilla">
+                            <span>
                                 X<sub>i</sub>
                             </span>
                         </Tooltip>
@@ -151,24 +167,10 @@ export default function LinearCongruent() {
                         onChange={handleValueChange}
                         name="x0"
                         value={formValues.x0}
-                        placeholder="Ingrese el valor de la primer semilla"
-                    />
-                </InputGroup>
-                <InputGroup width={widthForms} mb={2}>
-                    <InputLeftAddon>
-                        <Tooltip label="Semilla">
-                            <span>
-                                X<sub>i-1</sub>
-                            </span>
-                        </Tooltip>
-                    </InputLeftAddon>
-                    <Input
-                        onChange={handleValueChange}
-                        name="x1"
-                        value={formValues.x0}
                         placeholder="Ingrese el valor de la segunda semilla"
                     />
                 </InputGroup>
+
                 <InputGroup width={widthForms} mb={2}>
                     <InputLeftAddon>
                         <Tooltip label="Módulo">M</Tooltip>

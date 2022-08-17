@@ -24,7 +24,7 @@ export default function TP1() {
             <Heading>Trabajo Práctico 1</Heading>
             {/*With the defaultIndex = 1 starts in the second tab: CombinedCongruent*/}
             <Tabs variant="enclosed" mt={4} w="100%" defaultIndex={0}>
-                <TabList>
+                <TabList overflowX="scroll" overflowY={'hidden'} style={{'-ms-overflow-style': 'none', 'scrollbar-width': 'none'}}>
                     <Tab>Congruencial Mixto</Tab>
                     <Tab>Congruencial Multiplicativo</Tab>
                     <Tab>Congruencial Aditivo</Tab>
@@ -34,10 +34,10 @@ export default function TP1() {
                         <CombinedCongruent />
                     </TabPanel>
                     <TabPanel>
-                        <AditiveCongruent/>
+                        <AditiveCongruent />
                     </TabPanel>
                     <TabPanel>
-                        <LinearCongruent/>
+                        <LinearCongruent />
                     </TabPanel>
                 </TabPanels>
             </Tabs>

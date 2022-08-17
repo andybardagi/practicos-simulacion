@@ -12,7 +12,7 @@ export const LinearCongruentValidationSchema = object().shape({
         .min(0, 'El valor de la semilla no puede ser negativo')
         .required('Debe ingresar un valor para la semilla (x0)'),
 
-    x1: number()
+    x_1: number()
         .integer()
         .typeError('El valor de X1 debe ser un número entero')
         .min(0, 'El valor de la semilla no puede ser negativo')
