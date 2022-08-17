@@ -22,7 +22,7 @@ import FormulaDisplay from './FormulaDisplay';
 
 export default function CombinedCongruent() {
     // Form handling functions
-    const [formValues, SetformValues] = useState({ a: '19', c: '7', m: '53', x0: '37' });
+    const [formValues, SetformValues] = useState({ a: '19', c: '7', m: '53', x0: '37', max:'10000' });
     const [error, setError] = useState({ error: false, message: [] as string[] });
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,6 +193,16 @@ export default function CombinedCongruent() {
                 </InputGroup>
 
                 <InputGroup width={widthForms} mb={2}>
+                    <InputLeftAddon children="Final" />
+                    <Input
+                        onChange={handleValueChange}
+                        name="max"
+                        value={formValues.max}
+                        placeholder="Ingrese el valor maximo de simulaciones"
+                    />
+                </InputGroup>
+
+                <InputGroup width={widthForms} mb={2}>
                     <InputLeftAddon>
                         <Tooltip label="Cantidad de intervalos a utilizar">n</Tooltip>
                     </InputLeftAddon>
@@ -223,10 +233,10 @@ export default function CombinedCongruent() {
                         <Button
                             colorScheme={'linkedin'}
                             onClick={() =>
-                                simulate(10_000 - generations[generations.length - 1].line, true)
+                                simulate(Number(formValues.max) - generations[generations.length - 1].line, true)
                             }
                         >
-                            Completar 10.000
+                            Completar {formValues.max}
                         </Button>
                     </>
                 )}
