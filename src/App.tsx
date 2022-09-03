@@ -3,9 +3,10 @@ import '@fontsource/roboto';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import TP1 from './components/TP1';
+import TP1 from './components/TP1/TP1';
 import { theme } from './theme';
 import Integrantes from './components/Integrantes';
+import TP3 from './components/TP3/TP3';
 
 // #0295A9
 // #12ADC1
@@ -22,8 +23,8 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Integrantes />} />
                             <Route path="/tp1" element={<TP1 />} />
-                            <Route path="/tp2" element={<Text>Trabajo práctico N° 2 pendiente :)</Text>} />
-                            <Route path="/tp3" element={<Text>Trabajo práctico N° 3 pendiente :)</Text>} />
+                            <Route path="/tp2" element={<Text>Trabajo práctico N° 2 realizado en Excel</Text>} />
+                            <Route path="/tp3" element={<TP3/>} />
                             <Route path="/tp4" element={<Text>Trabajo práctico N° 4 pendiente :)</Text>} />
                             <Route path="/tp5" element={<Text>Trabajo práctico N° 5 pendiente :)</Text>} />
                             <Route path="/tp6" element={<Text>Trabajo práctico N° 6 pendiente :)</Text>} />

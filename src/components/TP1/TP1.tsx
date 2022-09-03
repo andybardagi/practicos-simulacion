@@ -4,10 +4,10 @@ import {
     TabPanel,
     TabPanels, Tabs
 } from '@chakra-ui/react';
-import CombinedCongruent from './TP1/CombinedCongruent';
-import LanguageGenerator from './TP1/LanguageGenerator';
-import LinearCongruent from './TP1/LinearCongruent';
-import AditiveCongruent from './TP1/MultiplicativeCongruent';
+import CombinedCongruent from './CombinedCongruent';
+import LanguageGenerator from './LanguageGenerator';
+import LinearCongruent from './LinearCongruent';
+import AditiveCongruent from './MultiplicativeCongruent';
 
 export default function TP1() {
     return (
