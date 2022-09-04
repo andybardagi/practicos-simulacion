@@ -23,10 +23,6 @@ export default function Integrantes() {
                         <Td>Bertola Juan Ignacio</Td>
                     </Tr>
                     <Tr>
-                        <Td>81937</Td>
-                        <Td>Cáceres Lautaro</Td>
-                    </Tr>
-                    <Tr>
                         <Td>86570</Td>
                         <Td>Tamosaitis Juan Ezequiel</Td>
                     </Tr>
