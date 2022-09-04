@@ -1,4 +1,5 @@
 import { Box, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import NormalDist from './NormalDist';
 import PoissonDist from './PoissonDist';
 
 export default function TP3() {
@@ -42,7 +43,7 @@ export default function TP3() {
                         <Text>1</Text>
                     </TabPanel>
                     <TabPanel>
-                        <Text>2</Text>
+                      <NormalDist/>
                     </TabPanel>
                     <TabPanel>
                         <PoissonDist />
