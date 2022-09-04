@@ -9,13 +9,13 @@ export abstract class BaseDistGenerator {
         this.uniformGenerator = new CombinedCongruentGenerator(11, 7, 2 ** 61, initialSeed);
     }
 
-    private getUniformRandom(): number {
+    protected getUniformRandom(): number {
         return this.uniformGenerator.generateRandom();
     }
 
     abstract generateRandom(): number;
 
-    private generateDistribution(quantity: number) {
+    public generateDistribution(quantity: number) {
         for (let i = 0; i < quantity; i++) {
             this.generation.push(this.generateRandom());
         }
