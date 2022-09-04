@@ -10,12 +10,13 @@ import {
     ListItem,
     Tooltip,
 } from '@chakra-ui/react';
-import { PoissonDistGenerator } from '../../simulation/tp3/random-generators/PoissonDistGenerator';
+import { NormalDistGenerator } from '../../simulation/tp3/random-generators/NormalDistGenerator';
 
-export default function PoissonDist() {
-    const poissonDistGenerator = useRef({} as PoissonDistGenerator);
+export default function NormalDist() {
+    const normalDisGenerator = useRef({} as NormalDistGenerator);
     const [formValues, setFormValues] = useState({
-        lambda: 7,
+        average: 14,
+        standarDeviation: 0.7,
         quantitiy: 10_000,
     });
 
@@ -26,9 +27,9 @@ export default function PoissonDist() {
     };
     const handleGenerateClick = (e: React.SyntheticEvent) => {
         console.log('Generation started');
-        poissonDistGenerator.current = new PoissonDistGenerator(Number(formValues.lambda));
-        poissonDistGenerator.current.generateDistribution(formValues.quantitiy);
-        setGeneration(poissonDistGenerator.current.getGeneration());
+        normalDisGenerator.current = new NormalDistGenerator(Number(formValues.average), Number(formValues.standarDeviation));
+        normalDisGenerator.current.generateDistribution(formValues.quantitiy);
+        setGeneration(normalDisGenerator.current.getGeneration());
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
@@ -37,14 +38,26 @@ export default function PoissonDist() {
             <Flex direction={'row'} mt={4} flexWrap="wrap" maxW="100%" gap={'5%'}>
                 <InputGroup width={widthForms} mb={2}>
                     <InputLeftAddon>
-                        <Tooltip label="Lambda">λ</Tooltip>
+                        <Tooltip label="Media">Media</Tooltip>
                     </InputLeftAddon>
                     <Input
                         type="number"
                         onChange={handleValueChange}
-                        name="lambda"
-                        value={formValues.lambda}
-                        placeholder="Ingrese el valor de lambda"
+                        name="media"
+                        value={formValues.average}
+                        placeholder="Ingrese el valor de la Media"
+                    />
+                </InputGroup>
+                <InputGroup width={widthForms} mb={2}>
+                    <InputLeftAddon>
+                        <Tooltip label="Sigma">σ</Tooltip>
+                    </InputLeftAddon>
+                    <Input
+                        type="number"
+                        onChange={handleValueChange}
+                        name="sigma"
+                        value={formValues.average}
+                        placeholder="Ingrese el valor de sigma"
                     />
                 </InputGroup>
                 <InputGroup width={widthForms} mb={2}>
@@ -70,5 +83,5 @@ export default function PoissonDist() {
                 ))}
             </List>
         </Box>
-    );
+    )
 }

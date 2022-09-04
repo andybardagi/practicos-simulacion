@@ -15,7 +15,7 @@ export abstract class BaseDistGenerator {
 
     abstract generateRandom(): number;
 
-    private generateDistribution(quantity: number) {
+    public generateDistribution(quantity: number) {
         for (let i = 0; i < quantity; i++) {
             this.generation.push(this.generateRandom());
         }
