@@ -9,7 +9,7 @@ export abstract class BaseDistGenerator {
         this.uniformGenerator = new CombinedCongruentGenerator(11, 7, 2 ** 61, initialSeed);
     }
 
-    private getUniformRandom(): number {
+    protected getUniformRandom(): number {
         return this.uniformGenerator.generateRandom();
     }
 
