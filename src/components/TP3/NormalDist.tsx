@@ -6,6 +6,7 @@ import { ChiResultType } from '../../simulation/tp3/types/chiResult.type';
 import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
 import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
+import StringDownloader from '../StringDownloader';
 
 export default function NormalDist() {
     const normalDistGenerator = useRef({} as NormalDistGenerator);
@@ -91,15 +92,18 @@ export default function NormalDist() {
                 <></>
             )}
             {generation.length > 0 ? (
-                <InfoBox
-                    infoMsg={[
-                        `Con un p-valor de 0,99`,
-                        `${generation.length - 1} grados de libertad`,
-                        `c = ${chiResult.c.toFixed(4)}`,
-                        `Valor Chi = ${chiResult.chiValue.toFixed(4)}`,
-                        `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
-                    ]}
-                />
+                <>
+                    <InfoBox
+                        infoMsg={[
+                            `Con un p-valor de 0,99`,
+                            `${generation.length - 1} grados de libertad`,
+                            `c = ${chiResult.c.toFixed(4)}`,
+                            `Valor Chi = ${chiResult.chiValue.toFixed(4)}`,
+                            `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
+                        ]}
+                    />
+                    <StringDownloader strToDownload={generation.join('\n')} fileName="distribucionNormal">Descargar</StringDownloader>
+                </>
             ) : (
                 <></>
             )}
