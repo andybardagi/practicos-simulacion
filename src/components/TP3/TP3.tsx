@@ -1,4 +1,5 @@
 import { Box, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import PoissonDist from './PoissonDist';
 
 export default function TP3() {
     return (
@@ -44,7 +45,7 @@ export default function TP3() {
                         <Text>2</Text>
                     </TabPanel>
                     <TabPanel>
-                        <Text>3</Text>
+                        <PoissonDist />
                     </TabPanel>
                 </TabPanels>
             </Tabs>
