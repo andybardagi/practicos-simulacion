@@ -1,35 +1,43 @@
-import React, { useRef, useState } from 'react';
 import {
     Box,
     Button,
     Flex,
     Input,
     InputGroup,
-    InputLeftAddon,
-    List,
-    ListItem,
-    Tooltip,
+    InputLeftAddon, Tooltip
 } from '@chakra-ui/react';
+import React, { useRef, useState } from 'react';
+import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
 import { NormalDistGenerator } from '../../simulation/tp3/random-generators/NormalDistGenerator';
+import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
+import IntervalShower from '../IntervalShower';
 
 export default function NormalDist() {
-    const normalDisGenerator = useRef({} as NormalDistGenerator);
+    const normalDistGenerator = useRef({} as NormalDistGenerator);
+    const normalDistGeneratedValues = useRef([] as number[]);
     const [formValues, setFormValues] = useState({
         average: 14,
-        standarDeviation: 0.7,
+        standardDeviation: 0.7,
         quantitiy: 10_000,
     });
 
-    const [generation, setGeneration] = useState([1,2,3] as number[]);
+    const [generation, setGeneration] = useState([] as IIntervalWithPercentage[]);
+    const [limits, setLimits] = useState([] as string[]);
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setGeneration([]);
         setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
     const handleGenerateClick = (e: React.SyntheticEvent) => {
         console.log('Generation started');
-        normalDisGenerator.current = new NormalDistGenerator(Number(formValues.average), Number(formValues.standarDeviation));
-        normalDisGenerator.current.generateDistribution(formValues.quantitiy);
-        setGeneration(normalDisGenerator.current.getGeneration());
+        normalDistGenerator.current = new NormalDistGenerator(
+            Number(formValues.average),
+            Number(formValues.standardDeviation),
+        );
+        normalDistGenerator.current.generateDistribution(formValues.quantitiy);
+        normalDistGeneratedValues.current = normalDistGenerator.current.getGeneration();
+        setGeneration(normalDistGenerator.current.getIntervals());
+        setLimits(normalDistGenerator.current.getClassMarks());
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
@@ -43,7 +51,7 @@ export default function NormalDist() {
                     <Input
                         type="number"
                         onChange={handleValueChange}
-                        name="media"
+                        name="average"
                         value={formValues.average}
                         placeholder="Ingrese el valor de la Media"
                     />
@@ -55,8 +63,8 @@ export default function NormalDist() {
                     <Input
                         type="number"
                         onChange={handleValueChange}
-                        name="sigma"
-                        value={formValues.average}
+                        name="standardDeviation"
+                        value={formValues.standardDeviation}
                         placeholder="Ingrese el valor de sigma"
                     />
                 </InputGroup>
@@ -74,14 +82,17 @@ export default function NormalDist() {
                 </InputGroup>
             </Flex>
             <Flex direction={'row'} justifyContent="end">
-                <Button onClick={handleGenerateClick} colorScheme="linkedin"> Generar </Button>
+                <Button onClick={handleGenerateClick} colorScheme="linkedin">
+                    {' '}
+                    Generar{' '}
+                </Button>
             </Flex>
-
-            <List>
-                {generation.map((g, i) => (
-                    <ListItem key={i}> {g}</ListItem>
-                ))}
-            </List>
+            {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
+            {generation.length > 0 ? (
+                <DinamicFrequencyComparator intervals={generation} limits={limits} />
+            ) : (
+                <></>
+            )}
         </Box>
-    )
+    );
 }

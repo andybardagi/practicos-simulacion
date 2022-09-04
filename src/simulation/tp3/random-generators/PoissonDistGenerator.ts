@@ -1,10 +1,10 @@
-import CombinedCongruent from "../../../components/TP1/CombinedCongruent";
-import { BaseDistGenerator } from "./BaseDistGenerator";
+import CombinedCongruent from '../../../components/TP1/CombinedCongruent';
+import { BaseDistGenerator } from './BaseDistGenerator';
 
-export class PoissonDistGenerator extends BaseDistGenerator{
+export class PoissonDistGenerator extends BaseDistGenerator {
     private lambda: number;
 
-    constructor(lambda: number){
+    constructor(lambda: number) {
         super();
         this.lambda = lambda;
     }
@@ -16,7 +16,7 @@ export class PoissonDistGenerator extends BaseDistGenerator{
         let u = this.getUniformRandom();
         p = p * u;
         x = x + 1;
-        while (p >= a){
+        while (p >= a) {
             u = this.getUniformRandom();
             p = p * u;
             x = x + 1;
@@ -24,5 +24,7 @@ export class PoissonDistGenerator extends BaseDistGenerator{
         return x;
     }
 
-    
+    setIntervalsExpected(): void {
+        this.intervalHandler.setPoissonExpectedValues(this.lambda);
+    }
 }

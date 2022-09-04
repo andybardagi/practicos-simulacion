@@ -1,6 +1,7 @@
 import { Box, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
 import NormalDist from './NormalDist';
 import PoissonDist from './PoissonDist';
+import ExponDist from './ExponDist';
 
 export default function TP3() {
     return (
@@ -34,16 +35,16 @@ export default function TP3() {
                     overflowY={'hidden'}
                     style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
                 >
-                    <Tab>Uniforme</Tab>
+                    <Tab>Exponencial</Tab>
                     <Tab>Normal</Tab>
                     <Tab>Poisson</Tab>
                 </TabList>
                 <TabPanels border="1px solid #efefef">
                     <TabPanel>
-                        <Text>1</Text>
+                        <ExponDist />
                     </TabPanel>
                     <TabPanel>
-                      <NormalDist/>
+                        <NormalDist />
                     </TabPanel>
                     <TabPanel>
                         <PoissonDist />

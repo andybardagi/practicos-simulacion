@@ -35,13 +35,13 @@ export default function IntervalShower({ intervals, totalNumbers }: Props) {
             <Tbody>
                 {intervals.map((interval, index) => (
                     <Tr key={index}>
-                        <Td>{interval.lowerLimit.toFixed(4)}</Td>
-                        <Td>{interval.upperLimit.toFixed(4)}</Td>
+                        <Td>{interval.lowerLimit.toFixed(4).toString().replace('.', ',')}</Td>
+                        <Td>{interval.upperLimit.toFixed(4).toString().replace('.', ',')}</Td>
                         <Td>{interval.quantity}</Td>
                         <Td>
                             {interval.expected % 1 == 0
                                 ? interval.expected
-                                : interval.expected.toFixed(4)}
+                                : interval.expected.toFixed(4).toString().replace('.', ',')}
                         </Td>
                     </Tr>
                 ))}

@@ -9,6 +9,10 @@ export class ExponentialDistGenerator extends BaseDistGenerator {
     }
 
     generateRandom(): number {
-        return (1 / this.lambda) * Math.log(this.getUniformRandom());
+        return (-1 / this.lambda) * Math.log(this.getUniformRandom());
+    }
+
+    setIntervalsExpected(): void {
+        this.intervalHandler.setExponentialExpectedValues();
     }
 }
