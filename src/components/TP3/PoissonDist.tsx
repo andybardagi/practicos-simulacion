@@ -10,9 +10,10 @@ import {
     ListItem,
     Tooltip,
 } from '@chakra-ui/react';
+import { PoissonDistGenerator } from '../../simulation/tp3/random-generators/PoissonDistGenerator';
 
 export default function PoissonDist() {
-    const poissonDistGenerator = useRef({} as {});
+    const poissonDistGenerator = useRef({} as PoissonDistGenerator);
     const [formValues, setFormValues] = useState({
         lambda: 7,
         quantitiy: 10_000,
@@ -25,9 +26,9 @@ export default function PoissonDist() {
     };
     const handleGenerateClick = (e: React.SyntheticEvent) => {
         console.log('Generation started');
-        poissonDistGenerator.current = new (Number(formValues.lambda))();
+        poissonDistGenerator.current = new PoissonDistGenerator(Number(formValues.lambda));
         poissonDistGenerator.current.generateDistribution(formValues.quantitiy);
-        console.log(poissonDistGenerator.current.getGeneration());
+        setGeneration(poissonDistGenerator.current.getGeneration());
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
