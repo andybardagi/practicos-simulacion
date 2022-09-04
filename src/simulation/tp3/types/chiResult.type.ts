@@ -1,0 +1,1 @@
+export type ChiResultType = {c: number, chiValue: number, isAccepted: boolean} 

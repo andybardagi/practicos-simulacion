@@ -1,15 +1,10 @@
-import {
-    Box,
-    Button,
-    Flex,
-    Input,
-    InputGroup,
-    InputLeftAddon, Tooltip
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
 import { NormalDistGenerator } from '../../simulation/tp3/random-generators/NormalDistGenerator';
+import { ChiResultType } from '../../simulation/tp3/types/chiResult.type';
 import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
+import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
 
 export default function NormalDist() {
@@ -23,6 +18,7 @@ export default function NormalDist() {
 
     const [generation, setGeneration] = useState([] as IIntervalWithPercentage[]);
     const [limits, setLimits] = useState([] as string[]);
+    const [chiResult, setChiResult] = useState({} as ChiResultType);
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setGeneration([]);
@@ -38,6 +34,7 @@ export default function NormalDist() {
         normalDistGeneratedValues.current = normalDistGenerator.current.getGeneration();
         setGeneration(normalDistGenerator.current.getIntervals());
         setLimits(normalDistGenerator.current.getClassMarks());
+        setChiResult(normalDistGenerator.current.getChiResult());
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
@@ -90,6 +87,19 @@ export default function NormalDist() {
             {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
             {generation.length > 0 ? (
                 <DinamicFrequencyComparator intervals={generation} limits={limits} />
+            ) : (
+                <></>
+            )}
+            {generation.length > 0 ? (
+                <InfoBox
+                    infoMsg={[
+                        `Con un p-valor de 0,99`,
+                        `${generation.length - 1} grados de libertad`,
+                        `c = ${chiResult.c.toFixed(4)}`,
+                        `Valor Chi = ${chiResult.chiValue.toFixed(4)}`,
+                        `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
+                    ]}
+                />
             ) : (
                 <></>
             )}

@@ -25,7 +25,9 @@ export class ChiTester{
     public calculateC(){
         let sum = 0;
         for(let i = 0; i < this.intervals.length; i++){
-            sum += (this.intervals[i].quantity - this.intervals[i].expected)**2/this.intervals[i].expected;
+            if (this.intervals[i].expected !== 0){
+                sum += (this.intervals[i].expected - this.intervals[i].quantity)**2/this.intervals[i].expected;
+            }
         }
         this.c = sum;
         return this.c;
