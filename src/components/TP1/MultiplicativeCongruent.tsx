@@ -251,7 +251,6 @@ export default function MultiplicativeCongruent() {
                     <FrequencyComparator
                         limits={intervalHandler.current.getLimitsStrings()}
                         intervals={generations[generations.length - 1].intervals}
-                        total={generations[generations.length - 1].line}
                         key={graphUpdate}
                     />
                     <Flex direction={'row'} mt={4} mb={4} justifyContent="end">
