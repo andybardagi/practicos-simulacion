@@ -149,13 +149,12 @@ export class DinamicIntervalHandler {
                 normalDist.probabilityBetween(i.lowerLimit, i.upperLimit) * this.totalCounter;
         });
     }
-
-    public setExponentialExpectedValues(average: number, standarDeviation: number): void {
-        const exponDist = new NormalDistribution(average, standarDeviation);
-        this.intervals.map((i) => ({
-            ...i,
-            expected: exponDist.probabilityBetween(i.lowerLimit, i.upperLimit),
-        }));
+    public setExponentialExpectedValues(lambda: number): void {
+        this.intervals.forEach((i) => {
+            const cumulativeUpper = 1- Math.exp(-1 * lambda * i.upperLimit);
+            const cumulativeLower = 1- Math.exp(-1 * lambda * i.lowerLimit);
+            i.expected = (cumulativeUpper - cumulativeLower) * this.totalCounter;
+        });
     }
 
     public setPoissonExpectedValues(lambda: number): void {

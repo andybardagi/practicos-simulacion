@@ -13,6 +13,6 @@ export class ExponentialDistGenerator extends BaseDistGenerator {
     }
 
     setIntervalsExpected(): void {
-        this.intervalHandler.setExponentialExpectedValues(1,1);
+        this.intervalHandler.setExponentialExpectedValues(this.lambda);
     }
 }

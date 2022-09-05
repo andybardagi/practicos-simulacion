@@ -1,26 +1,24 @@
+import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import {
-    Box,
-    Button,
-    Flex,
-    Input,
-    InputGroup,
-    InputLeftAddon,
-    List,
-    ListItem,
-    Tooltip,
-} from '@chakra-ui/react';
-import { NormalDistGenerator } from '../../simulation/tp3/random-generators/NormalDistGenerator';
+import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
 import { ExponentialDistGenerator } from '../../simulation/tp3/random-generators/ExponentialDistGenerator';
+import { ChiResultType } from '../../simulation/tp3/types/chiResult.type';
+import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
+import InfoBox from '../InfoBox';
+import IntervalShower from '../IntervalShower';
+import StringDownloader from '../StringDownloader';
 
 export default function ExponDist() {
     const exponDistGenerator = useRef({} as ExponentialDistGenerator);
+    const exponDistGeneratedValues = useRef([] as number[]);
     const [formValues, setFormValues] = useState({
         lambda: 7,
         quantitiy: 10_000,
     });
 
-    const [generation, setGeneration] = useState([1, 2, 3] as number[]);
+    const [generation, setGeneration] = useState([] as IIntervalWithPercentage[]);
+    const [limits, setLimits] = useState([] as string[]);
+    const [chiResult, setChiResult] = useState({} as ChiResultType);
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setGeneration([]);
@@ -30,7 +28,10 @@ export default function ExponDist() {
         console.log('Generation started');
         exponDistGenerator.current = new ExponentialDistGenerator(Number(formValues.lambda));
         exponDistGenerator.current.generateDistribution(formValues.quantitiy);
-        setGeneration([4, 5, 6]);
+        exponDistGeneratedValues.current = exponDistGenerator.current.getGeneration();
+        setGeneration(exponDistGenerator.current.getIntervals());
+        setLimits(exponDistGenerator.current.getClassMarks());
+        setChiResult(exponDistGenerator.current.getChiResult());
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
@@ -69,11 +70,33 @@ export default function ExponDist() {
                 </Button>
             </Flex>
 
-            <List>
-                {generation.map((g, i) => (
-                    <ListItem key={i}> {g}</ListItem>
-                ))}
-            </List>
+            {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
+            {generation.length > 0 ? (
+                <DinamicFrequencyComparator intervals={generation} limits={limits} />
+            ) : (
+                <></>
+            )}
+            {generation.length > 0 ? (
+                <>
+                    <InfoBox
+                        infoMsg={[
+                            `Con un p-valor de 0,99`,
+                            `${generation.length - 1} grados de libertad`,
+                            `c = ${chiResult.c.toFixed(4)}`,
+                            `Valor Chi = ${chiResult.chiValue.toFixed(4)}`,
+                            `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
+                        ]}
+                    />
+                    <StringDownloader
+                        strToDownload={generation.join('\n')}
+                        fileName="distribucionNormal"
+                    >
+                        Descargar
+                    </StringDownloader>
+                </>
+            ) : (
+                <></>
+            )}
         </Box>
     );
 }
