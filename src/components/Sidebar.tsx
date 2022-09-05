@@ -1,22 +1,32 @@
 import { Box, List, ListItem, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useNavigationContext } from '../hooks/NavigationContext';
 
 const SidebarItem = ({ name, navLink }: { name: string; navLink: string }) => {
+    const location = useLocation();
     return (
-        <Box
-            p={3}
-            _hover={{
-                backgroundColor: '#12ADC1',
-                color: '#fff',
-                textDecoration: 'underline',
-            }}
-        >
-            <Text fontWeight={'bold'}>{name}</Text>
-        </Box>
+        <Link to={navLink}>
+            <ListItem>
+                <Box
+                    p={3}
+                    backgroundColor={location.pathname === navLink ? '#0295A9' : '#ffffff00'}
+                    color={location.pathname === navLink ? '#fff' : '#000'}
+                    _hover={{
+                        backgroundColor: '#12ADC1',
+                        color: '#fff',
+                        textDecoration: 'underline',
+                    }}
+                >
+                    <Text fontWeight={'bold'}>{name}</Text>
+                </Box>
+            </ListItem>
+        </Link>
     );
 };
 
 export default function Sidebar() {
+    const navContext = useNavigationContext();
+
     const tpList = [
         {
             name: 'Integrantes',
@@ -53,18 +63,20 @@ export default function Sidebar() {
     ];
 
     return (
-        <Box w={'200px'} bgColor="#12ADC133">
-            <List>
-                {tpList.map((tp, index) => {
-                    return (
-                        <Link to={tp.navLink} key={index}>
-                            <ListItem key={index}>
-                                <SidebarItem name={tp.name} navLink={tp.navLink} />
-                            </ListItem>
-                        </Link>
-                    );
-                })}
-            </List>
-        </Box>
+        <>
+            {navContext.sidebarDisplay ? (
+                <Box w={'200px'} bgColor="#12ADC133">
+                    <List>
+                        {tpList.map((tp, index) => {
+                            return (
+                                <SidebarItem name={tp.name} navLink={tp.navLink} key={tp.navLink} />
+                            );
+                        })}
+                    </List>
+                </Box>
+            ) : (
+                <></>
+            )}
+        </>
     );
 }
