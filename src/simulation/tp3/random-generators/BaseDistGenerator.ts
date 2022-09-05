@@ -3,10 +3,11 @@ import { IIntervalWithPercentage } from '../../tp1/interfaces/IIntervalWithPerce
 import CombinedCongruentGenerator from '../../tp1/random-generators/CombinedCongruentGenerator';
 import { DinamicIntervalHandler } from '../handlers/DinamicIntervalHandler';
 import { ChiResultType } from '../types/chiResult.type';
+import { PoissonDinamicIntervalHandler } from '../handlers/PoissonDinamicIntervalHandler';
 
 export abstract class BaseDistGenerator {
     private uniformGenerator: CombinedCongruentGenerator;
-    protected intervalHandler: DinamicIntervalHandler;
+    protected intervalHandler: DinamicIntervalHandler | PoissonDinamicIntervalHandler;
     private chiTester?: ChiTester;
     private chiResult?: ChiResultType;
 

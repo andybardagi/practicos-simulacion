@@ -26,7 +26,6 @@ export default function NormalDist() {
         setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
     const handleGenerateClick = (e: React.SyntheticEvent) => {
-        console.log('Generation started');
         normalDistGenerator.current = new NormalDistGenerator(
             Number(formValues.average),
             Number(formValues.standardDeviation),

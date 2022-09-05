@@ -2,13 +2,13 @@ import NormalDistribution from 'normal-distribution';
 import { IIntervalWithPercentage } from '../../tp1/interfaces/IIntervalWithPercentage';
 import { factorial } from '../helpers/factorial';
 export class DinamicIntervalHandler {
-    private minValue?: number;
-    private maxValue?: number;
-    private intervalQuantity: number;
-    private intervalRange: number = 0;
-    private totalCounter: number;
-    private intervals: IIntervalWithPercentage[];
-    private numbers: number[] = [];
+    protected minValue?: number;
+    protected maxValue?: number;
+    protected intervalQuantity: number;
+    protected intervalRange: number = 0;
+    protected totalCounter: number;
+    protected intervals: IIntervalWithPercentage[];
+    protected numbers: number[] = [];
 
     constructor(intervalQuantity: number) {
         this.intervalQuantity = intervalQuantity;
@@ -101,7 +101,7 @@ export class DinamicIntervalHandler {
 
     public groupIntervals(): void {
         let flagOK: boolean = false;
-        while (!flagOK){
+        while (!flagOK) {
             flagOK = true;
             const newIntervals: IIntervalWithPercentage[] = [];
             for (let i = 0; i < this.intervals.length; i++) {
@@ -160,10 +160,10 @@ export class DinamicIntervalHandler {
 
     public setPoissonExpectedValues(lambda: number): void {
         this.intervals.forEach((i) => {
+            const mark = i.upperLimit - 0.5;
+            console.log(mark);
             i.expected =
-                ((lambda ** i.upperLimit * Math.exp(-1 * lambda)) / factorial(i.upperLimit) -
-                    (lambda ** i.lowerLimit * Math.exp(-1 * lambda)) / factorial(i.lowerLimit)) *
-                this.totalCounter;
+                ((lambda ** mark * Math.exp(-lambda)) / factorial(mark)) * this.totalCounter;
         });
     }
 }

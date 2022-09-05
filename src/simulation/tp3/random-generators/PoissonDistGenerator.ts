@@ -1,5 +1,6 @@
 import CombinedCongruent from '../../../components/TP1/CombinedCongruent';
 import { BaseDistGenerator } from './BaseDistGenerator';
+import { PoissonDinamicIntervalHandler } from '../handlers/PoissonDinamicIntervalHandler';
 
 export class PoissonDistGenerator extends BaseDistGenerator {
     private lambda: number;
@@ -7,6 +8,7 @@ export class PoissonDistGenerator extends BaseDistGenerator {
     constructor(lambda: number) {
         super();
         this.lambda = lambda;
+        this.intervalHandler = new PoissonDinamicIntervalHandler(0);
     }
 
     generateRandom(): number {
@@ -26,5 +28,12 @@ export class PoissonDistGenerator extends BaseDistGenerator {
 
     setIntervalsExpected(): void {
         this.intervalHandler.setPoissonExpectedValues(this.lambda);
+    }
+
+    public getClassMarks(): string[] {
+        const classMarks: string[] = this.intervalHandler
+            .getIntervals()
+            .map((i) => ((i.upperLimit + i.lowerLimit) / 2).toFixed(0).toString());
+        return classMarks;
     }
 }
