@@ -1,22 +1,19 @@
-import React, { useRef, useState } from 'react';
 import {
     Box,
     Button,
     Flex,
     Input,
     InputGroup,
-    InputLeftAddon,
-    List,
-    ListItem,
-    Tooltip,
+    InputLeftAddon, Tooltip
 } from '@chakra-ui/react';
-import { PoissonDistGenerator } from '../../simulation/tp3/random-generators/PoissonDistGenerator';
+import React, { useRef, useState } from 'react';
 import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
+import { PoissonDistGenerator } from '../../simulation/tp3/random-generators/PoissonDistGenerator';
 import { ChiResultType } from '../../simulation/tp3/types/chiResult.type';
 import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
 import InfoBox from '../InfoBox';
-import IntervalShower from '../IntervalShower';
 import StringDownloader from '../StringDownloader';
+import IntervalShowerPoisson from './IntervalShowerPoisson';
 
 export default function PoissonDist() {
     const poissonDistGenerator = useRef({} as PoissonDistGenerator);
@@ -80,7 +77,7 @@ export default function PoissonDist() {
                 </Button>
             </Flex>
 
-            {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
+            {generation.length > 0 ? <IntervalShowerPoisson intervals={generation} /> : <></>}
             {generation.length > 0 ? (
                 <DinamicFrequencyComparator intervals={generation} limits={limits} />
             ) : (
