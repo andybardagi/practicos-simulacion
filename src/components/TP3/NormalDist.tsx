@@ -101,7 +101,7 @@ export default function NormalDist() {
             )}
             {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
             {generation.length > 0 ? (
-                <DinamicFrequencyComparator intervals={generation} limits={limits} />
+                <DinamicFrequencyComparator key={chiResult.c} intervals={generation} limits={limits} />
             ) : (
                 <></>
             )}
@@ -116,12 +116,14 @@ export default function NormalDist() {
                             `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
                         ]}
                     />
+                    <Flex my="10px" justifyContent={'right'}>
                     <StringDownloader
-                        strToDownload={generation.join('\n')}
+                        strToDownload={normalDistGeneratedValues.current.join('\n').replaceAll('.',',')}
                         fileName="distribucionNormal"
                     >
                         Descargar
                     </StringDownloader>
+                    </Flex>
                 </>
             ) : (
                 <></>

@@ -90,7 +90,7 @@ export default function ExponDist() {
 
             {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
             {generation.length > 0 ? (
-                <DinamicFrequencyComparator intervals={generation} limits={limits} />
+                <DinamicFrequencyComparator key={chiResult.c} intervals={generation} limits={limits} />
             ) : (
                 <></>
             )}
@@ -105,12 +105,16 @@ export default function ExponDist() {
                             `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
                         ]}
                     />
-                    <StringDownloader
-                        strToDownload={generation.join('\n')}
-                        fileName="distribucionNormal"
-                    >
-                        Descargar
-                    </StringDownloader>
+                    <Flex my="10px" justifyContent={'right'}>
+                        <StringDownloader
+                            strToDownload={exponDistGeneratedValues.current
+                                .join('\n')
+                                .replaceAll('.', ',')}
+                            fileName="distribucionExponencial"
+                        >
+                            Descargar
+                        </StringDownloader>
+                    </Flex>
                 </>
             ) : (
                 <></>
