@@ -1,11 +1,4 @@
-import {
-    Box,
-    Button,
-    Flex,
-    Input,
-    InputGroup,
-    InputLeftAddon, Tooltip
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
 import { PoissonDistGenerator } from '../../simulation/tp3/random-generators/PoissonDistGenerator';
@@ -79,7 +72,7 @@ export default function PoissonDist() {
 
             {generation.length > 0 ? <IntervalShowerPoisson intervals={generation} /> : <></>}
             {generation.length > 0 ? (
-                <DinamicFrequencyComparator intervals={generation} limits={limits} />
+                <DinamicFrequencyComparator key={chiResult.c} intervals={generation} limits={limits} />
             ) : (
                 <></>
             )}
@@ -94,12 +87,16 @@ export default function PoissonDist() {
                             `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
                         ]}
                     />
-                    <StringDownloader
-                        strToDownload={generation.join('\n')}
-                        fileName="distribucionNormal"
-                    >
-                        Descargar
-                    </StringDownloader>
+                    <Flex my="10px" justifyContent={'right'}>
+                        <StringDownloader
+                            strToDownload={poissonDistGeneratedValues.current
+                                .join('\n')
+                                .replaceAll('.', ',')}
+                            fileName="distribucionPoisson"
+                        >
+                            Descargar
+                        </StringDownloader>
+                    </Flex>
                 </>
             ) : (
                 <></>
