@@ -1,44 +1,48 @@
-import {
-    Box,
-    Button,
-    Flex,
-    Input,
-    InputGroup,
-    InputLeftAddon, Tooltip
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, Tooltip } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IIntervalWithPercentage';
 import { PoissonDistGenerator } from '../../simulation/tp3/random-generators/PoissonDistGenerator';
 import { ChiResultType } from '../../simulation/tp3/types/chiResult.type';
 import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
+import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
 import StringDownloader from '../StringDownloader';
 import IntervalShowerPoisson from './IntervalShowerPoisson';
+import { PoissonDistSchema } from './schemas/PoissonDist.schema';
 
 export default function PoissonDist() {
     const poissonDistGenerator = useRef({} as PoissonDistGenerator);
     const poissonDistGeneratedValues = useRef([] as number[]);
     const [formValues, setFormValues] = useState({
         lambda: 7,
-        quantitiy: 10_000,
+        quantity: 10_000,
     });
+    const [errors, setErrors] = useState<string[]>([]);
 
     const [generation, setGeneration] = useState([] as IIntervalWithPercentage[]);
     const [limits, setLimits] = useState([] as string[]);
     const [chiResult, setChiResult] = useState({} as ChiResultType);
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setErrors([]);
         setGeneration([]);
         setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
     const handleGenerateClick = (e: React.SyntheticEvent) => {
-        console.log('Generation started');
-        poissonDistGenerator.current = new PoissonDistGenerator(Number(formValues.lambda));
-        poissonDistGenerator.current.generateDistribution(formValues.quantitiy);
-        poissonDistGeneratedValues.current = poissonDistGenerator.current.getGeneration();
-        setGeneration(poissonDistGenerator.current.getIntervals());
-        setLimits(poissonDistGenerator.current.getClassMarks());
-        setChiResult(poissonDistGenerator.current.getChiResult());
+        setErrors([]);
+        PoissonDistSchema.validate(formValues, { abortEarly: false })
+            .then(() => {
+                console.log('Generation started');
+                poissonDistGenerator.current = new PoissonDistGenerator(Number(formValues.lambda));
+                poissonDistGenerator.current.generateDistribution(formValues.quantity);
+                poissonDistGeneratedValues.current = poissonDistGenerator.current.getGeneration();
+                setGeneration(poissonDistGenerator.current.getIntervals());
+                setLimits(poissonDistGenerator.current.getClassMarks());
+                setChiResult(poissonDistGenerator.current.getChiResult());
+            })
+            .catch((err) => {
+                setErrors(err.inner.map((i: { path: string; message: string }) => i.message));
+            });
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
@@ -64,18 +68,22 @@ export default function PoissonDist() {
                     <Input
                         type="number"
                         onChange={handleValueChange}
-                        name="quantitiy"
-                        value={formValues.quantitiy}
+                        name="quantity"
+                        value={formValues.quantity}
                         placeholder="Ingrese el tamaño de la muestra"
                     />
                 </InputGroup>
             </Flex>
-            <Flex direction={'row'} justifyContent="end">
-                <Button onClick={handleGenerateClick} colorScheme="linkedin">
-                    {' '}
-                    Generar{' '}
-                </Button>
-            </Flex>
+            {errors.length === 0 ? (
+                <Flex direction={'row'} justifyContent="end">
+                    <Button onClick={handleGenerateClick} colorScheme="linkedin">
+                        {' '}
+                        Generar{' '}
+                    </Button>
+                </Flex>
+            ) : (
+                <ErrorBox errorMsg={errors} />
+            )}
 
             {generation.length > 0 ? <IntervalShowerPoisson intervals={generation} /> : <></>}
             {generation.length > 0 ? (

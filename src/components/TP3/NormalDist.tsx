@@ -4,9 +4,11 @@ import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IInterv
 import { NormalDistGenerator } from '../../simulation/tp3/random-generators/NormalDistGenerator';
 import { ChiResultType } from '../../simulation/tp3/types/chiResult.type';
 import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
+import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
 import StringDownloader from '../StringDownloader';
+import { NormalDistSchema } from './schemas/NormalDist.schema';
 
 export default function NormalDist() {
     const normalDistGenerator = useRef({} as NormalDistGenerator);
@@ -14,27 +16,36 @@ export default function NormalDist() {
     const [formValues, setFormValues] = useState({
         average: 14,
         standardDeviation: 0.7,
-        quantitiy: 10_000,
+        quantity: 10_000,
     });
+    const [errors, setErrors] = useState([] as string[]);
 
     const [generation, setGeneration] = useState([] as IIntervalWithPercentage[]);
     const [limits, setLimits] = useState([] as string[]);
     const [chiResult, setChiResult] = useState({} as ChiResultType);
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setErrors([]);
         setGeneration([]);
         setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
     const handleGenerateClick = (e: React.SyntheticEvent) => {
-        normalDistGenerator.current = new NormalDistGenerator(
-            Number(formValues.average),
-            Number(formValues.standardDeviation),
-        );
-        normalDistGenerator.current.generateDistribution(formValues.quantitiy);
-        normalDistGeneratedValues.current = normalDistGenerator.current.getGeneration();
-        setGeneration(normalDistGenerator.current.getIntervals());
-        setLimits(normalDistGenerator.current.getClassMarks());
-        setChiResult(normalDistGenerator.current.getChiResult());
+        setErrors([]);
+        NormalDistSchema.validate(formValues, { abortEarly: false })
+            .then(() => {
+                normalDistGenerator.current = new NormalDistGenerator(
+                    Number(formValues.average),
+                    Number(formValues.standardDeviation),
+                );
+                normalDistGenerator.current.generateDistribution(formValues.quantity);
+                normalDistGeneratedValues.current = normalDistGenerator.current.getGeneration();
+                setGeneration(normalDistGenerator.current.getIntervals());
+                setLimits(normalDistGenerator.current.getClassMarks());
+                setChiResult(normalDistGenerator.current.getChiResult());
+            })
+            .catch((err) => {
+                setErrors(err.inner.map((i: { path: string; message: string }) => i.message));
+            });
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
@@ -72,18 +83,22 @@ export default function NormalDist() {
                     <Input
                         type="number"
                         onChange={handleValueChange}
-                        name="quantitiy"
-                        value={formValues.quantitiy}
+                        name="quantity"
+                        value={formValues.quantity}
                         placeholder="Ingrese el tamaño de la muestra"
                     />
                 </InputGroup>
             </Flex>
-            <Flex direction={'row'} justifyContent="end">
-                <Button onClick={handleGenerateClick} colorScheme="linkedin">
-                    {' '}
-                    Generar{' '}
-                </Button>
-            </Flex>
+            {errors.length === 0 ? (
+                <Flex direction={'row'} justifyContent="end">
+                    <Button onClick={handleGenerateClick} colorScheme="linkedin">
+                        {' '}
+                        Generar{' '}
+                    </Button>
+                </Flex>
+            ) : (
+                <ErrorBox errorMsg={errors} />
+            )}
             {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
             {generation.length > 0 ? (
                 <DinamicFrequencyComparator intervals={generation} limits={limits} />
@@ -101,7 +116,12 @@ export default function NormalDist() {
                             `Se ${chiResult.isAccepted ? 'acepta' : 'rechaza'} la hipótesis`,
                         ]}
                     />
-                    <StringDownloader strToDownload={generation.join('\n')} fileName="distribucionNormal">Descargar</StringDownloader>
+                    <StringDownloader
+                        strToDownload={generation.join('\n')}
+                        fileName="distribucionNormal"
+                    >
+                        Descargar
+                    </StringDownloader>
                 </>
             ) : (
                 <></>

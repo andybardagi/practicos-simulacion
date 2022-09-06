@@ -4,34 +4,47 @@ import { IIntervalWithPercentage } from '../../simulation/tp1/interfaces/IInterv
 import { ExponentialDistGenerator } from '../../simulation/tp3/random-generators/ExponentialDistGenerator';
 import { ChiResultType } from '../../simulation/tp3/types/chiResult.type';
 import DinamicFrequencyComparator from '../DinamicFrequencyComparator';
+import ErrorBox from '../ErrorBox';
 import InfoBox from '../InfoBox';
 import IntervalShower from '../IntervalShower';
 import StringDownloader from '../StringDownloader';
+import { ExponDistSchema } from './schemas/ExponDist.schema';
 
 export default function ExponDist() {
     const exponDistGenerator = useRef({} as ExponentialDistGenerator);
     const exponDistGeneratedValues = useRef([] as number[]);
     const [formValues, setFormValues] = useState({
         lambda: 7,
-        quantitiy: 10_000,
+        quantity: 10_000,
     });
+    const [errors, setErrors] = useState([] as string[]);
 
     const [generation, setGeneration] = useState([] as IIntervalWithPercentage[]);
     const [limits, setLimits] = useState([] as string[]);
     const [chiResult, setChiResult] = useState({} as ChiResultType);
 
     const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setErrors([]);
         setGeneration([]);
         setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
     const handleGenerateClick = (e: React.SyntheticEvent) => {
-        console.log('Generation started');
-        exponDistGenerator.current = new ExponentialDistGenerator(Number(formValues.lambda));
-        exponDistGenerator.current.generateDistribution(formValues.quantitiy);
-        exponDistGeneratedValues.current = exponDistGenerator.current.getGeneration();
-        setGeneration(exponDistGenerator.current.getIntervals());
-        setLimits(exponDistGenerator.current.getClassMarks());
-        setChiResult(exponDistGenerator.current.getChiResult());
+        setErrors([]);
+        ExponDistSchema.validate(formValues, { abortEarly: false })
+            .then(() => {
+                console.log('Generation started');
+                exponDistGenerator.current = new ExponentialDistGenerator(
+                    Number(formValues.lambda),
+                );
+                exponDistGenerator.current.generateDistribution(formValues.quantity);
+                exponDistGeneratedValues.current = exponDistGenerator.current.getGeneration();
+                setGeneration(exponDistGenerator.current.getIntervals());
+                setLimits(exponDistGenerator.current.getClassMarks());
+                setChiResult(exponDistGenerator.current.getChiResult());
+            })
+            .catch((err) => {
+                setErrors(err.inner.map((i: { path: string; message: string }) => i.message));
+            });
     };
 
     const widthForms = ['45%', '45%', '45%', '21.25%'];
@@ -58,17 +71,22 @@ export default function ExponDist() {
                     <Input
                         type="number"
                         onChange={handleValueChange}
-                        name="quantitiy"
-                        value={formValues.quantitiy}
+                        name="quantity"
+                        value={formValues.quantity}
                         placeholder="Ingrese el tamaño de la muestra"
                     />
                 </InputGroup>
             </Flex>
-            <Flex direction={'row'} justifyContent="end">
-                <Button onClick={handleGenerateClick} colorScheme="linkedin">
-                    Generar
-                </Button>
-            </Flex>
+            {errors.length === 0 ? (
+                <Flex direction={'row'} justifyContent="end">
+                    <Button onClick={handleGenerateClick} colorScheme="linkedin">
+                        {' '}
+                        Generar{' '}
+                    </Button>
+                </Flex>
+            ) : (
+                <ErrorBox errorMsg={errors} />
+            )}
 
             {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
             {generation.length > 0 ? (
