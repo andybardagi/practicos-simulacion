@@ -16,6 +16,7 @@ export default function ExponDist() {
     const [formValues, setFormValues] = useState({
         lambda: 7,
         quantity: 10_000,
+        intervals: 10,
     });
     const [errors, setErrors] = useState([] as string[]);
 
@@ -35,6 +36,7 @@ export default function ExponDist() {
                 console.log('Generation started');
                 exponDistGenerator.current = new ExponentialDistGenerator(
                     Number(formValues.lambda),
+                    Number(formValues.intervals),
                 );
                 exponDistGenerator.current.generateDistribution(formValues.quantity);
                 exponDistGeneratedValues.current = exponDistGenerator.current.getGeneration();
@@ -76,6 +78,19 @@ export default function ExponDist() {
                         placeholder="Ingrese el tamaño de la muestra"
                     />
                 </InputGroup>
+
+                <InputGroup width={widthForms} mb={2}>
+                    <InputLeftAddon>
+                        <Tooltip label="Cantidad de intervalos">Intervalos</Tooltip>
+                    </InputLeftAddon>
+                    <Input
+                        type="number"
+                        onChange={handleValueChange}
+                        name="intervals"
+                        value={formValues.intervals}
+                        placeholder="Ingrese la cantidad de intervalos"
+                    />
+                </InputGroup>
             </Flex>
             {errors.length === 0 ? (
                 <Flex direction={'row'} justifyContent="end">
@@ -90,7 +105,11 @@ export default function ExponDist() {
 
             {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
             {generation.length > 0 ? (
-                <DinamicFrequencyComparator key={chiResult.c} intervals={generation} limits={limits} />
+                <DinamicFrequencyComparator
+                    key={chiResult.c}
+                    intervals={generation}
+                    limits={limits}
+                />
             ) : (
                 <></>
             )}

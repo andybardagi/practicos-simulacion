@@ -17,6 +17,7 @@ export default function NormalDist() {
         average: 14,
         standardDeviation: 0.7,
         quantity: 10_000,
+        intervals: 10,
     });
     const [errors, setErrors] = useState([] as string[]);
 
@@ -36,6 +37,7 @@ export default function NormalDist() {
                 normalDistGenerator.current = new NormalDistGenerator(
                     Number(formValues.average),
                     Number(formValues.standardDeviation),
+                    Number(formValues.intervals),
                 );
                 normalDistGenerator.current.generateDistribution(formValues.quantity);
                 normalDistGeneratedValues.current = normalDistGenerator.current.getGeneration();
@@ -88,6 +90,18 @@ export default function NormalDist() {
                         placeholder="Ingrese el tamaño de la muestra"
                     />
                 </InputGroup>
+                <InputGroup width={widthForms} mb={2}>
+                    <InputLeftAddon>
+                        <Tooltip label="Cantidad de intervalos">Intervalos</Tooltip>
+                    </InputLeftAddon>
+                    <Input
+                        type="number"
+                        onChange={handleValueChange}
+                        name="intervals"
+                        value={formValues.intervals}
+                        placeholder="Ingrese la cantidad de intervalos"
+                    />
+                </InputGroup>
             </Flex>
             {errors.length === 0 ? (
                 <Flex direction={'row'} justifyContent="end">
@@ -101,7 +115,11 @@ export default function NormalDist() {
             )}
             {generation.length > 0 ? <IntervalShower intervals={generation} /> : <></>}
             {generation.length > 0 ? (
-                <DinamicFrequencyComparator key={chiResult.c} intervals={generation} limits={limits} />
+                <DinamicFrequencyComparator
+                    key={chiResult.c}
+                    intervals={generation}
+                    limits={limits}
+                />
             ) : (
                 <></>
             )}
@@ -117,12 +135,14 @@ export default function NormalDist() {
                         ]}
                     />
                     <Flex my="10px" justifyContent={'right'}>
-                    <StringDownloader
-                        strToDownload={normalDistGeneratedValues.current.join('\n').replaceAll('.',',')}
-                        fileName="distribucionNormal"
-                    >
-                        Descargar
-                    </StringDownloader>
+                        <StringDownloader
+                            strToDownload={normalDistGeneratedValues.current
+                                .join('\n')
+                                .replaceAll('.', ',')}
+                            fileName="distribucionNormal"
+                        >
+                            Descargar
+                        </StringDownloader>
                     </Flex>
                 </>
             ) : (

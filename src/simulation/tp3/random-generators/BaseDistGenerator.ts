@@ -11,11 +11,11 @@ export abstract class BaseDistGenerator {
     private chiTester?: ChiTester;
     private chiResult?: ChiResultType;
 
-    constructor() {
+    constructor(intervalsQuantity: number) {
         const now = new Date();
         const initialSeed = now.getTime();
         this.uniformGenerator = new CombinedCongruentGenerator(11, 7, 2 ** 61, 23);
-        this.intervalHandler = new DinamicIntervalHandler(15);        
+        this.intervalHandler = new DinamicIntervalHandler(intervalsQuantity);        
     }
 
     protected getUniformRandom(): number {

@@ -6,7 +6,7 @@ export class PoissonDistGenerator extends BaseDistGenerator {
     private lambda: number;
 
     constructor(lambda: number) {
-        super();
+        super(0);
         this.lambda = lambda;
         this.intervalHandler = new PoissonDinamicIntervalHandler(0);
     }

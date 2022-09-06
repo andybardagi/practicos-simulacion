@@ -3,8 +3,8 @@ import { BaseDistGenerator } from './BaseDistGenerator';
 export class ExponentialDistGenerator extends BaseDistGenerator {
     private lambda: number;
 
-    constructor(lambda: number) {
-        super();
+    constructor(lambda: number, intervalsQuantity: number) {
+        super(intervalsQuantity);
         this.lambda = lambda;
     }
 
