@@ -3,7 +3,7 @@ import { number, object } from 'yup';
 export const ExponDistSchema = object().shape({
     lambda: number()
         .typeError('El valor de lambda debe ser un número entero')
-        .min(1, 'El valor de lambda no puede ser menor a 1')
+        .moreThan(0, 'El valor de lambda debe ser mayor a 0')
         .required('Debe ingresar un valor para a'),
     quantity: number()
         .integer()
