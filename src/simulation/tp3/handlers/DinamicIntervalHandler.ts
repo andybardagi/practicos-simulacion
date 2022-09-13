@@ -105,7 +105,7 @@ export class DinamicIntervalHandler {
             flagOK = true;
             const newIntervals: IIntervalWithPercentage[] = [];
             for (let i = 0; i < this.intervals.length; i++) {
-                if (this.intervals[i].quantity <= 5) {
+                if (this.intervals[i].expected <= 5) {
                     this.intervalQuantity = this.intervalQuantity - 1;
                     flagOK = false;
 
