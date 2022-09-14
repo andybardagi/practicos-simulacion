@@ -164,5 +164,9 @@ export class DinamicIntervalHandler {
             i.expected =
                 ((lambda ** mark * Math.exp(-lambda)) / factorial(mark)) * this.totalCounter;
         });
+        const sum = this.intervals.reduce((sum, i) => sum + i.expected, 0);
+        if (sum < this.totalCounter){
+            this.intervals[this.intervals.length - 1].expected += this.totalCounter - sum;
+        }
     }
 }
