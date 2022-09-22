@@ -8,6 +8,7 @@ import { theme } from './theme';
 import Integrantes from './components/Integrantes';
 import TP3 from './components/TP3/TP3';
 import { NavigationProvider } from './hooks/NavigationContext';
+import TP4 from './components/TP4/TP4';
 
 // #0295A9
 // #12ADC1
@@ -30,10 +31,7 @@ function App() {
                                     element={<Text>Trabajo práctico N° 2 realizado en Excel</Text>}
                                 />
                                 <Route path="/tp3" element={<TP3 />} />
-                                <Route
-                                    path="/tp4"
-                                    element={<Text>Trabajo práctico N° 4 pendiente :)</Text>}
-                                />
+                                <Route path="/tp4" element={<TP4 />} />
                                 <Route
                                     path="/tp5"
                                     element={<Text>Trabajo práctico N° 5 pendiente :)</Text>}
