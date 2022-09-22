@@ -2,7 +2,6 @@ import {
     Box,
     Button,
     Flex,
-    FormLabel,
     Heading,
     Input,
     InputGroup,
@@ -18,6 +17,7 @@ import { ActivityCoordinator } from '../../simulation/tp4/handlers/ActivityCoord
 import { tp4StatsType } from '../../simulation/tp4/types/stats.type';
 import ErrorBox from '../ErrorBox';
 import LineEvolution from '../LineEvolution';
+import ActivityFlow from './ActivityFlow';
 import TP4StatsShower from './TP4StatsShower';
 
 export default function TP4() {
@@ -29,6 +29,14 @@ export default function TP4() {
         'Identificar máximos y mínimos simulados de los valores de la duración mínima de la tarea de ensamble',
         'Indique cual es la probabilidad de haber completado la tarea de ensamble en 45 días',
         'Cuál es la fecha a fijar si se busca un nivel de confianza del 90% de terminar en esa fecha o antes',
+    ];
+
+    const activities = [
+        'A1 - Distribución uniforme U [20, 30)',
+        'A2 - Distribución uniforme U [30, 50)',
+        'A3 - Distribución exponencial con media de 30',
+        'A4 - Distribución uniforme U [10, 20)',
+        'A5 - Distribución exponencial con media de 5',
     ];
 
     const activityHandler = useRef(new ActivityCoordinator());
@@ -50,7 +58,11 @@ export default function TP4() {
             setFlagSim(true);
             activityHandler.current = new ActivityCoordinator();
             activityHandler.current.simulateManyTasks(parseInt(n));
-            setStats(activityHandler.current.getStats());
+            const res = activityHandler.current.getStats();
+            res.averageEvolution = !flagGraph
+                ? res.averageEvolution
+                : res.averageEvolution.slice(0, 1000);
+            setStats(res);
         }
     };
 
@@ -61,9 +73,28 @@ export default function TP4() {
                 <Text color="#444444">
                     Simule el siguiente proyecto en red y luego responda las siguientes preguntas
                 </Text>
+                <Box mx="auto" w="fit-content" my={4}>
+                    <Text color="#444444" mb={2}>
+                        Diagrama de precedencia de actividades
+                    </Text>
+                    <ActivityFlow />
+                </Box>
+                <UnorderedList mb={2}>
+                    {activities.map((a, i) => (
+                        <ListItem>
+                            <Text color="#444444">{a} </Text>
+                        </ListItem>
+                    ))}
+                </UnorderedList>
                 <Text color="#444444">
-                    Llamaremos "duración de la tarea de ensamble" al "tiempo mínimo" en que puede
-                    completarse dicha tarea.
+                    Llamaremos <b>duración de la tarea de ensamble</b> al "tiempo mínimo" en que
+                    puede completarse dicha tarea.
+                </Text>
+                <Text color="#444444">
+                    <b>
+                        Se considera completada la tarea de ensamble cuando completamos las 5
+                        actividades considerando sus precedencias
+                    </b>
                 </Text>
                 <UnorderedList>
                     {consignas.map((c, i) => (
@@ -88,16 +119,16 @@ export default function TP4() {
                 </Flex>
                 {error.isError ? <ErrorBox errorMsg={error.msg} /> : null}
                 {flagSim ? <TP4StatsShower stats={stats} /> : null}
-                <Flex alignItems="center" gap={2}>
-                    <Text>Activar gráfico</Text>
+                <Flex alignItems="center" gap={2} my={4}>
                     <Switch
                         size={'md'}
                         id="graphActivator"
                         isChecked={flagGraph}
                         onChange={() => setFlagGraph(!flagGraph)}
                     ></Switch>
+                    <Text>Recortar primeras 1000 simulaciones en gráfico </Text>
                 </Flex>
-                {flagSim && flagGraph ? (
+                {flagSim ? (
                     <LineEvolution
                         key={stats.trust90}
                         evolution={stats.averageEvolution}
