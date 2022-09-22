@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     Flex,
+    FormLabel,
     Heading,
     Input,
     InputGroup,
@@ -87,7 +88,15 @@ export default function TP4() {
                 </Flex>
                 {error.isError ? <ErrorBox errorMsg={error.msg} /> : null}
                 {flagSim ? <TP4StatsShower stats={stats} /> : null}
-                <Switch isChecked={flagGraph} onChange={() => setFlagGraph(!flagGraph)}></Switch>
+                <Flex alignItems="center" gap={2}>
+                    <Text>Activar gráfico</Text>
+                    <Switch
+                        size={'md'}
+                        id="graphActivator"
+                        isChecked={flagGraph}
+                        onChange={() => setFlagGraph(!flagGraph)}
+                    ></Switch>
+                </Flex>
                 {flagSim && flagGraph ? (
                     <LineEvolution
                         key={stats.trust90}
