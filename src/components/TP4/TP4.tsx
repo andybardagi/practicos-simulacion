@@ -139,6 +139,3 @@ export default function TP4() {
         </Box>
     );
 }
-/*
-
-*/

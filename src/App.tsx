@@ -31,7 +31,10 @@ function App() {
                                     element={<Text>Trabajo práctico N° 2 realizado en Excel</Text>}
                                 />
                                 <Route path="/tp3" element={<TP3 />} />
-                                <Route path="/tp4" element={<TP4 />} />
+                                <Route
+                                    path="/tp4"
+                                    element={<TP4/>}
+                                />
                                 <Route
                                     path="/tp5"
                                     element={<Text>Trabajo práctico N° 5 pendiente :)</Text>}
