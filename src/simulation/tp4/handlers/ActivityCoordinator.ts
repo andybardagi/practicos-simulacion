@@ -2,6 +2,7 @@ import { tp4StatsType } from './../types/stats.type';
 import CombinedCongruentGenerator from '../../tp1/random-generators/CombinedCongruentGenerator';
 import { ExponentialDistGenerator } from '../../tp3/random-generators/ExponentialDistGenerator';
 import { number } from 'yup';
+import { IrregularIntervalHandler } from './IrregularIntervalHandler';
 export class ActivityCoordinator {
     private durationAcumulator: number = 0;
     private durationsSimulated: number[] = [];
@@ -12,6 +13,7 @@ export class ActivityCoordinator {
     private minDuration?: number;
     private exponentialGeneratorTask3: ExponentialDistGenerator;
     private exponentialGeneratorTask5: ExponentialDistGenerator;
+    private intervalStatHandler = new IrregularIntervalHandler();
 
     constructor() {
         this.exponentialGeneratorTask3 = new ExponentialDistGenerator(1 / 30, 1);
@@ -46,6 +48,12 @@ export class ActivityCoordinator {
 
         this.durationsSimulated.push(assemblyDuration);
 
+        if (this.simulationCounter < 15) {
+            this.intervalStatHandler.addLimit(assemblyDuration);
+        } else {
+            this.intervalStatHandler.addNumber(assemblyDuration);
+        }
+
         this.finishedBefore45Counter += assemblyDuration <= 45 ? 1 : 0;
         this.historicAverage.push(this.durationAcumulator / this.simulationCounter);
         if (this.simulationCounter > 0 && this.maxDuration && this.minDuration) {
@@ -69,7 +77,6 @@ export class ActivityCoordinator {
         //Sort to get te trust90 value correctly
 
         this.durationsSimulated.sort((a, b) => a - b);
-        console.log(this.durationsSimulated);
         return {
             averageDuration: this.historicAverage[this.historicAverage.length - 1],
             averageEvolution: this.historicAverage,
@@ -78,5 +85,9 @@ export class ActivityCoordinator {
             pLess45: this.finishedBefore45Counter / this.simulationCounter,
             trust90: this.durationsSimulated[Math.ceil(this.durationsSimulated.length * 0.9)],
         };
+    }
+
+    public getIntervalStats() {
+        return this.intervalStatHandler.getStats();
     }
 }

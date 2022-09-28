@@ -14,10 +14,12 @@ import {
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { ActivityCoordinator } from '../../simulation/tp4/handlers/ActivityCoordinator';
+import { IntervalStatType } from '../../simulation/tp4/types/intervalStat.type';
 import { tp4StatsType } from '../../simulation/tp4/types/stats.type';
 import ErrorBox from '../ErrorBox';
 import LineEvolution from '../LineEvolution';
 import ActivityFlow from './ActivityFlow';
+import TableIntervalStat from './TableIntervalStat';
 import TP4StatsShower from './TP4StatsShower';
 
 export default function TP4() {
@@ -29,6 +31,7 @@ export default function TP4() {
         'Identificar máximos y mínimos simulados de los valores de la duración mínima de la tarea de ensamble',
         'Indique cual es la probabilidad de haber completado la tarea de ensamble en 45 días',
         'Cuál es la fecha a fijar si se busca un nivel de confianza del 90% de terminar en esa fecha o antes',
+        'Cuál es la fecha a fijar si se busca un nivel de confianza del 90% de terminar en esa fecha o antes. En base a las 14 simulaciones iniciales identifique 15 intervalos de frecuencia.',
     ];
 
     const activities = [
@@ -50,6 +53,7 @@ export default function TP4() {
         setN(e.target.value);
     };
     const [stats, setStats] = useState({} as tp4StatsType);
+    const [statsInterval, setStatsInterval] = useState([] as IntervalStatType[]);
 
     const simulate = () => {
         if (isNaN(parseInt(n))) {
@@ -63,6 +67,7 @@ export default function TP4() {
                 ? res.averageEvolution
                 : res.averageEvolution.slice(0, 1000);
             setStats(res);
+            setStatsInterval(activityHandler.current.getIntervalStats());
         }
     };
 
@@ -128,6 +133,7 @@ export default function TP4() {
                     ></Switch>
                     <Text>Recortar primeras 1000 simulaciones en gráfico </Text>
                 </Flex>
+                {flagSim ? <TableIntervalStat intervals={statsInterval} /> : <></>}
                 {flagSim ? (
                     <LineEvolution
                         key={stats.trust90}
