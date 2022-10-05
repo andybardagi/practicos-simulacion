@@ -1,4 +1,4 @@
-import { Box, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Heading, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React from 'react';
 import { IntervalStatType } from '../../simulation/tp4/types/intervalStat.type';
 
@@ -7,7 +7,8 @@ type PropType = {
 };
 export default function TableIntervalStat({ intervals }: PropType) {
     return (
-        <Box>
+        <Box my={8}>
+            <Heading size="md">Intervalos de frecuencia</Heading>
             <Table>
                 <Thead>
                     <Tr>

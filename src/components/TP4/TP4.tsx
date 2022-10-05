@@ -21,6 +21,8 @@ import LineEvolution from '../LineEvolution';
 import ActivityFlow from './ActivityFlow';
 import TableIntervalStat from './TableIntervalStat';
 import TP4StatsShower from './TP4StatsShower';
+import { tp4FormSchema } from './form.schema';
+import StateVectorTP4Shower from './StateVectorTP4Shower';
 
 export default function TP4() {
     const consignas = [
@@ -42,33 +44,52 @@ export default function TP4() {
         'A5 - Distribución exponencial con media de 5',
     ];
 
-    const activityHandler = useRef(new ActivityCoordinator());
-    const [n, setN] = useState('10000');
+    const activityHandler = useRef(new ActivityCoordinator(0, Infinity));
+    const [form, setForm] = useState({ n: '10000', min: '1', max: '100' });
     const [flagSim, setFlagSim] = useState(false);
     const [flagGraph, setFlagGraph] = useState(true);
     const [error, setError] = useState({ isError: false, msg: [''] });
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFlagSim(false);
         setError((p) => ({ ...p, isError: false }));
-        setN(e.target.value);
+        setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
     };
     const [stats, setStats] = useState({} as tp4StatsType);
     const [statsInterval, setStatsInterval] = useState([] as IntervalStatType[]);
 
     const simulate = () => {
-        if (isNaN(parseInt(n))) {
-            setError({ isError: true, msg: ['El valor de N es inválido'] });
-        } else {
-            setFlagSim(true);
-            activityHandler.current = new ActivityCoordinator();
-            activityHandler.current.simulateManyTasks(parseInt(n));
-            const res = activityHandler.current.getStats();
-            res.averageEvolution = !flagGraph
-                ? res.averageEvolution
-                : res.averageEvolution.slice(0, 1000);
-            setStats(res);
-            setStatsInterval(activityHandler.current.getIntervalStats());
-        }
+        tp4FormSchema
+            .validate(form, { abortEarly: false })
+            .then(() => {
+                if (Number(form.max) - Number(form.min) > 100) {
+                    setError({
+                        isError: true,
+                        msg: ['La cantidad de vectores de estado no debe ser mayor a 100'],
+                    });
+                    return;
+                }
+
+                setFlagSim(true);
+                activityHandler.current = new ActivityCoordinator(
+                    Number(form.min),
+                    Number(form.max),
+                );
+                activityHandler.current.simulateManyTasks(parseInt(form.n));
+                const res = activityHandler.current.getStats();
+                res.averageEvolution = !flagGraph
+                    ? res.averageEvolution
+                    : res.averageEvolution.slice(0, 1000);
+                setStats(res);
+                setStatsInterval(activityHandler.current.getIntervalStats());
+            })
+            .catch((err) => {
+                console.log('a');
+                console.log(err.inner.map((i: { path: string; message: string }) => i.message));
+                setError({
+                    isError: true,
+                    msg: err.inner.map((i: { path: string; message: string }) => i.message),
+                });
+            });
     };
 
     return (
@@ -111,12 +132,46 @@ export default function TP4() {
             </Box>
 
             <Box border="1px solid #efefef" borderRadius={8} p={4} mt={4}>
+                <Text size="md">Límites de muestreo de vector de estados</Text>
+                <Flex my={2} gap={2} direction={['column', 'column', 'row', 'row']}>
+                    <InputGroup>
+                        <InputLeftAddon>
+                            <Tooltip label="Limite inferior para guardado de vector de estado">
+                                Min
+                            </Tooltip>
+                        </InputLeftAddon>
+                        <Input
+                            onChange={handleInputChange}
+                            value={form.min}
+                            type="number"
+                            name="min"
+                        />
+                    </InputGroup>
+                    <InputGroup>
+                        <InputLeftAddon>
+                            <Tooltip label="Limite superior para guardado de vector de estado">
+                                Max
+                            </Tooltip>
+                        </InputLeftAddon>
+                        <Input
+                            onChange={handleInputChange}
+                            value={form.max}
+                            type="number"
+                            name="max"
+                        />
+                    </InputGroup>
+                </Flex>
                 <Flex justify={'flex-end'} my={2} gap={2}>
                     <InputGroup>
                         <InputLeftAddon>
                             <Tooltip label="Cantidad de simulaciones">N</Tooltip>
                         </InputLeftAddon>
-                        <Input onChange={handleInputChange} value={n} type="number" />
+                        <Input
+                            onChange={handleInputChange}
+                            value={form.n}
+                            type="number"
+                            name="form"
+                        />
                     </InputGroup>
                     <Button onClick={simulate} colorScheme={'linkedin'}>
                         Simular
@@ -133,6 +188,8 @@ export default function TP4() {
                     ></Switch>
                     <Text>Recortar primeras 1000 simulaciones en gráfico </Text>
                 </Flex>
+
+                {flagSim ? <StateVectorTP4Shower stateVectors={stats.stateVectors} /> : <></>}
                 {flagSim ? <TableIntervalStat intervals={statsInterval} /> : <></>}
                 {flagSim ? (
                     <LineEvolution

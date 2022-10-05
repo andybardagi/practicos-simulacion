@@ -1,7 +1,6 @@
-import { tp4StatsType } from './../types/stats.type';
-import CombinedCongruentGenerator from '../../tp1/random-generators/CombinedCongruentGenerator';
 import { ExponentialDistGenerator } from '../../tp3/random-generators/ExponentialDistGenerator';
-import { number } from 'yup';
+import { activity, stateVector } from '../types/stateVector.type';
+import { tp4StatsType } from './../types/stats.type';
 import { IrregularIntervalHandler } from './IrregularIntervalHandler';
 export class ActivityCoordinator {
     private durationAcumulator: number = 0;
@@ -14,22 +13,32 @@ export class ActivityCoordinator {
     private exponentialGeneratorTask3: ExponentialDistGenerator;
     private exponentialGeneratorTask5: ExponentialDistGenerator;
     private intervalStatHandler = new IrregularIntervalHandler();
+    private stateVectors: stateVector[] = [];
+    private minStateShow: number;
+    private maxStateShow: number;
 
-    constructor() {
+    constructor(minStateShow: number, maxStateShow: number) {
+        //Set the exponential generator with lambda = 1/avg for each task.
         this.exponentialGeneratorTask3 = new ExponentialDistGenerator(1 / 30, 1);
         this.exponentialGeneratorTask5 = new ExponentialDistGenerator(1 / 5, 1);
+        this.minStateShow = minStateShow;
+        this.maxStateShow = maxStateShow;
     }
 
-    private simulateUniformTaskDuration(min: number, max: number): number {
-        return Math.random() * (max - min) + min;
+    private simulateUniformTaskDuration(min: number, max: number): activity {
+        const uRandom = Math.random();
+        return {
+            uRnd: uRandom,
+            random: uRandom * (max - min) + min,
+        };
     }
 
-    private simulateTask3(): number {
-        return this.exponentialGeneratorTask3.generateRandom();
+    private simulateTask3(): activity {
+        return this.exponentialGeneratorTask3.generateRandomActivity();
     }
 
-    private simulateTask5(): number {
-        return this.exponentialGeneratorTask5.generateRandom();
+    private simulateTask5(): activity {
+        return this.exponentialGeneratorTask5.generateRandomActivity();
     }
 
     private simulateAssembly() {
@@ -37,11 +46,11 @@ export class ActivityCoordinator {
         const task2 = this.simulateUniformTaskDuration(30, 50);
         const task3 = this.simulateTask3();
         const task4 = this.simulateUniformTaskDuration(10, 20);
-        const task4Final = task1 + task4;
+        const task4Final = task1.random + task4.random;
         const task5 = this.simulateTask5();
-        const task5Final = (task2 > task4Final ? task2 : task4Final) + task5;
+        const task5Final = (task2.random > task4Final ? task2.random : task4Final) + task5.random;
 
-        const assemblyDuration = task5Final > task3 ? task5Final : task3;
+        const assemblyDuration = task5Final > task3.random ? task5Final : task3.random;
 
         this.simulationCounter += 1;
         this.durationAcumulator += assemblyDuration;
@@ -65,6 +74,22 @@ export class ActivityCoordinator {
             this.maxDuration = assemblyDuration;
             this.minDuration = assemblyDuration;
         }
+
+        //Check if the simulation is in the range of saving the state vector and do it if true.
+        if (
+            this.simulationCounter >= this.minStateShow &&
+            this.simulationCounter <= this.maxStateShow
+        ) {
+            this.stateVectors.push({
+                activities: [task1, task2, task3, task4, task5],
+                assemblyDuration: assemblyDuration,
+                durationAcumulator: Number(this.durationAcumulator),
+                simulationCounter: Number(this.simulationCounter),
+                finishedBefore45Counter: Number(this.finishedBefore45Counter),
+                maxDuration: Number(this.maxDuration),
+                minDuration: Number(this.minDuration),
+            });
+        }
     }
 
     public simulateManyTasks(n: number) {
@@ -75,8 +100,8 @@ export class ActivityCoordinator {
 
     public getStats(): tp4StatsType {
         //Sort to get te trust90 value correctly
-
         this.durationsSimulated.sort((a, b) => a - b);
+
         return {
             averageDuration: this.historicAverage[this.historicAverage.length - 1],
             averageEvolution: this.historicAverage,
@@ -84,6 +109,7 @@ export class ActivityCoordinator {
             minDuration: this.minDuration || 0,
             pLess45: this.finishedBefore45Counter / this.simulationCounter,
             trust90: this.durationsSimulated[Math.ceil(this.durationsSimulated.length * 0.9)],
+            stateVectors: this.stateVectors 
         };
     }
 

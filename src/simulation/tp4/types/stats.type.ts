@@ -1,3 +1,4 @@
+import { stateVector } from './stateVector.type';
 export type tp4StatsType = {
     averageDuration: number;
     averageEvolution: number[];
@@ -5,4 +6,5 @@ export type tp4StatsType = {
     minDuration: number;
     pLess45: number;
     trust90: number;
+    stateVectors: stateVector[];
 };

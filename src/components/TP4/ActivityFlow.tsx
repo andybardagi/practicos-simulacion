@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function ActivityFlow() {
     return (
-        <Box maxW={"100%"}>
+        <Box maxW={"min(300px,100%)"} margin="auto">
             <div>
                 <svg
                     
