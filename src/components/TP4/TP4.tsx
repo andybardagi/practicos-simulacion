@@ -170,7 +170,7 @@ export default function TP4() {
                             onChange={handleInputChange}
                             value={form.n}
                             type="number"
-                            name="form"
+                            name="n"
                         />
                     </InputGroup>
                     <Button onClick={simulate} colorScheme={'linkedin'}>
