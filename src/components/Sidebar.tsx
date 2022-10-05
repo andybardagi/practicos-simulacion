@@ -65,7 +65,7 @@ export default function Sidebar() {
     return (
         <>
             {navContext.sidebarDisplay ? (
-                <Box w={'200px'} bgColor="#12ADC133">
+                <Box w={'200px'} bgColor="#12ADC133" display={'inline-block'}>
                     <List>
                         {tpList.map((tp, index) => {
                             return (
