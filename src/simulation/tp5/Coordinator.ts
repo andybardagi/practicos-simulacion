@@ -4,6 +4,7 @@ import { UniformServer } from './ConcreteServer/UniformServer';
 import { Servers } from './enum/Servers';
 import { EventType, SimulationEvent } from './enum/SimulationEvent';
 import { Server } from './Server';
+import { StatsObserver } from './StatsObserver';
 
 export class Coordinator {
     private clock: number;
@@ -13,6 +14,7 @@ export class Coordinator {
     private pendingEvents: SimulationEvent[];
     private finishedAssemblies: AssemblyObject[];
     private lastAssemblyId: number;
+    private statsObserver: StatsObserver;
 
     constructor() {
         this.clock = 0;
@@ -29,11 +31,13 @@ export class Coordinator {
         this.pendingEvents = [];
         this.nextStep = {
             [Servers.server1]: (objAs) => {
-                this.servers[Servers.server4].queueAssembly(objAs, this.clock);
+                const q4 = this.servers[Servers.server4].queueAssembly(objAs, this.clock);
+                this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
             },
             [Servers.server2]: (objAs) => {
                 if (objAs.hasFinishedServer(Servers.server4)) {
-                    this.servers[Servers.server5].queueAssembly(objAs, this.clock);
+                    const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
+                    this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
                 }
             },
             [Servers.server3]: (objAs) => {
@@ -44,7 +48,8 @@ export class Coordinator {
             },
             [Servers.server4]: (objAs) => {
                 if (objAs.hasFinishedServer(Servers.server2)) {
-                    this.servers[Servers.server5].queueAssembly(objAs, this.clock);
+                    const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
+                    this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
                 }
             },
             [Servers.server5]: (objAs) => {
@@ -54,7 +59,7 @@ export class Coordinator {
                 }
             },
         };
-
+        this.statsObserver = new StatsObserver();
         this.generateNextArrive();
     }
 
@@ -63,6 +68,8 @@ export class Coordinator {
             //Genero simulaciones hasta cumplir con el límite de simulaciones solicitadas.
             this.processNextEvent();
         }
+
+        return this.statsObserver.getFinalStats(this.clock);
     }
 
     processNextEvent() {
@@ -70,13 +77,18 @@ export class Coordinator {
         this.clock = nextEvent.time;
 
         if (nextEvent.type === EventType.orderArrive) {
+            //Notificar que llegaron pedidos para el cálculo de estadísticas
+            this.statsObserver.notifyArrives(nextEvent.orderQuantity);
             //Crear nuevos AssemblyObject y encolar donde corresponda
             for (let i = 0; i < nextEvent.orderQuantity; i++) {
                 this.lastAssemblyId++;
                 const asObj: AssemblyObject = new AssemblyObject(this.lastAssemblyId, this.clock);
-                this.servers[Servers.server1].queueAssembly(asObj, this.clock);
-                this.servers[Servers.server2].queueAssembly(asObj, this.clock);
-                this.servers[Servers.server3].queueAssembly(asObj, this.clock);
+                const q1 = this.servers[Servers.server1].queueAssembly(asObj, this.clock);
+                const q2 = this.servers[Servers.server2].queueAssembly(asObj, this.clock);
+                const q3 = this.servers[Servers.server3].queueAssembly(asObj, this.clock);
+                this.statsObserver.notifyQueueQuantity(Servers.server1, q1)
+                this.statsObserver.notifyQueueQuantity(Servers.server2, q2)
+                this.statsObserver.notifyQueueQuantity(Servers.server3, q3)
             }
 
             this.generateNextArrive();

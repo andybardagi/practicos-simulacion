@@ -1,3 +1,4 @@
+import { number } from 'yup';
 import { AssemblyObject } from './AssemblyObject';
 import { Coordinator } from './Coordinator';
 import { Servers } from './enum/Servers';
@@ -33,7 +34,7 @@ export abstract class Server {
         this.currentAssembly = null;
         if (this.queue.length > 0) {
             this.currentAssembly = this.queue.shift() as AssemblyObject;
-            this.currentAssembly.setTailTime(this.id, clock);
+            this.currentAssembly.setQueueTime(this.id, clock);
             this.coord.addPendingEvent({
                 type: EventType.finishTask,
                 time: this.calculateNextFinish(clock),
@@ -47,23 +48,26 @@ export abstract class Server {
      *
      * @param asObj AssemblyObject a encolar o procesar
      * @param clock Tiempo de la simulación en la que se invoca la operación de encolado
+     * @returns number cantidad de elementos en cola para ese momento.
      */
-    public queueAssembly(asObj: AssemblyObject, clock: number) {
-        asObj.setArriveToTailTime(this.id, clock);
+    public queueAssembly(asObj: AssemblyObject, clock: number): number {
+        asObj.setArriveToQueueTime(this.id, clock);
         //Chequeo si el servidor está ocupado
         if (this.currentAssembly == null) {
             //No lo esta, seteo el actual
             this.currentAssembly = asObj;
-            this.currentAssembly.setTailTime(this.id, clock);
+            this.currentAssembly.setQueueTime(this.id, clock);
             this.calculateNextFinish(clock);
             this.coord.addPendingEvent({
                 type: EventType.finishTask,
                 time: this.calculateNextFinish(clock),
                 server: this.id,
             });
+            return 0;
         } else {
             //Si lo esta, pongo en cola
             this.queue.push(asObj);
+            return this.queue.length;
         }
     }
 }

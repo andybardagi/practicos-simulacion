@@ -1,8 +1,8 @@
 import { Servers } from './enum/Servers';
 export class AssemblyObject {
     private id: number;
-    private tailTimes: Record<Servers, number>;
-    private arriveToTailTimes: Record<Servers, number>;
+    private queueTimes: Record<Servers, number>;
+    private arriveToQueueTimes: Record<Servers, number>;
     private serverTimes: Record<Servers, number>;
     private assemblyDuration: number = -1;
     private arriveTime: number;
@@ -11,7 +11,7 @@ export class AssemblyObject {
     constructor(id: number, arriveTime: number) {
         this.id = id;
         this.arriveTime = arriveTime;
-        this.tailTimes = {
+        this.queueTimes = {
             [Servers.server1]: -1,
             [Servers.server2]: -1,
             [Servers.server3]: -1,
@@ -25,7 +25,7 @@ export class AssemblyObject {
             [Servers.server4]: -1,
             [Servers.server5]: -1,
         };
-        this.arriveToTailTimes = {
+        this.arriveToQueueTimes = {
             [Servers.server1]: -1,
             [Servers.server2]: -1,
             [Servers.server3]: -1,
@@ -39,14 +39,14 @@ export class AssemblyObject {
         return this.assemblyDuration;
     }
 
-    public setTailTime(server: Servers, clock: number): void {
-        this.tailTimes[server] = clock - this.arriveToTailTimes[server];
+    public setQueueTime(server: Servers, clock: number): void {
+        this.queueTimes[server] = clock - this.arriveToQueueTimes[server];
     }
     public setServerTime(server: Servers, duration: number): void {
         this.serverTimes[server] = duration;
     }
-    public setArriveToTailTime(server: Servers, duration: number): void {
-        this.arriveToTailTimes[server] = duration;
+    public setArriveToQueueTime(server: Servers, duration: number): void {
+        this.arriveToQueueTimes[server] = duration;
     }
 
     public setFinishTime(n: number) {
@@ -65,5 +65,13 @@ export class AssemblyObject {
             this.hasFinishedServer(Servers.server4) &&
             this.hasFinishedServer(Servers.server5)
         );
+    }
+
+    public getTotalDuration() {
+        return this.finishTime - this.arriveTime;
+    }
+
+    public getQueuesDuration() {
+        return this.queueTimes;
     }
 }
