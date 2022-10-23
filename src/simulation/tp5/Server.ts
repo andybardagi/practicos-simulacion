@@ -4,7 +4,7 @@ import { Servers } from './enum/Servers';
 import { EventType } from './enum/SimulationEvent';
 export abstract class Server {
     private id: Servers;
-    private tail: AssemblyObject[] = [];
+    private queue: AssemblyObject[] = [];
     private currentAssembly: AssemblyObject | null;
     private estimatedFinish: number = 0;
     private coord: Coordinator;
@@ -22,15 +22,17 @@ export abstract class Server {
 
     public abstract calculateTaskDuration(): number;
 
-    public finishCurrentTask(clock: number) {
+    public finishCurrentTask(clock: number): AssemblyObject {
         if (this.currentAssembly == null) {
+            console.log(this.id);
             throw Error('Finalizando evento fantasma');
         }
         //Finalizo el ensamble.
         this.currentAssembly?.setServerTime(this.id, this.estimatedFinish);
+        const old = this.currentAssembly;
         this.currentAssembly = null;
-        if (this.tail.length > 0) {
-            this.currentAssembly = this.tail.shift() as AssemblyObject;
+        if (this.queue.length > 0) {
+            this.currentAssembly = this.queue.shift() as AssemblyObject;
             this.currentAssembly.setTailTime(this.id, clock);
             this.coord.addPendingEvent({
                 type: EventType.finishTask,
@@ -38,6 +40,7 @@ export abstract class Server {
                 server: this.id,
             });
         }
+        return old;
     }
 
     /**
@@ -45,7 +48,7 @@ export abstract class Server {
      * @param asObj AssemblyObject a encolar o procesar
      * @param clock Tiempo de la simulación en la que se invoca la operación de encolado
      */
-    public queue(asObj: AssemblyObject, clock: number) {
+    public queueAssembly(asObj: AssemblyObject, clock: number) {
         asObj.setArriveToTailTime(this.id, clock);
         //Chequeo si el servidor está ocupado
         if (this.currentAssembly == null) {
@@ -60,7 +63,7 @@ export abstract class Server {
             });
         } else {
             //Si lo esta, pongo en cola
-            this.tail.push(asObj);
+            this.queue.push(asObj);
         }
     }
 }

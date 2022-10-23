@@ -1,8 +1,8 @@
 import { Servers } from './Servers';
 
 export enum EventType {
-    finishTask = 1,
-    orderArrive = 2,
+    finishTask = "finishTask",
+    orderArrive = "orderArrival",
 }
 
 type OrderArrive = {

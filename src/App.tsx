@@ -9,6 +9,7 @@ import Integrantes from './components/Integrantes';
 import TP3 from './components/TP3/TP3';
 import { NavigationProvider, useNavigationContext } from './hooks/NavigationContext';
 import TP4 from './components/TP4/TP4';
+import TP5 from './components/TP5/TP5';
 
 // #0295A9
 // #12ADC1
@@ -33,10 +34,7 @@ function App() {
                             />
                             <Route path="/tp3" element={<TP3 />} />
                             <Route path="/tp4" element={<TP4 />} />
-                            <Route
-                                path="/tp5"
-                                element={<Text>Trabajo práctico N° 5 pendiente :)</Text>}
-                            />
+                            <Route path="/tp5" element={<TP5 />} />
                             <Route
                                 path="/tp6"
                                 element={<Text>Trabajo práctico N° 6 pendiente :)</Text>}
