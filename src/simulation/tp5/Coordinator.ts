@@ -78,6 +78,8 @@ export class Coordinator {
                 this.servers[Servers.server2].queue(asObj, this.clock);
                 this.servers[Servers.server3].queue(asObj, this.clock);
             }
+
+            this.generateNextArrive();
         } else if (nextEvent.type === EventType.finishTask) {
             //procesar finalizacion tarea en servidor.
             this.servers[nextEvent.server].finishCurrentTask(this.clock);
@@ -85,6 +87,7 @@ export class Coordinator {
     }
 
     public addPendingEvent(e: SimulationEvent) {
+        // TODO Esta inserción debe realizarse ordenada por e.time; para que se pueda utilizar el shift en el getNextEvent();
         this.pendingEvents.push(e);
     }
 
