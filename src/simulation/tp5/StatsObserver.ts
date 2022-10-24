@@ -1,5 +1,6 @@
 import { Servers } from './enum/Servers';
 import { AssemblyObject } from './AssemblyObject';
+import { tp5StatsType } from './types/stats.type';
 export class StatsObserver {
     private assemblyDurationAcumulator: number = 0;
     private queueDurationAcumulator: Record<Servers, number>;
@@ -54,7 +55,7 @@ export class StatsObserver {
         }
     }
 
-    public getFinalStats(clock: number) {
+    public getFinalStats(clock: number): tp5StatsType { {
         const queueAverageTime = {
             [Servers.server1]:
                 this.queueDurationAcumulator[Servers.server1] / this.finishedAssemblies,
@@ -78,4 +79,5 @@ export class StatsObserver {
             pGreaterOrEqualThan3: 0, // pendiente
         };
     }
+}
 }

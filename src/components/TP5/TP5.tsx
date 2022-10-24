@@ -1,10 +1,13 @@
 import { Heading, UnorderedList, ListItem, Text, Box, Button } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { estimators } from './ConsignasTP5';
 import QueueFlow from './QueueFlow';
 import { useRef } from 'react';
 import { Coordinator } from '../../simulation/tp5/Coordinator';
 import { SimulationEvent } from '../../simulation/tp5/enum/SimulationEvent';
+import TP5StatsShower from './TP5StatsShower';
+import { tp5StatsType } from '../../simulation/tp5/types/stats.type';
+
 
 export default function TP5() {
     const activities = [
@@ -16,9 +19,13 @@ export default function TP5() {
     ];
 
     const coordinator = useRef<Coordinator>();
+    const [flagSim, setFlagSim] = useState(false);
+    const [stats, setStats] = useState({} as tp5StatsType);
     const simulate = () => {
         coordinator.current = new Coordinator();
-        coordinator.current.simulate(10);
+        const res = coordinator.current.simulate(10);
+        setFlagSim(true);
+        setStats(res);
     };
 
     return (
@@ -72,10 +79,11 @@ export default function TP5() {
             </Box>
 
             <Box>
-                <Button colorScheme={'linkedin'} onClick={simulate}>
+                <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
                     Simular 10 ensambles
                 </Button>
             </Box>
+            {flagSim ? <TP5StatsShower stats={stats} /> : null}
         </Box>
     );
 }

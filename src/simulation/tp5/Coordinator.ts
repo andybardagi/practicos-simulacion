@@ -44,6 +44,7 @@ export class Coordinator {
                 if (objAs.hasFinishedServer(Servers.server5)) {
                     objAs.setFinishTime(this.clock);
                     this.finishedAssemblies.push(objAs);
+                    this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
                 }
             },
             [Servers.server4]: (objAs) => {
@@ -56,6 +57,7 @@ export class Coordinator {
                 if (objAs.hasFinishedServer(Servers.server3)) {
                     objAs.setFinishTime(this.clock);
                     this.finishedAssemblies.push(objAs);
+                    this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
                 }
             },
         };
@@ -86,9 +88,13 @@ export class Coordinator {
                 const q1 = this.servers[Servers.server1].queueAssembly(asObj, this.clock);
                 const q2 = this.servers[Servers.server2].queueAssembly(asObj, this.clock);
                 const q3 = this.servers[Servers.server3].queueAssembly(asObj, this.clock);
+                const q4 = this.servers[Servers.server4].queueAssembly(asObj, this.clock);
+                const q5 = this.servers[Servers.server5].queueAssembly(asObj, this.clock);
                 this.statsObserver.notifyQueueQuantity(Servers.server1, q1)
                 this.statsObserver.notifyQueueQuantity(Servers.server2, q2)
                 this.statsObserver.notifyQueueQuantity(Servers.server3, q3)
+                this.statsObserver.notifyQueueQuantity(Servers.server4, q4)
+                this.statsObserver.notifyQueueQuantity(Servers.server5, q5)
             }
 
             this.generateNextArrive();
