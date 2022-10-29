@@ -5,6 +5,7 @@ import { Servers } from './enum/Servers';
 import { EventType, SimulationEvent } from './enum/SimulationEvent';
 import { Server } from './Server';
 import { StatsObserver } from './StatsObserver';
+import { stateVector } from './types/stateVector.type';
 
 export class Coordinator {
     private clock: number;
@@ -15,6 +16,7 @@ export class Coordinator {
     private finishedAssemblies: AssemblyObject[];
     private lastAssemblyId: number;
     private statsObserver: StatsObserver;
+    private vectorState: stateVector[] = [];
 
     constructor() {
         this.clock = 0;
@@ -69,12 +71,29 @@ export class Coordinator {
         while (this.finishedAssemblies.length < orders) {
             //Genero simulaciones hasta cumplir con el límite de simulaciones solicitadas.
             this.processNextEvent();
+
+            if (this.finishedAssemblies.length <= 10) {
+                const stats = structuredClone(this.statsObserver.getFinalStats(this.clock));
+                this.vectorState.push({
+                    ...stats,
+                    queues: {
+                        [Servers.server1]: this.servers[Servers.server1].getQueueIds(),
+                        [Servers.server2]: this.servers[Servers.server2].getQueueIds(),
+                        [Servers.server3]: this.servers[Servers.server3].getQueueIds(),
+                        [Servers.server4]: this.servers[Servers.server4].getQueueIds(),
+                        [Servers.server5]: this.servers[Servers.server5].getQueueIds(),
+                    },
+                    events: structuredClone(this.pendingEvents),
+                    clock: this.clock,
+                });
+            }
         }
 
         return this.statsObserver.getFinalStats(this.clock);
     }
 
     processNextEvent() {
+        const oldClock = this.clock;
         const nextEvent = this.getNextEvent();
         this.clock = nextEvent.time;
 
@@ -90,11 +109,11 @@ export class Coordinator {
                 const q3 = this.servers[Servers.server3].queueAssembly(asObj, this.clock);
                 const q4 = this.servers[Servers.server4].queueAssembly(asObj, this.clock);
                 const q5 = this.servers[Servers.server5].queueAssembly(asObj, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server1, q1)
-                this.statsObserver.notifyQueueQuantity(Servers.server2, q2)
-                this.statsObserver.notifyQueueQuantity(Servers.server3, q3)
-                this.statsObserver.notifyQueueQuantity(Servers.server4, q4)
-                this.statsObserver.notifyQueueQuantity(Servers.server5, q5)
+                this.statsObserver.notifyQueueQuantity(Servers.server1, q1);
+                this.statsObserver.notifyQueueQuantity(Servers.server2, q2);
+                this.statsObserver.notifyQueueQuantity(Servers.server3, q3);
+                this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
+                this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
             }
 
             this.generateNextArrive();
@@ -103,13 +122,23 @@ export class Coordinator {
             const objAssembly = this.servers[nextEvent.server].finishCurrentTask(this.clock);
             this.nextStep[nextEvent.server](objAssembly);
         }
+
+        const busy1 = this.servers[Servers.server1].isBusy();
+        const busy2 = this.servers[Servers.server2].isBusy();
+        const busy3 = this.servers[Servers.server3].isBusy();
+        const busy4 = this.servers[Servers.server4].isBusy();
+        const busy5 = this.servers[Servers.server5].isBusy();
+        this.statsObserver.notifyServerOcupation(Servers.server1, oldClock, this.clock, busy1);
+        this.statsObserver.notifyServerOcupation(Servers.server2, oldClock, this.clock, busy2);
+        this.statsObserver.notifyServerOcupation(Servers.server3, oldClock, this.clock, busy3);
+        this.statsObserver.notifyServerOcupation(Servers.server4, oldClock, this.clock, busy4);
+        this.statsObserver.notifyServerOcupation(Servers.server5, oldClock, this.clock, busy5);
     }
 
     public addPendingEvent(e: SimulationEvent) {
         // TODO Esta inserción debe realizarse ordenada por e.time; para que se pueda utilizar el shift en el getNextEvent();
         const i = this.getInsertionIndex(e.time);
         this.pendingEvents.splice(i, 0, e); //Inserta el evento e en el índice i.
-        console.log(new Date().getTime(), structuredClone(this.pendingEvents));
     }
 
     private getInsertionIndex(timeToInsert: number): number {
@@ -148,5 +177,9 @@ export class Coordinator {
         // Se asume llegan pedidos en números enteros... 1,2,4 o 10 pedidos. No 0.1 ni 3.75
         //Generate exponential random. Media = 3  → Lambda = 1/3
         return Math.round(-3 * Math.log(Math.random()));
+    }
+
+    public getStateVector() {
+        return this.vectorState;
     }
 }

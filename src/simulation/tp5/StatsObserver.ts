@@ -5,6 +5,7 @@ export class StatsObserver {
     private assemblyDurationAcumulator: number = 0;
     private queueDurationAcumulator: Record<Servers, number>;
     private maxQueueQuantity: Record<Servers, number>;
+    private serverOcupation: Record<Servers, number>;
     private finishedAssemblies: number = 0;
     private requestedAssemblies: number = 0;
     private finalQueues: Record<Servers, number>;
@@ -20,6 +21,7 @@ export class StatsObserver {
         };
         this.queueDurationAcumulator = structuredClone(initialization_0);
         this.maxQueueQuantity = structuredClone(initialization_0);
+        this.serverOcupation = structuredClone(initialization_0);
         this.finalQueues = structuredClone(initialization_0);
         this.hourAssemblies = {
             0: 0,
@@ -55,29 +57,42 @@ export class StatsObserver {
         }
     }
 
-    public getFinalStats(clock: number): tp5StatsType { {
-        const queueAverageTime = {
-            [Servers.server1]:
-                this.queueDurationAcumulator[Servers.server1] / this.finishedAssemblies,
-            [Servers.server2]:
-                this.queueDurationAcumulator[Servers.server2] / this.finishedAssemblies,
-            [Servers.server3]:
-                this.queueDurationAcumulator[Servers.server3] / this.finishedAssemblies,
-            [Servers.server4]:
-                this.queueDurationAcumulator[Servers.server4] / this.finishedAssemblies,
-            [Servers.server5]:
-                this.queueDurationAcumulator[Servers.server5] / this.finishedAssemblies,
-        };
-
-        return {
-            averageAssemblyDuration: this.assemblyDurationAcumulator / this.finishedAssemblies,
-            realizedAssembliesRatio: this.finishedAssemblies / this.requestedAssemblies,
-            maxQueueQuantByServer: structuredClone(this.maxQueueQuantity), //pendiente
-            queueAverageTimes: queueAverageTime,
-            assembliesQuantPerHour: structuredClone(this.hourAssemblies),
-            averageAssembliesPerHour: this.finishedAssemblies / (clock / 60),
-            pGreaterOrEqualThan3: 0, // pendiente
-        };
+    public notifyServerOcupation(
+        server: Servers,
+        oldClock: number,
+        newClock: number,
+        busy: boolean,
+    ) {
+        this.serverOcupation[server] =
+            this.serverOcupation[server] * oldClock + (busy ? 0 : 1) * (newClock - oldClock);
     }
-}
+
+    public getFinalStats(clock: number): tp5StatsType {
+        {
+            const queueAverageTime = {
+                [Servers.server1]:
+                    this.queueDurationAcumulator[Servers.server1] / this.finishedAssemblies,
+                [Servers.server2]:
+                    this.queueDurationAcumulator[Servers.server2] / this.finishedAssemblies,
+                [Servers.server3]:
+                    this.queueDurationAcumulator[Servers.server3] / this.finishedAssemblies,
+                [Servers.server4]:
+                    this.queueDurationAcumulator[Servers.server4] / this.finishedAssemblies,
+                [Servers.server5]:
+                    this.queueDurationAcumulator[Servers.server5] / this.finishedAssemblies,
+            };
+
+            return {
+                averageAssemblyDuration: this.assemblyDurationAcumulator / this.finishedAssemblies,
+                realizedAssembliesRatio: this.finishedAssemblies / this.requestedAssemblies,
+                maxQueueQuantByServer: structuredClone(this.maxQueueQuantity),
+                serversOccupation: structuredClone(this.serverOcupation),
+                queueAverageTimes: queueAverageTime,
+                assembliesQuantPerHour: structuredClone(this.hourAssemblies),
+                averageAssembliesPerHour: this.finishedAssemblies / (clock / 60),
+                pGreaterOrEqualThan3: 0, // pendiente
+                finishedAssemblies: this.finishedAssemblies
+            };
+        }
+    }
 }

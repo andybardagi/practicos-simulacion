@@ -7,7 +7,8 @@ import { Coordinator } from '../../simulation/tp5/Coordinator';
 import { SimulationEvent } from '../../simulation/tp5/enum/SimulationEvent';
 import TP5StatsShower from './TP5StatsShower';
 import { tp5StatsType } from '../../simulation/tp5/types/stats.type';
-
+import { stateVector } from '../../simulation/tp5/types/stateVector.type';
+import TP5StateVectorShower from './TP5StateVectorShower';
 
 export default function TP5() {
     const activities = [
@@ -20,12 +21,15 @@ export default function TP5() {
 
     const coordinator = useRef<Coordinator>();
     const [flagSim, setFlagSim] = useState(false);
-    const [stats, setStats] = useState({} as tp5StatsType);
+    const [stats, setStats] = useState<tp5StatsType>();
+    const [stateVector, setStateVector] = useState<stateVector[]>();
+
     const simulate = () => {
         coordinator.current = new Coordinator();
-        const res = coordinator.current.simulate(10);
+        const res = coordinator.current.simulate(10_000);
         setFlagSim(true);
         setStats(res);
+        setStateVector(coordinator.current.getStateVector());
     };
 
     return (
@@ -83,7 +87,8 @@ export default function TP5() {
                     Simular 10 ensambles
                 </Button>
             </Box>
-            {flagSim ? <TP5StatsShower stats={stats} /> : null}
+            {flagSim && stateVector ? <TP5StateVectorShower stateVectors={stateVector} /> : null}
+            {flagSim && stats ? <TP5StatsShower stats={stats} /> : null}
         </Box>
     );
 }

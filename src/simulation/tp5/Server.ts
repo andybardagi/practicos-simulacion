@@ -70,4 +70,12 @@ export abstract class Server {
             return this.queue.length;
         }
     }
+
+    isBusy(): boolean {
+        return this.currentAssembly != null;
+    }
+
+    getQueueIds(): number[] {
+        return structuredClone(this.queue.map((q) => q.getId()));
+    }
 }

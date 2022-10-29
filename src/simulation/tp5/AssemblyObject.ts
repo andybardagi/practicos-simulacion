@@ -74,4 +74,8 @@ export class AssemblyObject {
     public getQueuesDuration() {
         return this.queueTimes;
     }
+
+    public getId() {
+        return this.id;
+    }
 }
