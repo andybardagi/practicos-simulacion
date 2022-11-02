@@ -16,7 +16,10 @@ export default function TP5StatsShower({ stats }: { stats: tp5StatsType }) {
                 </ListItem>
                 <ListItem>
                     <Text>
-                        <b>Proporción de ensambles realizados:</b> {stats.realizedAssembliesRatio}
+                        <b>Proporción de ensambles realizados:</b>{' '}
+                        {Number.isNaN(stats.realizedAssembliesRatio)
+                            ? 'Sin datos'
+                            : stats.realizedAssembliesRatio}
                     </Text>
                 </ListItem>
                 <ListItem>

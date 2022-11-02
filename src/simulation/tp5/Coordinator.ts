@@ -11,7 +11,6 @@ export class Coordinator {
     private clock: number;
     private orderArriveClock: number;
     private servers: Record<Servers, Server>;
-    private nextStep: Record<Servers, (asObj: AssemblyObject) => void>;
     private pendingEvents: SimulationEvent[];
     private finishedAssemblies: AssemblyObject[];
     private lastAssemblyId: number;
@@ -31,40 +30,46 @@ export class Coordinator {
             [Servers.server5]: new ExponentialServer(Servers.server5, this, 5),
         };
         this.pendingEvents = [];
-        this.nextStep = {
-            [Servers.server1]: (objAs) => {
-                const q4 = this.servers[Servers.server4].queueAssembly(objAs, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
-            },
-            [Servers.server2]: (objAs) => {
-                if (objAs.hasFinishedServer(Servers.server4)) {
-                    const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
-                    this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
-                }
-            },
-            [Servers.server3]: (objAs) => {
-                if (objAs.hasFinishedServer(Servers.server5)) {
-                    objAs.setFinishTime(this.clock);
-                    this.finishedAssemblies.push(objAs);
-                    this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
-                }
-            },
-            [Servers.server4]: (objAs) => {
-                if (objAs.hasFinishedServer(Servers.server2)) {
-                    const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
-                    this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
-                }
-            },
-            [Servers.server5]: (objAs) => {
-                if (objAs.hasFinishedServer(Servers.server3)) {
-                    objAs.setFinishTime(this.clock);
-                    this.finishedAssemblies.push(objAs);
-                    this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
-                }
-            },
-        };
         this.statsObserver = new StatsObserver();
         this.generateNextArrive();
+    }
+
+    private nextStep(s: Servers, objAs: AssemblyObject) {
+        if (s === Servers.server1) {
+            const q4 = this.servers[Servers.server4].queueAssembly(objAs, this.clock);
+            this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
+            return;
+        }
+        if (s === Servers.server2) {
+            if (objAs.hasFinishedServer(Servers.server4)) {
+                const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
+                this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
+            }
+            return;
+        }
+        if (s === Servers.server3) {
+            if (objAs.hasFinishedServer(Servers.server5)) {
+                objAs.setFinishTime(this.clock);
+                this.finishedAssemblies.push(objAs);
+                this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
+            }
+            return;
+        }
+        if (s === Servers.server4) {
+            if (objAs.hasFinishedServer(Servers.server2)) {
+                const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
+                this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
+            }
+            return;
+        }
+        if (s === Servers.server5) {
+            if (objAs.hasFinishedServer(Servers.server3)) {
+                objAs.setFinishTime(this.clock);
+                this.finishedAssemblies.push(objAs);
+                this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
+            }
+            return;
+        }
     }
 
     public simulate(orders: number) {
@@ -77,11 +82,21 @@ export class Coordinator {
                 this.vectorState.push({
                     ...stats,
                     queues: {
-                        [Servers.server1]: structuredClone(this.servers[Servers.server1].getQueueObjects()),
-                        [Servers.server2]: structuredClone(this.servers[Servers.server2].getQueueObjects()),
-                        [Servers.server3]: structuredClone(this.servers[Servers.server3].getQueueObjects()),
-                        [Servers.server4]: structuredClone(this.servers[Servers.server4].getQueueObjects()),
-                        [Servers.server5]: structuredClone(this.servers[Servers.server5].getQueueObjects()),
+                        [Servers.server1]: structuredClone(
+                            this.servers[Servers.server1].getQueueObjects(),
+                        ),
+                        [Servers.server2]: structuredClone(
+                            this.servers[Servers.server2].getQueueObjects(),
+                        ),
+                        [Servers.server3]: structuredClone(
+                            this.servers[Servers.server3].getQueueObjects(),
+                        ),
+                        [Servers.server4]: structuredClone(
+                            this.servers[Servers.server4].getQueueObjects(),
+                        ),
+                        [Servers.server5]: structuredClone(
+                            this.servers[Servers.server5].getQueueObjects(),
+                        ),
                     },
                     events: structuredClone(this.pendingEvents),
                     clock: this.clock,
@@ -120,7 +135,7 @@ export class Coordinator {
         } else if (nextEvent.type === EventType.finishTask) {
             //procesar finalizacion tarea en servidor.
             const objAssembly = this.servers[nextEvent.server].finishCurrentTask(this.clock);
-            this.nextStep[nextEvent.server](objAssembly);
+            this.nextStep(nextEvent.server, objAssembly);
         }
 
         const busy1 = this.servers[Servers.server1].isBusy();
@@ -179,7 +194,7 @@ export class Coordinator {
         return Math.round(-3 * Math.log(Math.random()));
     }
 
-    public getStateVector() : stateVector[] {
+    public getStateVector(): stateVector[] {
         return this.vectorState;
     }
 }

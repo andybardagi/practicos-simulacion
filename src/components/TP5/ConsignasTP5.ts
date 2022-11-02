@@ -21,16 +21,14 @@ export const estimators = [
         done: 1,
     },
     { text: 'Tiempo promedio de Permanencia en cola (para cada cola)', done: 1 },
-    { text: 'Cantidad Promedio de productos en cola', done: 0 },
-    { text: 'Cantidad Promedio de productos en el sistema', done: 0 },
-    { text: 'Porcentaje de Ocupación del servidor (para todas las secciones) %', done: 0 },
+    { text: 'Porcentaje de Ocupación del servidor (para todas las secciones) %', done: 1 },
     {
         text: 'Proporción de tiempo de bloqueo respecto del tiempo de ocupación en actividad 5, y para encastre final indicando el tiempo en que hay productos esperando el encastre discriminando la proporción que corresponde a los productos provenientes de A3 y los de A5.',
         done: 0,
     },
     { text: 'Cantidad de ensambles por hora y cantidad promedio de ensambles por hora.', done: 1 },
     {
-        text: 'Indique cual es la probabilidad de haber completado 3 o más ensambles por hora. (este valor debería ser modificable)',
+        text: 'Indique cual es la probabilidad de haber completado 3 o más ensambles por hora.',
         done: 1,
     },
     { text: 'Debería poder simular al menos 10000 ensambles o 100000 eventos', done: 1 },

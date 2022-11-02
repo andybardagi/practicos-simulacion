@@ -14,6 +14,8 @@ import { stateVector } from '../../simulation/tp5/types/stateVector.type';
 import EventShower from './EventShower';
 import QueuesShower from './QueuesShower';
 import TP5StatsShower from './TP5StatsShower';
+import { Servers } from '../../simulation/tp5/enum/Servers';
+import { ListItem } from '@chakra-ui/react';
 
 export default function TP5StateVectorShower({ stateVectors }: { stateVectors: stateVector[] }) {
     return (
@@ -56,9 +58,84 @@ export default function TP5StateVectorShower({ stateVectors }: { stateVectors: s
                                 </Box>
                                 <Box>
                                     <Text fontSize={'18px'}>
+                                        <b>Porcentaje de ocupación de servidores</b>
+                                    </Text>
+                                    <UnorderedList>
+                                        <ListItem>
+                                            <Text>
+                                                Servidor 1:{' '}
+                                                {(
+                                                    s.serversOccupation[Servers.server1] * 100
+                                                ).toFixed(4)}
+                                                %
+                                            </Text>
+                                        </ListItem>
+                                        <ListItem>
+                                            <Text>
+                                                Servidor 2:{' '}
+                                                {(
+                                                    s.serversOccupation[Servers.server2] * 100
+                                                ).toFixed(4)}
+                                                %
+                                            </Text>
+                                        </ListItem>
+                                        <ListItem>
+                                            <Text>
+                                                Servidor 3:{' '}
+                                                {(
+                                                    s.serversOccupation[Servers.server3] * 100
+                                                ).toFixed(4)}
+                                                %
+                                            </Text>
+                                        </ListItem>
+                                        <ListItem>
+                                            <Text>
+                                                Servidor 4:{' '}
+                                                {(
+                                                    s.serversOccupation[Servers.server4] * 100
+                                                ).toFixed(4)}
+                                                %
+                                            </Text>
+                                        </ListItem>
+                                        <ListItem>
+                                            <Text>
+                                                Servidor 5:{' '}
+                                                {(
+                                                    s.serversOccupation[Servers.server5] * 100
+                                                ).toFixed(4)}
+                                                %
+                                            </Text>
+                                        </ListItem>
+                                    </UnorderedList>
+                                </Box>
+                                <Box mt={6}>
+                                    <Text fontSize={'18px'}>
+                                        <b>Cantidad promedio de ensambles por hora: </b>
+                                        {Number.isNaN(s.averageAssembliesPerHour)
+                                            ? 'Sin datos'
+                                            : s.averageAssembliesPerHour.toFixed(2)}
+                                    </Text>
+                                </Box>
+                                <Box mt={6}>
+                                    <Text fontSize={'18px'}>
+                                        <b>Ensambles por hora</b>
+                                    </Text>
+                                    <UnorderedList>
+                                        {Object.entries(s.assembliesQuantPerHour).map(
+                                            ([hora, cantidad], i) => (
+                                                <ListItem key={i}>
+                                                    {hora}° hora: {cantidad} ensambles.
+                                                </ListItem>
+                                            ),
+                                        )}
+                                    </UnorderedList>
+                                </Box>
+
+                                <Box mt={6}>
+                                    <Text fontSize={'18px'}>
                                         <b>Objetos en cola</b>
                                     </Text>
-                                    <QueuesShower queues={s.queues}/>
+                                    <QueuesShower queues={s.queues} />
                                 </Box>
                             </Box>
                         </AccordionPanel>

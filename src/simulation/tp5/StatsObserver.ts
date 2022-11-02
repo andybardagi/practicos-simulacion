@@ -24,7 +24,6 @@ export class StatsObserver {
         this.serverOcupation = structuredClone(initialization_0);
         this.finalQueues = structuredClone(initialization_0);
         this.hourAssemblies = {
-            0: 0,
             1: 0,
         };
     }
@@ -63,8 +62,11 @@ export class StatsObserver {
         newClock: number,
         busy: boolean,
     ) {
-        this.serverOcupation[server] =
-            this.serverOcupation[server] * oldClock + (busy ? 0 : 1) * (newClock - oldClock);
+        if (newClock != 0) {
+            this.serverOcupation[server] =
+                (this.serverOcupation[server] * oldClock + (busy ? 1 : 0) * (newClock - oldClock)) /
+                newClock;
+        }
     }
 
     public getFinalStats(clock: number): tp5StatsType {
@@ -82,6 +84,10 @@ export class StatsObserver {
                     this.queueDurationAcumulator[Servers.server5] / this.finishedAssemblies,
             };
 
+            const pHoursGEthan3 =
+                Object.values(this.hourAssemblies).filter((v) => v >= 3).length /
+                Object.values(this.hourAssemblies).length;
+
             return {
                 averageAssemblyDuration: this.assemblyDurationAcumulator / this.finishedAssemblies,
                 realizedAssembliesRatio: this.finishedAssemblies / this.requestedAssemblies,
@@ -90,8 +96,8 @@ export class StatsObserver {
                 queueAverageTimes: queueAverageTime,
                 assembliesQuantPerHour: structuredClone(this.hourAssemblies),
                 averageAssembliesPerHour: this.finishedAssemblies / (clock / 60),
-                pGreaterOrEqualThan3: 0, // pendiente
-                finishedAssemblies: this.finishedAssemblies
+                pGreaterOrEqualThan3: pHoursGEthan3, // pendiente
+                finishedAssemblies: this.finishedAssemblies,
             };
         }
     }
