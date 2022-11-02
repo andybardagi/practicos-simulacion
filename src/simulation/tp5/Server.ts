@@ -78,4 +78,8 @@ export abstract class Server {
     getQueueIds(): number[] {
         return structuredClone(this.queue.map((q) => q.getId()));
     }
+
+    getQueueObjects(): any {
+        return this.queue;
+    }
 }

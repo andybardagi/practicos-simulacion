@@ -1,8 +1,9 @@
+import { AssemblyObject } from '../AssemblyObject';
 import { Servers } from '../enum/Servers';
+import { SimulationEvent } from '../enum/SimulationEvent';
 import { tp5StatsType } from './stats.type';
-import { EventType, SimulationEvent } from '../enum/SimulationEvent';
 export type stateVector = tp5StatsType & {
-    queues: Record<Servers, number[]>;
+    queues: Record<Servers, AssemblyObject[]>;
     events: SimulationEvent[];
     clock: number;
 };

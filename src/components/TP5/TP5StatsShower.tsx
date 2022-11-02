@@ -9,7 +9,9 @@ export default function TP5StatsShower({ stats }: { stats: tp5StatsType }) {
                 <ListItem>
                     <Text>
                         <b>Duración promedio de la tarea de ensamble:</b>{' '}
-                        {stats.averageAssemblyDuration}
+                        {Number.isNaN(stats.averageAssemblyDuration)
+                            ? 'Sin datos'
+                            : stats.averageAssemblyDuration}
                     </Text>
                 </ListItem>
                 <ListItem>
@@ -19,87 +21,92 @@ export default function TP5StatsShower({ stats }: { stats: tp5StatsType }) {
                 </ListItem>
                 <ListItem>
                     <Text>
-                        <b>Cola 1</b> {' '}
+                        <b>Cola 1</b>{' '}
                         <UnorderedList>
                             <ListItem>
-                                <Text>
-                                Cantidad máxima: {stats.maxQueueQuantByServer[1]}
-                                </Text>
+                                <Text>Cantidad máxima: {stats.maxQueueQuantByServer[1]}</Text>
                             </ListItem>
                             <ListItem>
                                 <Text>
-                                Tiempo promedio: {stats.queueAverageTimes[1]}
+                                    Tiempo promedio:{' '}
+                                    {Number.isNaN(stats.queueAverageTimes[1])
+                                        ? 'Sin datos'
+                                        : stats.queueAverageTimes[1]}
                                 </Text>
                             </ListItem>
-                        </UnorderedList>  
+                        </UnorderedList>
                     </Text>
                 </ListItem>
                 <ListItem>
                     <Text>
-                        <b>Cola 2</b> {' '}
+                        <b>Cola 2</b>{' '}
                         <UnorderedList>
                             <ListItem>
-                                <Text>
-                                Cantidad máxima: {stats.maxQueueQuantByServer[2]}
-                                </Text>
+                                <Text>Cantidad máxima: {stats.maxQueueQuantByServer[2]}</Text>
                             </ListItem>
                             <ListItem>
                                 <Text>
-                                Tiempo promedio: {stats.queueAverageTimes[2]}
+                                    Tiempo promedio:{' '}
+                                    {Number.isNaN(stats.queueAverageTimes[2])
+                                        ? 'Sin datos'
+                                        : stats.queueAverageTimes[2]}
                                 </Text>
                             </ListItem>
-                        </UnorderedList>  
+                        </UnorderedList>
                     </Text>
                 </ListItem>
                 <ListItem>
                     <Text>
-                        <b>Cola 3</b> {' '}
+                        <b>Cola 3</b>{' '}
                         <UnorderedList>
                             <ListItem>
-                                <Text>
-                                Cantidad máxima: {stats.maxQueueQuantByServer[3]}
-                                </Text>
+                                <Text>Cantidad máxima: {stats.maxQueueQuantByServer[3]}</Text>
                             </ListItem>
                             <ListItem>
                                 <Text>
-                                Tiempo promedio: {stats.queueAverageTimes[3]}
+                                    Tiempo promedio:{' '}
+                                    {Number.isNaN(stats.queueAverageTimes[3])
+                                        ? 'Sin datos'
+                                        : stats.queueAverageTimes[3]}
                                 </Text>
                             </ListItem>
-                        </UnorderedList>  
+                        </UnorderedList>
                     </Text>
                 </ListItem>
                 <ListItem>
                     <Text>
-                        <b>Cola 4</b> {' '}
+                        <b>Cola 4</b>{' '}
                         <UnorderedList>
                             <ListItem>
-                                <Text>
-                                Cantidad máxima: {stats.maxQueueQuantByServer[4]}
-                                </Text>
+                                <Text>Cantidad máxima: {stats.maxQueueQuantByServer[4]}</Text>
                             </ListItem>
                             <ListItem>
                                 <Text>
-                                Tiempo promedio: {stats.queueAverageTimes[4]}
+                                    Tiempo promedio:{' '}
+                                    {Number.isNaN(stats.queueAverageTimes[4])
+                                        ? 'Sin datos'
+                                        : stats.queueAverageTimes[4]}
                                 </Text>
                             </ListItem>
-                        </UnorderedList>  
+                        </UnorderedList>
                     </Text>
                 </ListItem>
                 <ListItem>
                     <Text>
-                        <b>Cola 5</b> {' '}
+                        <b>Cola 5</b>{' '}
                         <UnorderedList>
                             <ListItem>
-                                <Text>
-                                Cantidad máxima: {stats.maxQueueQuantByServer[5]}
-                                </Text>
+                                <Text>Cantidad máxima: {stats.maxQueueQuantByServer[5]}</Text>
                             </ListItem>
                             <ListItem>
                                 <Text>
-                                Tiempo promedio: {stats.queueAverageTimes[5]}
+                                    Tiempo promedio:{' '}
+                                    {Number.isNaN(stats.queueAverageTimes[5])
+                                        ? 'Sin datos'
+                                        : stats.queueAverageTimes[5]}
                                 </Text>
                             </ListItem>
-                        </UnorderedList>  
+                        </UnorderedList>
                     </Text>
                 </ListItem>
                 {/* <ListItem>
@@ -110,7 +117,9 @@ export default function TP5StatsShower({ stats }: { stats: tp5StatsType }) {
                 <ListItem>
                     <Text>
                         <b>Cantidad promedio de ensambles por hora:</b>{' '}
-                        {stats.averageAssembliesPerHour}
+                        {Number.isNaN(stats.averageAssembliesPerHour)
+                            ? 'Sin datos'
+                            : stats.averageAssembliesPerHour}
                     </Text>
                 </ListItem>
                 <ListItem>

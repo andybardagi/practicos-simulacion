@@ -1,6 +1,6 @@
 import { Servers } from './enum/Servers';
 export class AssemblyObject {
-    private id: number;
+    public id: number;
     private queueTimes: Record<Servers, number>;
     private arriveToQueueTimes: Record<Servers, number>;
     private serverTimes: Record<Servers, number>;

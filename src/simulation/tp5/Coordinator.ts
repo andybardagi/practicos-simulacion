@@ -72,16 +72,16 @@ export class Coordinator {
             //Genero simulaciones hasta cumplir con el límite de simulaciones solicitadas.
             this.processNextEvent();
 
-            if (this.finishedAssemblies.length <= 10) {
+            if (this.finishedAssemblies.length <= 5) {
                 const stats = structuredClone(this.statsObserver.getFinalStats(this.clock));
                 this.vectorState.push({
                     ...stats,
                     queues: {
-                        [Servers.server1]: this.servers[Servers.server1].getQueueIds(),
-                        [Servers.server2]: this.servers[Servers.server2].getQueueIds(),
-                        [Servers.server3]: this.servers[Servers.server3].getQueueIds(),
-                        [Servers.server4]: this.servers[Servers.server4].getQueueIds(),
-                        [Servers.server5]: this.servers[Servers.server5].getQueueIds(),
+                        [Servers.server1]: structuredClone(this.servers[Servers.server1].getQueueObjects()),
+                        [Servers.server2]: structuredClone(this.servers[Servers.server2].getQueueObjects()),
+                        [Servers.server3]: structuredClone(this.servers[Servers.server3].getQueueObjects()),
+                        [Servers.server4]: structuredClone(this.servers[Servers.server4].getQueueObjects()),
+                        [Servers.server5]: structuredClone(this.servers[Servers.server5].getQueueObjects()),
                     },
                     events: structuredClone(this.pendingEvents),
                     clock: this.clock,
@@ -107,13 +107,13 @@ export class Coordinator {
                 const q1 = this.servers[Servers.server1].queueAssembly(asObj, this.clock);
                 const q2 = this.servers[Servers.server2].queueAssembly(asObj, this.clock);
                 const q3 = this.servers[Servers.server3].queueAssembly(asObj, this.clock);
-                const q4 = this.servers[Servers.server4].queueAssembly(asObj, this.clock);
-                const q5 = this.servers[Servers.server5].queueAssembly(asObj, this.clock);
+                //const q4 = this.servers[Servers.server4].queueAssembly(asObj, this.clock);
+                //const q5 = this.servers[Servers.server5].queueAssembly(asObj, this.clock);
                 this.statsObserver.notifyQueueQuantity(Servers.server1, q1);
                 this.statsObserver.notifyQueueQuantity(Servers.server2, q2);
                 this.statsObserver.notifyQueueQuantity(Servers.server3, q3);
-                this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
-                this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
+                //this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
+                //this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
             }
 
             this.generateNextArrive();
@@ -179,7 +179,7 @@ export class Coordinator {
         return Math.round(-3 * Math.log(Math.random()));
     }
 
-    public getStateVector() {
+    public getStateVector() : stateVector[] {
         return this.vectorState;
     }
 }
