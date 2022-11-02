@@ -39,6 +39,78 @@ export default function QueuesShower({ queues }: Props) {
                                 ))}
                             </Box>
                         </Td>
+                        <Td>
+                            <Box>
+                                {queues[Servers.server2].map((s, i) => (
+                                    <Box
+                                        key={i}
+                                        w={'100%'}
+                                        py={1}
+                                        onClick={() => {
+                                            console.log(s);
+                                        }}
+                                        textAlign={'center'}
+                                        _hover={{ background: '#f1f1f1' }}
+                                    >
+                                        {s.id}
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Td>
+                        <Td>
+                            <Box>
+                                {queues[Servers.server3].map((s, i) => (
+                                    <Box
+                                        key={i}
+                                        w={'100%'}
+                                        py={1}
+                                        onClick={() => {
+                                            console.log(s);
+                                        }}
+                                        textAlign={'center'}
+                                        _hover={{ background: '#f1f1f1' }}
+                                    >
+                                        {s.id}
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Td>
+                        <Td>
+                            <Box>
+                                {queues[Servers.server4].map((s, i) => (
+                                    <Box
+                                        key={i}
+                                        w={'100%'}
+                                        py={1}
+                                        onClick={() => {
+                                            console.log(s);
+                                        }}
+                                        textAlign={'center'}
+                                        _hover={{ background: '#f1f1f1' }}
+                                    >
+                                        {s.id}
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Td>
+                        <Td>
+                            <Box>
+                                {queues[Servers.server5].map((s, i) => (
+                                    <Box
+                                        key={i}
+                                        w={'100%'}
+                                        py={1}
+                                        onClick={() => {
+                                            console.log(s);
+                                        }}
+                                        textAlign={'center'}
+                                        _hover={{ background: '#f1f1f1' }}
+                                    >
+                                        {s.id}
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Td>
                     </Tr>
                 </Tbody>
             </Table>
