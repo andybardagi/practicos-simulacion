@@ -9,6 +9,7 @@ export class RungeKuta extends Server{
     private h: number;
     private b: number;
     private c: number;
+    private aVar: number;
     private k1: number = 0;
     private k2: number = 0;
     private k3: number = 0;
@@ -17,9 +18,8 @@ export class RungeKuta extends Server{
     private r2: number = 0;
     private r3: number = 0;
     private r4: number = 0;
-    private aVar: number;
-
-
+    
+    
     constructor(id: Servers, coord: Coordinator, t: number, x: number, y: number, h: number, b: number, c: number) {
         super(id, coord);
         this.t = t;
@@ -56,14 +56,17 @@ export class RungeKuta extends Server{
 
         this.k1 = this.y;
         this.r1 = this.calculateK(this.t, this.x, this.y);
+
         const frsX: number = this.calculateY(midH, this.k1);
         const frsY: number = this.calculateY(midH, this.r1);
         this.k2 = frsY;
         this.r2 = this.calculateK(midt, frsX, frsY);
+
         const scdX: number = this.calculateY(midH, this.k2);
         const scdY: number = this.calculateY(midH, this.r2);
         this.k3 = scdY;
         this.r3 = this.calculateK(midH, scdX, scdY);
+
         const thrX: number = this.calculateY(this.h, this.k3);
         const thrY: number = this.calculateY(this.h, this.r3);
         this.k4 = thrY;
@@ -78,19 +81,20 @@ export class RungeKuta extends Server{
 
         return resX;
     }
+
     public calculateTaskDuration(): number {
-        var mayor: number = 0;
-        var n1:number = 0;
-        var n2:number = 0;
-        var n3:number = 0;
+        let mayor: number = 0;
+
+        let n1:number = 0;
+        let n2:number = 0;
+        let n3:number = 0;
 
         while(mayor !== 2){
             n1 = n2;
             n2 = n3;
             n3 = this.calculateLine()
-            if((n1<n2)&&(n3<n2)){
-                mayor++;
-            }
+
+            mayor += ((n1<n2)&&(n3<n2)) ? 1 : 0            
         }
         
         return n2;
