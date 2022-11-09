@@ -1,32 +1,44 @@
-import { Heading, UnorderedList, ListItem, Text, Box, Button } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { useRef } from 'react';
-import { Coordinator } from '../../simulation/tp5/Coordinator';
-import { SimulationEvent } from '../../simulation/tp5/enum/SimulationEvent';
-import TP5StatsShower from '../TP5/TP5StatsShower';
-import { tp5StatsType } from '../../simulation/tp5/types/stats.type';
-import { stateVector } from '../../simulation/tp5/types/stateVector.type';
-import TP5StateVectorShower from '../TP5/TP5StateVectorShower';
-import QueueFlow from '../TP5/QueueFlow';
-import { estimators } from '../TP5/ConsignasTP5';
+import {
+    Box,
+    Button,
+    Heading,
+    Input,
+    InputGroup,
+    InputLeftAddon,
+    ListItem,
+    Text,
+    UnorderedList,
+} from '@chakra-ui/react';
+import { useRef, useState } from 'react';
+import { Coordinator } from '../../simulation/tp6/Coordinator';
+import { stateVector } from '../../simulation/tp6/types/stateVector.type';
+import { tp6StatsType } from '../../simulation/tp6/types/stats.type';
+import { estimators, activities } from '../TP6/ConsignasTP6';
+import QueueFlow from './QueueFlow';
+import TP6StateVectorShower from '../TP6/TP6StateVectorShower';
+import TP6StatsShower from './TP6StatsShower';
+import { Flex } from '@chakra-ui/react';
 
 export default function TP6() {
-    const activities = [
-        'A1 - Distribución uniforme U [20, 30)',
-        'A2 - Distribución uniforme U [30, 50)',
-        'A3 - Distribución exponencial con media de 30',
-        'A4 - Distribución uniforme U [10, 20)',
-        'A5 - Distribución exponencial con media de 5',
-    ];
-
     const coordinator = useRef<Coordinator>();
     const [flagSim, setFlagSim] = useState(false);
-    const [stats, setStats] = useState<tp5StatsType>();
+    const [stats, setStats] = useState<tp6StatsType>();
+    const [form, setForm] = useState({
+        b: '10',
+        c: '5',
+        h: '0,05',
+        x_0: '0',
+        x_d_0: '0',
+    });
     const [stateVector, setStateVector] = useState<stateVector[]>();
+
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+    };
 
     const simulate = () => {
         coordinator.current = new Coordinator();
-        const res = coordinator.current.simulate(10_000);
+        const res = coordinator.current.simulate(10);
         setFlagSim(true);
         setStats(res);
         setStateVector(coordinator.current.getStateVector());
@@ -69,7 +81,7 @@ export default function TP6() {
                 </Text>
                 <Text color="#444444">
                     <b>
-                        Se considera completada la tarea de ensamble cuando completamos las 5
+                        Se considera completada la tarea de ensamble cuando completamos las 6
                         actividades considerando sus precedencias
                     </b>
                 </Text>
@@ -81,14 +93,40 @@ export default function TP6() {
                     ))}
                 </UnorderedList>
             </Box>
+            <Flex direction={['column', 'column', 'row', 'row']} gap="2" my={2}>
+                <InputGroup>
+                    <InputLeftAddon>b</InputLeftAddon>
+                    <Input value={form.b} onChange={handleFormChange} name="b"></Input>
+                </InputGroup>
+                <InputGroup>
+                    <InputLeftAddon>c</InputLeftAddon>
+                    <Input value={form.c} onChange={handleFormChange} name="c"></Input>
+                </InputGroup>
+                <InputGroup>
+                    <InputLeftAddon>h</InputLeftAddon>
+                    <Input value={form.h} onChange={handleFormChange} name="h"></Input>
+                </InputGroup>
+                <InputGroup>
+                    <InputLeftAddon>
+                        x<sub>0</sub>
+                    </InputLeftAddon>
+                    <Input value={form.x_0} onChange={handleFormChange} name="x_0"></Input>
+                </InputGroup>
+                <InputGroup>
+                    <InputLeftAddon>
+                        x'<sub>0</sub>
+                    </InputLeftAddon>
+                    <Input value={form.x_d_0} onChange={handleFormChange} name="x_d_0"></Input>
+                </InputGroup>
+            </Flex>
 
             <Box>
                 <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
                     Simular 10 ensambles
                 </Button>
             </Box>
-            {flagSim && stateVector ? <TP5StateVectorShower stateVectors={stateVector} /> : null}
-            {flagSim && stats ? <TP5StatsShower stats={stats} /> : null}
+            {flagSim && stateVector ? <TP6StateVectorShower stateVectors={stateVector} /> : null}
+            {flagSim && stats ? <TP6StatsShower stats={stats} /> : null}
         </Box>
     );
 }
