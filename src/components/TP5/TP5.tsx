@@ -84,7 +84,7 @@ export default function TP5() {
 
             <Box>
                 <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
-                    Simular 10 ensambles
+                    Simular 10.000 ensambles
                 </Button>
             </Box>
             {flagSim && stateVector ? <TP5StateVectorShower stateVectors={stateVector} /> : null}
