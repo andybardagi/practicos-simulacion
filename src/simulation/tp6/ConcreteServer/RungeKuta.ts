@@ -2,6 +2,7 @@ import { isThisTypeNode } from 'typescript';
 import { Coordinator } from '../Coordinator';
 import { Servers } from '../enum/Servers';
 import { Server } from '../Server';
+import { RungeKuttaLine } from '../types/rungeKuttaEvolution';
 
 export class RungeKuta extends Server {
     private t: number;
@@ -20,6 +21,7 @@ export class RungeKuta extends Server {
     private r3: number = 0;
     private r4: number = 0;
     private readonly initialValues;
+    private evolution: RungeKuttaLine[];
 
     constructor(
         id: Servers,
@@ -38,6 +40,7 @@ export class RungeKuta extends Server {
         this.h = h;
         this.b = b;
         this.c = c;
+        console.log(t, x, y, h, b, c);
         this.aVar = this.generateAVar();
         this.initialValues = {
             t,
@@ -47,6 +50,11 @@ export class RungeKuta extends Server {
             b,
             c,
         };
+        this.evolution = [];
+    }
+
+    public getRungeKuttaEvolution(): RungeKuttaLine[] {
+        return this.evolution;
     }
 
     private generateAVar(): number {
@@ -99,6 +107,18 @@ export class RungeKuta extends Server {
         const resY: number =
             this.y + (this.h / 6) * (this.r1 + 2 * this.r2 + 2 * this.r3 + this.r4);
 
+        this.evolution.push({
+            t: this.t,
+            x: this.x,
+            y: this.y,
+            k1: this.k1,
+            k2: this.k2,
+            k3: this.k3,
+            k4: this.k4,
+            xi_1: resX,
+            yi_1: resY,
+        });
+
         this.t = next;
         this.x = resX;
         this.y = resY;
@@ -114,6 +134,7 @@ export class RungeKuta extends Server {
         this.h = this.initialValues.h;
         this.b = this.initialValues.b;
         this.c = this.initialValues.c;
+        this.evolution = [];
     }
 
     public calculateTaskDuration(): number {
@@ -121,7 +142,7 @@ export class RungeKuta extends Server {
         let mayor: number = 0;
 
         let n1: number = this.x;
-        let n2: number = -Infinity; // two numbers extremely small to not activate bigger condition 
+        let n2: number = -Infinity; // two numbers extremely small to not activate bigger condition
         let n3: number = -Infinity; // two numbers extremely small to not activate bigger condition
 
         while (mayor < 2) {

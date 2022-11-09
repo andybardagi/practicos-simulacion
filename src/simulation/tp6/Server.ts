@@ -3,6 +3,7 @@ import { AssemblyObject } from './AssemblyObject';
 import { Coordinator } from './Coordinator';
 import { Servers } from './enum/Servers';
 import { EventType } from './enum/SimulationEvent';
+import { RungeKuttaLine } from './types/rungeKuttaEvolution';
 export abstract class Server {
     private id: Servers;
     private queue: AssemblyObject[] = [];
@@ -22,6 +23,14 @@ export abstract class Server {
     }
 
     public abstract calculateTaskDuration(): number;
+
+    public getCurrent(){
+        return this.currentAssembly;
+    }
+
+    public getRungeKuttaEvolution(): RungeKuttaLine[]{
+        throw Error('getRungeKuttaEvolution: Not implemented');
+    }
 
     public finishCurrentTask(clock: number): AssemblyObject {
         if (this.currentAssembly == null) {

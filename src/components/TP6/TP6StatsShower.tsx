@@ -1,8 +1,8 @@
 import { Box, ListItem, UnorderedList, Text } from '@chakra-ui/react';
 import React from 'react';
-import { tp5StatsType } from '../../simulation/tp5/types/stats.type';
+import { tp6StatsType } from '../../simulation/tp6/types/stats.type';
 
-export default function TP6StatsShower({ stats }: { stats: tp5StatsType }) {
+export default function TP6StatsShower({ stats }: { stats: tp6StatsType }) {
     return (
         <Box>
             <UnorderedList>
@@ -112,6 +112,24 @@ export default function TP6StatsShower({ stats }: { stats: tp5StatsType }) {
                         </UnorderedList>
                     </Text>
                 </ListItem>
+                <ListItem>
+                    <Text>
+                        <b>Cola 6</b>{' '}
+                        <UnorderedList>
+                            <ListItem>
+                                <Text>Cantidad máxima: {stats.maxQueueQuantByServer[6]}</Text>
+                            </ListItem>
+                            <ListItem>
+                                <Text>
+                                    Tiempo promedio:{' '}
+                                    {Number.isNaN(stats.queueAverageTimes[6])
+                                        ? 'Sin datos'
+                                        : stats.queueAverageTimes[6]}
+                                </Text>
+                            </ListItem>
+                        </UnorderedList>
+                    </Text>
+                </ListItem>
                 {/* <ListItem>
                     <Text>
                         <b>Cantidad de ensambles por hora:</b> {stats.assembliesQuantPerHour}
@@ -132,6 +150,18 @@ export default function TP6StatsShower({ stats }: { stats: tp5StatsType }) {
                     </Text>
                 </ListItem>
             </UnorderedList>
+            <Box mt={6}>
+                <Text fontSize={'18px'}>
+                    <b>Ensambles por hora</b>
+                </Text>
+                <UnorderedList>
+                    {Object.entries(stats.assembliesQuantPerHour).map(([hora, cantidad], i) => (
+                        <ListItem key={i}>
+                            {hora}° hora: {cantidad} ensambles.
+                        </ListItem>
+                    ))}
+                </UnorderedList>
+            </Box>
         </Box>
     );
 }
