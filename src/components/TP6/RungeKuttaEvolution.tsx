@@ -8,6 +8,9 @@ type Props = {
     evolution: RungeKuttaLine[];
 };
 export default function RungeKuttaEvolution({ evolution }: Props) {
+    let evolutionSortedByX = structuredClone(evolution);
+    evolutionSortedByX = evolutionSortedByX.sort((a, b) => a.x - b.x);
+
     return (
         <Box>
             <Table>
@@ -53,7 +56,9 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
             <Box>
                 <DoubleFunctionGraph
                     title="x'' y x' en funcion de x"
-                    evolutionX={evolution.sort((a,b)=> a.t-b.t).map((e) => Math.round(e.t * 100) / 100)}
+                    evolutionX={evolution
+                        .sort((a, b) => a.t - b.t)
+                        .map((e) => Math.round(e.t * 100) / 100)}
                     evolutionY2={evolution.map((e) => e.x)}
                     evolutionY={evolution.map((e) => e.y)}
                 />
@@ -61,9 +66,7 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
             <Box>
                 <FuntionGraph
                     title="x' en funcion de x"
-                    evolutionX={evolution
-                        .sort((a, b) => a.t - b.t)
-                        .map((e) => Math.round(e.t * 100) / 100)}
+                    evolutionX={evolution.map((e) => Math.round(e.t * 100) / 100)}
                     evolutionY={evolution.map((e) => e.x)}
                 />
             </Box>
@@ -77,13 +80,10 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
             <Box>
                 <FuntionGraph
                     title="x'' en funcion de x'"
-                    evolutionX={evolution
-                        .sort((a, b) => a.x - b.x)
-                        .map((e) => Math.round(e.x * 10000) / 10000)}
+                    evolutionX={evolutionSortedByX.map((e) => Math.round(e.x * 10000) / 10000)}
                     evolutionY={evolution.map((e) => e.y)}
                 />
             </Box>
-            
         </Box>
     );
 }

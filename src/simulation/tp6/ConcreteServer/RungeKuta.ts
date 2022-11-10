@@ -152,6 +152,7 @@ export class RungeKuta extends Server {
 
             mayor += n1 < n2 && n3 < n2 ? 1 : 0;
         }
-        return this.t;
+        console.log(this.t, n1,n2,n3);
+        return this.t-this.h;
     }
 }
