@@ -40,7 +40,21 @@ export class RungeKuta extends Server {
         this.h = h;
         this.b = b;
         this.c = c;
+        console.log(t, x, y, h, b, c);
         this.aVar = this.generateAVar();
+        this.initialValues = {
+            t,
+            x,
+            y,
+            h,
+            b,
+            c,
+        };
+        this.evolution = [];
+    }
+
+    public getRungeKuttaEvolution(): RungeKuttaLine[] {
+        return this.evolution;
     }
 
     private generateAVar(): number {
@@ -72,7 +86,6 @@ export class RungeKuta extends Server {
 
         this.k1 = this.y;
         this.r1 = this.calculateK(this.t, this.x, this.y);
-        console.log("R1 " + this.r1)
 
         const frsX: number = this.calculateX(midH, this.k1);
         const frsY: number = this.calculateY(midH, this.r1);
@@ -135,7 +148,7 @@ export class RungeKuta extends Server {
         while (mayor < 2) {
             n1 = n2;
             n2 = n3;
-            n3 = this.calculateLine()
+            n3 = this.calculateLine();
 
             mayor += n1 < n2 && n3 < n2 ? 1 : 0;
         }
