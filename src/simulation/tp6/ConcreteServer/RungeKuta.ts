@@ -28,7 +28,7 @@ export class RungeKuta extends Server{
         this.h = h;
         this.b = b;
         this.c = c;
-        this.aVar = this.generateAVar();
+        this.aVar = 1.5;
     }
 
     private generateAVar () : number {
@@ -56,6 +56,7 @@ export class RungeKuta extends Server{
 
         this.k1 = this.y;
         this.r1 = this.calculateK(this.t, this.x, this.y);
+        console.log("R1 " + this.r1)
 
         const frsX: number = this.calculateY(midH, this.k1);
         const frsY: number = this.calculateY(midH, this.r1);
@@ -92,7 +93,20 @@ export class RungeKuta extends Server{
         while(mayor !== 2){
             n1 = n2;
             n2 = n3;
+            
+            console.log("xxxxxxx " + this.x)
+            console.log("yyyyyyy " + this.y)
+            //console.log("k1 " + this.k1)
+            console.log("R1 " + this.r1)
+            //console.log("k2 " + this.k2)
+            //console.log("R2 " + this.r2)
+            //console.log("k3 " + this.k3)
+            //console.log("R3 " + this.r3)
+            //console.log("k4 " + this.k4)
+            //console.log("R4 " + this.r4)
             n3 = this.calculateLine()
+            console.log("xxxxxxx " + this.x)
+            console.log("yyyyyyy " + this.y)
 
             mayor += ((n1<n2)&&(n3<n2)) ? 1 : 0            
         }
