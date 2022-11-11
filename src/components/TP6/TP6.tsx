@@ -18,12 +18,15 @@ import QueueFlow from './QueueFlow';
 import TP6StateVectorShower from '../TP6/TP6StateVectorShower';
 import TP6StatsShower from './TP6StatsShower';
 import { Flex } from '@chakra-ui/react';
+import { RungeKuta } from '../../simulation/tp6/ConcreteServer/RungeKuta';
+import { Servers } from '../../simulation/tp6/enum/Servers';
 
 export default function TP6() {
     const coordinator = useRef<Coordinator>();
     const [flagSim, setFlagSim] = useState(false);
     const [stats, setStats] = useState<tp6StatsType>();
     const [form, setForm] = useState({
+        cant: '10000',
         b: '10',
         c: '5',
         h: '0,05',
@@ -33,12 +36,37 @@ export default function TP6() {
     const [stateVector, setStateVector] = useState<stateVector[]>();
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFlagSim(false);
+        setStats(undefined);
         setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
     };
 
     const simulate = () => {
         coordinator.current = new Coordinator();
-        const res = coordinator.current.simulate(10);
+
+        const isIncorrect =
+            Object.values(form)
+                .map((v) => v.replace(',', '.'))
+                .map((v) => Number(v))
+                .filter((v) => Number.isNaN(v)).length > 0;
+        console.log(
+            Object.values(form)
+                .map((v) => v.replace(',', '.'))
+                .map((v) => Number(v)),
+        );
+        if (isIncorrect) {
+            alert('Error en los valores ingresados');
+            return;
+        }
+        coordinator.current.setRungeServer(
+            0,
+            Number(form.x_0.replace(',', '.')),
+            Number(form.x_d_0.replace(',', '.')),
+            Number(form.h.replace(',', '.')),
+            Number(form.b.replace(',', '.')),
+            Number(form.c.replace(',', '.')),
+        );
+        const res = coordinator.current.simulate(Number(form.cant));
         setFlagSim(true);
         setStats(res);
         setStateVector(coordinator.current.getStateVector());
@@ -46,7 +74,7 @@ export default function TP6() {
 
     return (
         <Box p={4} w="100%">
-            <Heading>Trabajo Práctico 5</Heading>
+            <Heading>Trabajo Práctico 6</Heading>
             <Box border="1px solid #efefef" borderRadius={8} p={4}>
                 <Text color="#444444">
                     Simule el siguiente Modelo dinámico obteniendo los estimadores solicitados y
@@ -96,6 +124,10 @@ export default function TP6() {
             <Flex direction={['column', 'column', 'row', 'row']} gap="2" my={2}>
                 <InputGroup>
                     <InputLeftAddon>b</InputLeftAddon>
+                    <Input value={form.cant} onChange={handleFormChange} name="cant"></Input>
+                </InputGroup>
+                <InputGroup>
+                    <InputLeftAddon>b</InputLeftAddon>
                     <Input value={form.b} onChange={handleFormChange} name="b"></Input>
                 </InputGroup>
                 <InputGroup>
@@ -122,7 +154,7 @@ export default function TP6() {
 
             <Box>
                 <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
-                    Simular 10 ensambles
+                    Simular {form.cant} ensambles
                 </Button>
             </Box>
             {flagSim && stateVector ? <TP6StateVectorShower stateVectors={stateVector} /> : null}

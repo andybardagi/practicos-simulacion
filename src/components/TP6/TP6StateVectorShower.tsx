@@ -8,13 +8,14 @@ import {
     Flex,
     ListItem,
     Text,
-    UnorderedList
+    UnorderedList,
 } from '@chakra-ui/react';
 import { Servers } from '../../simulation/tp6/enum/Servers';
 import { stateVector } from '../../simulation/tp6/types/stateVector.type';
 import EventShower from './EventShower';
 import QueuesShower from './QueuesShower';
 import TP6StatsShower from './TP6StatsShower';
+import RungeKuttaEvolution from './RungeKuttaEvolution';
 
 export default function TP6StateVectorShower({ stateVectors }: { stateVectors: stateVector[] }) {
     return (
@@ -23,7 +24,7 @@ export default function TP6StateVectorShower({ stateVectors }: { stateVectors: s
                 {stateVectors.map((s, i) => (
                     <AccordionItem>
                         <h2>
-                            <AccordionButton>
+                            <AccordionButton bgColor={s.rungeKuttaEvolution.length > 0 ? "#00FFFF66" : ""}>
                                 <Box flex="1" textAlign="left">
                                     <Flex justifyContent={'space-between'}>
                                         <Text>
@@ -105,6 +106,15 @@ export default function TP6StateVectorShower({ stateVectors }: { stateVectors: s
                                                 %
                                             </Text>
                                         </ListItem>
+                                        <ListItem>
+                                            <Text>
+                                                Servidor 6:{' '}
+                                                {(
+                                                    s.serversOccupation[Servers.server6] * 100
+                                                ).toFixed(4)}
+                                                %
+                                            </Text>
+                                        </ListItem>
                                     </UnorderedList>
                                 </Box>
                                 <Box mt={6}>
@@ -134,8 +144,17 @@ export default function TP6StateVectorShower({ stateVectors }: { stateVectors: s
                                     <Text fontSize={'18px'}>
                                         <b>Objetos en cola</b>
                                     </Text>
-                                    <QueuesShower queues={s.queues} />
+                                    <QueuesShower queues={s.queues} current={s.current}/>
                                 </Box>
+
+                                {s.rungeKuttaEvolution.length > 0 ? (
+                                    <Box mt={6}>
+                                        <Text fontSize={'18px'}>
+                                            <b>Evolución de Runge Kutta</b>
+                                        </Text>
+                                        <RungeKuttaEvolution evolution={s.rungeKuttaEvolution} />
+                                    </Box>
+                                ) : null}
                             </Box>
                         </AccordionPanel>
                     </AccordionItem>

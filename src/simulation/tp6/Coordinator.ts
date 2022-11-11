@@ -1,4 +1,3 @@
-
 import { AssemblyObject } from './AssemblyObject';
 import { ExponentialServer } from './ConcreteServer/ExponentialServer';
 import { UniformServer } from './ConcreteServer/UniformServer';
@@ -8,6 +7,8 @@ import { Server } from './Server';
 import { stateVector } from './types/stateVector.type';
 import { StatsObserver } from './StatsObserver';
 import { RungeKuta } from './ConcreteServer/RungeKuta';
+import { RungeKuttaLine } from './types/rungeKuttaEvolution';
+import { boolean } from 'yup';
 
 export class Coordinator {
     private clock: number;
@@ -35,6 +36,17 @@ export class Coordinator {
         this.pendingEvents = [];
         this.statsObserver = new StatsObserver();
         this.generateNextArrive();
+    }
+
+    public setRungeServer(
+        t: number,
+        x: number,
+        y: number,
+        h: number,
+        b: number,
+        c: number,
+    ) {
+        this.servers[Servers.server6] = new RungeKuta(Servers.server6, this, t, x, y, h, b, c);
     }
 
     private nextStep(s: Servers, objAs: AssemblyObject) {
@@ -82,6 +94,10 @@ export class Coordinator {
     public simulate(orders: number) {
         while (this.finishedAssemblies.length < orders) {
             //Genero simulaciones hasta cumplir con el límite de simulaciones solicitadas.
+            let isRungeKutta: boolean =
+                this.pendingEvents[0].type == EventType.finishTask &&
+                this.pendingEvents[0].server == Servers.server6;
+
             this.processNextEvent();
 
             if (this.finishedAssemblies.length <= 5) {
@@ -108,6 +124,29 @@ export class Coordinator {
                             this.servers[Servers.server6].getQueueObjects(),
                         ),
                     },
+                    current: {
+                        [Servers.server1]: structuredClone(
+                            this.servers[Servers.server1].getCurrent(),
+                        ),
+                        [Servers.server2]: structuredClone(
+                            this.servers[Servers.server2].getCurrent(),
+                        ),
+                        [Servers.server3]: structuredClone(
+                            this.servers[Servers.server3].getCurrent(),
+                        ),
+                        [Servers.server4]: structuredClone(
+                            this.servers[Servers.server4].getCurrent(),
+                        ),
+                        [Servers.server5]: structuredClone(
+                            this.servers[Servers.server5].getCurrent(),
+                        ),
+                        [Servers.server6]: structuredClone(
+                            this.servers[Servers.server6].getCurrent(),
+                        ),
+                    },
+                    rungeKuttaEvolution: isRungeKutta
+                        ? this.servers[Servers.server6].getRungeKuttaEvolution()
+                        : [],
                     events: structuredClone(this.pendingEvents),
                     clock: this.clock,
                 });

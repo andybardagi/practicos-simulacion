@@ -8,6 +8,7 @@
     },
     "scripts": {
         "dev": "vite --open",
+        "debug": "vite --open --port 4000",
         "build": "tsc && vite build",
         "start": "serve -s dist",
         "preview": "vite preview",
