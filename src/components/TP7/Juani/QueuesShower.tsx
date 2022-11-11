@@ -1,7 +1,7 @@
 import { Box, Table, TableContainer, Th, Thead, Tr, Tbody, Td } from '@chakra-ui/react';
 import React from 'react';
-import { stateVector } from '../../../simulation/tp7-juani/types/stateVector.type';
-import { Servers } from '../../../simulation/tp7-juani/enum/Servers';
+import { stateVector } from '../../../simulation/tp7/juani/types/stateVector.type';
+import { Servers } from '../../../simulation/tp7/juani/enum/Servers';
 
 type Props = {
     queues: stateVector['queues'];

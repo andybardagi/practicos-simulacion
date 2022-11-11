@@ -1,6 +1,6 @@
 import { Box, ListItem, UnorderedList, Text } from '@chakra-ui/react';
 import React from 'react';
-import { tp7StatsType } from '../../../simulation/tp7-juani/types/stats.type';
+import { tp7StatsType } from '../../../simulation/tp7/juani/types/stats.type';
 
 export default function JuaniStatsShower({ stats }: { stats: tp7StatsType }) {
     return (

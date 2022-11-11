@@ -10,16 +10,16 @@ import {
     UnorderedList,
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
-import { Coordinator } from '../../../simulation/tp7-juani/Coordinator';
-import { stateVector } from '../../../simulation/tp7-juani/types/stateVector.type';
-import { tp7StatsType } from '../../../simulation/tp7-juani/types/stats.type';
+import { Coordinator } from '../../../simulation/tp7/juani/Coordinator';
+import { stateVector } from '../../../simulation/tp7/juani/types/stateVector.type';
+import { tp7StatsType } from '../../../simulation/tp7/juani/types/stats.type';
 import { estimators, activities } from '../../TP6/ConsignasTP6';
 import QueueFlow from './QueueFlow';
 import JuaniStateVectorShower from './JuaniStateVectorShower';
 import TP7StatsShower from './JuaniStatsShower';
 import { Flex } from '@chakra-ui/react';
-import { RungeKutaServer } from '../../../simulation/tp7-juani/ConcreteServer/RungeKutaServer';
-import { Servers } from '../../../simulation/tp7-juani/enum/Servers';
+import { RungeKutaServer } from '../../../simulation/tp7/juani/ConcreteServer/RungeKutaServer';
+import { Servers } from '../../../simulation/tp7/juani/enum/Servers';
 
 export default function Juani() {
     const coordinator = useRef<Coordinator>();

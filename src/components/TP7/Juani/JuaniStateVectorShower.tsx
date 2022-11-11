@@ -10,8 +10,8 @@ import {
     Text,
     UnorderedList,
 } from '@chakra-ui/react';
-import { Servers } from '../../../simulation/tp7-juani/enum/Servers';
-import { stateVector } from '../../../simulation/tp7-juani/types/stateVector.type';
+import { Servers } from '../../../simulation/tp7/juani/enum/Servers';
+import { stateVector } from '../../../simulation/tp7/juani/types/stateVector.type';
 import EventShower from './EventShower';
 import QueuesShower from './QueuesShower';
 import JuaniStatsShower from './JuaniStatsShower';
