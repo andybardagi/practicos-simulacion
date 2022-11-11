@@ -1,6 +1,6 @@
 import { Box, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React from 'react';
-import { RungeKuttaLine } from '../../simulation/tp7-juani/types/rungeKuttaEvolution';
+import { RungeKuttaLine } from '../../../simulation/tp7-juani/types/rungeKuttaEvolution';
 
 type Props = {
     evolution: RungeKuttaLine[];

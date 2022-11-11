@@ -1,6 +1,6 @@
 import { Box, ListItem } from '@chakra-ui/react';
 import React from 'react';
-import { EventType, SimulationEvent } from '../../simulation/tp6/enum/SimulationEvent';
+import { EventType, SimulationEvent } from '../../../simulation/tp6/enum/SimulationEvent';
 
 type Props = {
     event: SimulationEvent;
