@@ -11,7 +11,7 @@ import { NavigationProvider, useNavigationContext } from './hooks/NavigationCont
 import TP4 from './components/TP4/TP4';
 import TP5 from './components/TP5/TP5';
 import TP6 from './components/TP6/TP6';
-import TP7 from './components/TP7/Juani/TP7Juani';
+import TP7 from './components/TP7/Juani/Juani';
 
 // #0295A9
 // #12ADC1

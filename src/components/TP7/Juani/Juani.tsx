@@ -15,13 +15,13 @@ import { stateVector } from '../../../simulation/tp7-juani/types/stateVector.typ
 import { tp7StatsType } from '../../../simulation/tp7-juani/types/stats.type';
 import { estimators, activities } from '../../TP6/ConsignasTP6';
 import QueueFlow from './QueueFlow';
-import TP7StateVectorShower from './TP7StateVectorShower';
-import TP7StatsShower from './TP7StatsShower';
+import JuaniStateVectorShower from './JuaniStateVectorShower';
+import TP7StatsShower from './JuaniStatsShower';
 import { Flex } from '@chakra-ui/react';
 import { RungeKutaServer } from '../../../simulation/tp7-juani/ConcreteServer/RungeKutaServer';
 import { Servers } from '../../../simulation/tp7-juani/enum/Servers';
 
-export default function TP7Juani() {
+export default function Juani() {
     const coordinator = useRef<Coordinator>();
     const [flagSim, setFlagSim] = useState(false);
     const [stats, setStats] = useState<tp7StatsType>();
@@ -144,7 +144,7 @@ export default function TP7Juani() {
                     Simular {form.cant} ensambles
                 </Button>
             </Box>
-            {flagSim && stateVector ? <TP7StateVectorShower stateVectors={stateVector} /> : null}
+            {flagSim && stateVector ? <JuaniStateVectorShower stateVectors={stateVector} /> : null}
             {flagSim && stats ? <TP7StatsShower stats={stats} /> : null}
         </Box>
     );

@@ -14,10 +14,10 @@ import { Servers } from '../../../simulation/tp7-juani/enum/Servers';
 import { stateVector } from '../../../simulation/tp7-juani/types/stateVector.type';
 import EventShower from './EventShower';
 import QueuesShower from './QueuesShower';
-import TP7StatsShower from './TP7StatsShower';
+import JuaniStatsShower from './JuaniStatsShower';
 import RungeKuttaEvolution from './RungeKuttaEvolution';
 
-export default function TP7StateVectorShower({ stateVectors }: { stateVectors: stateVector[] }) {
+export default function JuaniStateVectorShower({ stateVectors }: { stateVectors: stateVector[] }) {
     return (
         <Box mb={16}>
             <Accordion defaultIndex={[0]} allowMultiple>
@@ -54,7 +54,7 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                     <Text fontSize={'18px'}>
                                         <b>Estadísticas parciales</b>
                                     </Text>
-                                    <TP7StatsShower stats={s}></TP7StatsShower>
+                                    <JuaniStatsShower stats={s}></JuaniStatsShower>
                                 </Box>
                                 <Box>
                                     <Text fontSize={'18px'}>
