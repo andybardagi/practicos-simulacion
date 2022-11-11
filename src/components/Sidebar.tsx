@@ -57,8 +57,20 @@ export default function Sidebar() {
             navLink: '/tp6',
         },
         {
-            name: 'Trabajo Práctico 7',
-            navLink: '/tp7',
+            name: '🚀 TP7 - Andrés',
+            navLink: '/tp7/andy',
+        },
+        {
+            name: '🥸 TP7 - Juan',
+            navLink: '/tp7/juan',
+        },
+        {
+            name: '🌖 TP7 - Juani',
+            navLink: '/tp7/juani',
+        },
+        {
+            name: '🏎️ TP7 - Lorenzo',
+            navLink: '/tp7/loren',
         },
     ];
 
