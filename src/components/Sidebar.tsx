@@ -70,7 +70,7 @@ export default function Sidebar() {
         },
         {
             name: '🏎️ TP7 - Lorenzo',
-            navLink: '/tp7/loren',
+            navLink: '/tp7',
         },
     ];
 
