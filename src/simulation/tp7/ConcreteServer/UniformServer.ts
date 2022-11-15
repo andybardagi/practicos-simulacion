@@ -1,12 +1,10 @@
 import { Coordinator } from '../Coordinator';
-import { Server } from '../Silo';
 
-export class UniformServer extends Server {
+export class UniformServer {
     private min: number;
     private max: number;
 
     constructor(coord: Coordinator, min: number, max: number) {
-        super(coord);
         this.min = min;
         this.max = max;
     }
@@ -14,4 +12,5 @@ export class UniformServer extends Server {
     public calculateTaskDuration(): number {
         return Math.random() * (this.max - this.min) + this.min;
     }
+
 }

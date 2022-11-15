@@ -7,7 +7,6 @@ export class RungeKuta  {
     private x: number;
     private y: number;
     private h: number;
-    private k: number;
     private k1: number = 0;
     private k2: number = 0;
     private k3: number = 0;
@@ -23,15 +22,13 @@ export class RungeKuta  {
         t: number,
         x: number,
         y: number,
-        h: number,
-        k: number
+        h: number
     ) {
         this.t = t;
         this.x = x;
         this.y = y;
         this.h = h;
-        this.k = k,
-        console.log(t, x, y, h, k);
+        console.log(t, x, y, h);
         this.initialValues = {
             t,
             x,
@@ -116,16 +113,16 @@ export class RungeKuta  {
         this.evolution = [];
     }
 
-    public calculateDuration(): number {
+    public calculateDuration(cant: number): number {
         this.resetValues();
         let mayor: number = 0;
         
-        while (mayor < this.k){
+        while (mayor < cant){
             this.calculateLine();
             mayor = this.y;
         }
         
-        console.log(this.t, this.x, this.y, this.k);
+        console.log(this.t, this.x, this.y);
         return this.t;
     }
 }

@@ -1,22 +1,23 @@
-import { Servers } from './enum/Servers';
-import { AssemblyObject } from './Truck';
+import { Silos } from './enum/Silos';
+import { states } from './enum/states';
+import { Truck } from './Truck';
 import { tp6StatsType } from './types/stats.type';
 export class StatsObserver {
     private assemblyDurationAcumulator: number = 0;
-    private queueDurationAcumulator: Record<Servers, number>;
-    private maxQueueQuantity: Record<Servers, number>;
-    private serverOcupation: Record<Servers, number>;
+    private queueDurationAcumulator: Record<Silos, number>;
+    private maxQueueQuantity: Record<Silos, number>;
+    private serverOcupation: Record<Silos, number>;
     private finishedAssemblies: number = 0;
     private requestedAssemblies: number = 0;
-    private finalQueues: Record<Servers, number>;
+    private finalQueues: Record<Silos, number>;
     private hourAssemblies: Record<number, number>;
 
     constructor() {
         const initialization_0 = {
-            [Servers.server1]: 0,
-            [Servers.server2]: 0,
-            [Servers.server3]: 0,
-            [Servers.server4]: 0,
+            [Silos.silo1]: 0,
+            [Silos.silo2]: 0,
+            [Silos.silo3]: 0,
+            [Silos.silo4]: 0,
         };
         this.queueDurationAcumulator = structuredClone(initialization_0);
         this.maxQueueQuantity = structuredClone(initialization_0);
@@ -31,14 +32,14 @@ export class StatsObserver {
         this.requestedAssemblies += n;
     }
 
-    public notifyAssemblyFinish(asObj: AssemblyObject, clock: number) {
+    /*public notifyAssemblyFinish(tk : Truck, clock: number) {
         this.finishedAssemblies++;
-        this.assemblyDurationAcumulator += asObj.getTotalDuration();
-        const queueTimes = asObj.getQueuesDuration();
-        this.queueDurationAcumulator[Servers.server1] += queueTimes[Servers.server1];
-        this.queueDurationAcumulator[Servers.server2] += queueTimes[Servers.server2];
-        this.queueDurationAcumulator[Servers.server3] += queueTimes[Servers.server3];
-        this.queueDurationAcumulator[Servers.server4] += queueTimes[Servers.server4];
+        this.assemblyDurationAcumulator += tk.getTotalDuration();
+        const queueTimes = tk.getQueueDuration();
+        this.queueDurationAcumulator[Silos.silo1] += queueTimes[Silos.silo1];
+        this.queueDurationAcumulator[Silos.silo2] += queueTimes[Silos.silo2];
+        this.queueDurationAcumulator[Silos.silo3] += queueTimes[Silos.silo3];
+        this.queueDurationAcumulator[Silos.silo4] += queueTimes[Silos.silo4];
 
         const hour = Math.ceil(clock / 60);
         if (this.hourAssemblies[hour] != null && this.hourAssemblies[hour] != undefined) {
@@ -46,23 +47,23 @@ export class StatsObserver {
         } else {
             this.hourAssemblies[hour] = 1;
         }
-    }
+    }*/
 
-    public notifyQueueQuantity(server: Servers, quant: number) {
-        if (this.maxQueueQuantity[server] < quant) {
-            this.maxQueueQuantity[server] = quant;
+    public notifyQueueQuantity(silo: Silos, quant: number) {
+        if (this.maxQueueQuantity[silo] < quant) {
+            this.maxQueueQuantity[silo] = quant;
         }
     }
 
     public notifyServerOcupation(
-        server: Servers,
+        silo: Silos,
         oldClock: number,
         newClock: number,
-        busy: boolean,
+        busy: states,
     ) {
         if (newClock != 0) {
-            this.serverOcupation[server] =
-                (this.serverOcupation[server] * oldClock + (busy ? 1 : 0) * (newClock - oldClock)) /
+            this.serverOcupation[silo] =
+                (this.serverOcupation[silo] * oldClock + (busy ? 1 : 0) * (newClock - oldClock)) /
                 newClock;
         }
     }
@@ -70,14 +71,14 @@ export class StatsObserver {
     public getFinalStats(clock: number): tp6StatsType {
         {
             const queueAverageTime = {
-                [Servers.server1]:
-                    this.queueDurationAcumulator[Servers.server1] / this.finishedAssemblies,
-                [Servers.server2]:
-                    this.queueDurationAcumulator[Servers.server2] / this.finishedAssemblies,
-                [Servers.server3]:
-                    this.queueDurationAcumulator[Servers.server3] / this.finishedAssemblies,
-                [Servers.server4]:
-                    this.queueDurationAcumulator[Servers.server4] / this.finishedAssemblies,
+                [Silos.silo1]:
+                    this.queueDurationAcumulator[Silos.silo1] / this.finishedAssemblies,
+                [Silos.silo2]:
+                    this.queueDurationAcumulator[Silos.silo2] / this.finishedAssemblies,
+                [Silos.silo3]:
+                    this.queueDurationAcumulator[Silos.silo3] / this.finishedAssemblies,
+                [Silos.silo4]:
+                    this.queueDurationAcumulator[Silos.silo4] / this.finishedAssemblies,
             };
 
             const pHoursGEthan3 =

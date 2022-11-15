@@ -1,5 +1,3 @@
-import { number } from 'yup';
-import { stateVector } from '../tp4/types/stateVector.type';
 import { states } from './enum/states';
 
 
@@ -18,7 +16,7 @@ export class Silo {
     public cargar(q: number): number{
         if (this.quantity + q > this.maxQuantity){
             let left: number = this.quantity + q - this.maxQuantity;
-            this.quantity += 20;
+            this.quantity = this.maxQuantity;
             return left;
         }
         else{
@@ -27,8 +25,28 @@ export class Silo {
         }
     }
     
+    public descargar(){
+        this.quantity -= 0,5;
+    }
+
+    public setState(estado: states){
+        this.state = estado;
+    }
+
+    public libre(): boolean{
+        return this.state != states.usando && this.quantity < this.maxQuantity;
+    }
+    
+    public usable(): boolean{
+        return this.state != states.descarga && this.quantity >= 0.5;
+    }
+
     public getState(): states {
         return this.state;
+    }
+
+    public getEspacio(): number{
+        return this.maxQuantity - this.quantity;
     }
 
 }

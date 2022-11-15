@@ -1,170 +1,131 @@
-import { AssemblyObject } from './Truck';
+import { Truck } from './Truck';
 import { UniformServer } from './ConcreteServer/UniformServer';
-import { Servers } from './enum/Servers';
+import { Silos } from './enum/Silos';
 import { EventType, SimulationEvent } from './enum/SimulationEvent';
-import { Server } from './Silo';
+import { Silo } from './Silo';
 import { stateVector } from './types/stateVector.type';
 import { StatsObserver } from './StatsObserver';
-import { RungeKuta } from './RungeKuta';
-import { RungeKuttaLine } from './types/rungeKuttaEvolution';
-import { boolean } from 'yup';
+import { states } from './enum/states';
 
 export class Coordinator {
     private clock: number;
-    private orderArriveClock: number;
-    private servers: Server;
+    private usageClock: number;
+    private arrivals: UniformServer;
     private pendingEvents: SimulationEvent[];
-    private finishedAssemblies: AssemblyObject[];
-    private lastAssemblyId: number;
+    private queue: Truck[] = [];
+    private currentTruck: Truck;
+    private lastTruckId: number;
     private statsObserver: StatsObserver;
     private vectorState: stateVector[] = [];
+    private silos: Silo[];
+    private usingSilo: Silo;
+    private deschargingSilo: Silo | undefined;
+    private descargas: number = 0;
+    private ocupado: boolean;
 
     constructor() {
         this.clock = 0;
-        this.orderArriveClock = 0;
-        this.lastAssemblyId = 0;
-        this.finishedAssemblies = [];
-        this.servers = new UniformServer(1, this, 5, 9);
+        this.usageClock = 0;
+        this.lastTruckId = 0;
+        this.arrivals = new UniformServer(this, 5, 9);
         this.pendingEvents = [];
         this.statsObserver = new StatsObserver();
+        this.silos = new Array (new Silo(1), new Silo(2), new Silo(3), new Silo(4),);
+        this.usingSilo = this.silos[0];
+        this.usingSilo.setState(states.usando);
+        this.usingSilo = this.silos[1];
+        this.currentTruck = new Truck(0, 0);
+        this.currentTruck.setQuantity(0);
+        this.generateNextUsage();
         this.generateNextArrive();
+        this.ocupado = false;
     }
 
-
-    private nextStep(s: Servers, objAs: AssemblyObject) {
-        /*if (s === Servers.server1) {
-            const q4 = this.servers[Servers.server4].queueAssembly(objAs, this.clock);
-            this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
-            return;
-        }
-        if (s === Servers.server2) {
-            if (objAs.hasFinishedServer(Servers.server4)) {
-                const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
-            }
-            return;
-        }
-        if (s === Servers.server3) {
-            if (objAs.hasFinishedServer(Servers.server5)) {
-                const q6 = this.servers[Servers.server6].queueAssembly(objAs, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server6, q6);
-            }
-            return;
-        }
-        if (s === Servers.server4) {
-            if (objAs.hasFinishedServer(Servers.server2)) {
-                const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
-            }
-            return;
-        }
-        if (s === Servers.server5) {
-            if (objAs.hasFinishedServer(Servers.server3)) {
-                const q6 = this.servers[Servers.server6].queueAssembly(objAs, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server6, q6);
-            }
-            return;
-        }
-        if (s === Servers.server6) {
-            objAs.setFinishTime(this.clock);
-            this.finishedAssemblies.push(objAs);
-            this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
-            return;
-        }*/
-    }
 
     public simulate(orders: number) {
-        while (this.finishedAssemblies.length < orders) {
+        while (this.descargas < orders) {
             //Genero simulaciones hasta cumplir con el límite de simulaciones solicitadas.
-            let isRungeKutta: boolean =
-                this.pendingEvents[0].type == EventType.finishTask &&
-                this.pendingEvents[0].server == Servers.server4;
-
             this.processNextEvent();
-
-            if (this.finishedAssemblies.length <= 5) {
-                const stats = structuredClone(this.statsObserver.getFinalStats(this.clock));
-                this.vectorState.push({
-                    ...stats,
-                    queues: {
-                        [Servers.server1]: structuredClone(
-                            this.servers[Servers.server1].getQueueObjects(),
-                        ),
-                        [Servers.server2]: structuredClone(
-                            this.servers[Servers.server2].getQueueObjects(),
-                        ),
-                        [Servers.server3]: structuredClone(
-                            this.servers[Servers.server3].getQueueObjects(),
-                        ),
-                        [Servers.server4]: structuredClone(
-                            this.servers[Servers.server4].getQueueObjects(),
-                        ),
-                    },
-                    current: {
-                        [Servers.server1]: structuredClone(
-                            this.servers[Servers.server1].getCurrent(),
-                        ),
-                        [Servers.server2]: structuredClone(
-                            this.servers[Servers.server2].getCurrent(),
-                        ),
-                        [Servers.server3]: structuredClone(
-                            this.servers[Servers.server3].getCurrent(),
-                        ),
-                        [Servers.server4]: structuredClone(
-                            this.servers[Servers.server4].getCurrent(),
-                        ),
-                    },
-                    rungeKuttaEvolution: isRungeKutta
-                        ? this.servers[Servers.server4].getRungeKuttaEvolution()
-                        : [],
-                    events: structuredClone(this.pendingEvents),
-                    clock: this.clock,
-                });
-            }
         }
 
         return this.statsObserver.getFinalStats(this.clock);
     }
 
-    processNextEvent() {
+    private processNextEvent() {
         const oldClock = this.clock;
         const nextEvent = this.getNextEvent();
         this.clock = nextEvent.time;
 
-        if (nextEvent.type === EventType.orderArrive) {
-            //Notificar que llegaron pedidos para el cálculo de estadísticas
-            this.statsObserver.notifyArrives(nextEvent.orderQuantity);
-            //Crear nuevos AssemblyObject y encolar donde corresponda
-            for (let i = 0; i < nextEvent.orderQuantity; i++) {
-                this.lastAssemblyId++;
-                const asObj: AssemblyObject = new AssemblyObject(this.lastAssemblyId, this.clock);
-                const q1 = this.servers[Servers.server1].queueAssembly(asObj, this.clock);
-                const q2 = this.servers[Servers.server2].queueAssembly(asObj, this.clock);
-                const q3 = this.servers[Servers.server3].queueAssembly(asObj, this.clock);
-                //const q4 = this.servers[Servers.server4].queueAssembly(asObj, this.clock);
-                //const q5 = this.servers[Servers.server5].queueAssembly(asObj, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server1, q1);
-                this.statsObserver.notifyQueueQuantity(Servers.server2, q2);
-                this.statsObserver.notifyQueueQuantity(Servers.server3, q3);
-                //this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
-                //this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
+        if (nextEvent.type === EventType.truckArrive) {
+            
+            let truck: Truck;
+            truck = this.generateNextArrive();
+
+            if(this.ocupado){
+                this.queue.push(truck);
+            }
+            else{
+                this.ocupado = true;
+                this.atenderTruck(truck);
             }
 
-            this.generateNextArrive();
-        } else if (nextEvent.type === EventType.finishTask) {
-            //procesar finalizacion tarea en servidor.
-            const objAssembly = this.servers[nextEvent.server].finishCurrentTask(this.clock);
-            this.nextStep(nextEvent.server, objAssembly);
+        } else if (nextEvent.type === EventType.finishDischarge) {
+
+            let silo: Silo = nextEvent.silo;
+            silo.setState(states.libre);
+            silo.cargar(nextEvent.cant);
+
+            if ( this.queue.length == 0){
+                this.ocupado = false;
+            }
+            else{
+                let truck: Truck = this.queue.shift();
+                this.atenderTruck(truck);
+            }
+            
+        }
+        else{
+            let silo: Silo = nextEvent.silo;
+            silo.descargar();
+            silo.setState(states.libre);
+
+            this.generateNextUsage();
         }
 
-        const busy1 = this.servers[Servers.server1].isBusy();
-        const busy2 = this.servers[Servers.server2].isBusy();
-        const busy3 = this.servers[Servers.server3].isBusy();
-        const busy4 = this.servers[Servers.server4].isBusy();
-        this.statsObserver.notifyServerOcupation(Servers.server1, oldClock, this.clock, busy1);
-        this.statsObserver.notifyServerOcupation(Servers.server2, oldClock, this.clock, busy2);
-        this.statsObserver.notifyServerOcupation(Servers.server3, oldClock, this.clock, busy3);
-        this.statsObserver.notifyServerOcupation(Servers.server4, oldClock, this.clock, busy4);
+        const busy1 = this.silos[Silos.silo1].getState();
+        const busy2 = this.silos[Silos.silo2].getState();
+        const busy3 = this.silos[Silos.silo3].getState();
+        const busy4 = this.silos[Silos.silo4].getState();
+        this.statsObserver.notifyServerOcupation(Silos.silo1, oldClock, this.clock, busy1);
+        this.statsObserver.notifyServerOcupation(Silos.silo2, oldClock, this.clock, busy2);
+        this.statsObserver.notifyServerOcupation(Silos.silo3, oldClock, this.clock, busy3);
+        this.statsObserver.notifyServerOcupation(Silos.silo4, oldClock, this.clock, busy4);
+    }
+
+    private atenderTruck(truck: Truck) {
+        let silo: Silo = this.findFreeSilo();
+        silo.setState(states.descarga);
+
+        let cant: number 
+        if (silo.getEspacio() < truck.getQuantity()){
+            cant = silo.getEspacio();
+            
+            this.addPendingEvent({
+                type: EventType.truckArrive,
+                time: this.clock + 1/6,
+                truck: truck,
+            });
+        }
+        else{
+            cant = truck.getQuantity()
+        }
+
+        this.addPendingEvent({
+            type: EventType.finishDischarge,
+            time: truck.calculateDuration(cant),
+            silo: silo,
+            cant: cant,
+        });
     }
 
     public addPendingEvent(e: SimulationEvent) {
@@ -196,22 +157,55 @@ export class Coordinator {
         throw Error('No hay eventos pendientes');
     }
 
-    private generateNextArrive() {
+    private generateNextArrive(): Truck {
+        let duracion: number = this.arrivals.calculateTaskDuration();
+        let truck: Truck = new Truck(this.lastTruckId, this.clock);
+        
+        this.lastTruckId++;
+
         this.addPendingEvent({
-            type: EventType.orderArrive,
-            time: this.orderArriveClock,
-            orderQuantity: this.generateQuantityArrive(),
+            type: EventType.truckArrive,
+            time: this.clock + duracion,
+            truck: truck,
         });
-        this.orderArriveClock += 60;
+        return truck;
     }
 
-    private generateQuantityArrive(): number {
-        // Se asume llegan pedidos en números enteros... 1,2,4 o 10 pedidos. No 0.1 ni 3.75
-        //Generate exponential random. Media = 3  → Lambda = 1/3
-        return Math.round(-3 * Math.log(Math.random()));
+    private generateNextUsage() {
+        let newSilo: Silo = this.findUsableSilo();
+
+        if (newSilo != this.usingSilo){
+            this.usingSilo = newSilo;   
+        }
+        this.usingSilo.setState(states.usando);
+
+        this.addPendingEvent({
+            type: EventType.useSilo,
+            time: this.usageClock,
+            silo: this.usingSilo,
+        });
+
+        this.usageClock += 60;
+    }
+
+    private findUsableSilo(): Silo{
+        for (let i = 0; i < this.silos.length; i++) {
+            let silo: Silo = this.silos[i] as Silo;
+            if (silo.usable()) return silo;
+        }
+        return this.silos[0];
+    }
+
+    private findFreeSilo(): Silo{
+        for (let i = 0; i < this.silos.length; i++) {
+            let silo: Silo = this.silos[i] as Silo;
+            if (silo.libre()) return silo;
+        }
+        return this.silos[0];
     }
 
     public getStateVector(): stateVector[] {
         return this.vectorState;
     }
+    
 }
