@@ -1,4 +1,5 @@
 import { Heading, UnorderedList, ListItem, Text, Box, Button } from '@chakra-ui/react';
+import FormulaDisplay from './FormulaDisplay';
 
 //import Ec.Diferencial from '../TP7';
 // 
@@ -34,7 +35,7 @@ export default function TP7() {
                     <Text color="#444444" >
                         La tasa de descarga, se rige por la siguiente ecuación:
                     </Text>
-                    
+                    <FormulaDisplay></FormulaDisplay>
                 </Box>
                 
                 

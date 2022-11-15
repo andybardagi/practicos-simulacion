@@ -1,5 +1,5 @@
 import { Servers } from './enum/Servers';
-import { AssemblyObject } from './AssemblyObject';
+import { AssemblyObject } from './Truck';
 import { tp6StatsType } from './types/stats.type';
 export class StatsObserver {
     private assemblyDurationAcumulator: number = 0;

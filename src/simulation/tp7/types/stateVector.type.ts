@@ -1,4 +1,4 @@
-import { AssemblyObject } from '../AssemblyObject';
+import { AssemblyObject } from '../Truck';
 import { Servers } from '../enum/Servers';
 import { SimulationEvent } from '../enum/SimulationEvent';
 import { tp6StatsType } from './stats.type';

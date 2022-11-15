@@ -1,18 +1,18 @@
-import { AssemblyObject } from './AssemblyObject';
+import { AssemblyObject } from './Truck';
 import { UniformServer } from './ConcreteServer/UniformServer';
 import { Servers } from './enum/Servers';
 import { EventType, SimulationEvent } from './enum/SimulationEvent';
 import { Server } from './Server';
 import { stateVector } from './types/stateVector.type';
 import { StatsObserver } from './StatsObserver';
-import { RungeKuta } from './ConcreteServer/RungeKuta';
+import { RungeKuta } from './RungeKuta';
 import { RungeKuttaLine } from './types/rungeKuttaEvolution';
 import { boolean } from 'yup';
 
 export class Coordinator {
     private clock: number;
     private orderArriveClock: number;
-    private servers: Record<Servers, Server>;
+    private servers: Server;
     private pendingEvents: SimulationEvent[];
     private finishedAssemblies: AssemblyObject[];
     private lastAssemblyId: number;
@@ -24,25 +24,12 @@ export class Coordinator {
         this.orderArriveClock = 0;
         this.lastAssemblyId = 0;
         this.finishedAssemblies = [];
-        this.servers = {
-            [Servers.server1]: new UniformServer(Servers.server1, this, 20, 30),
-            [Servers.server2]: new UniformServer(Servers.server2, this, 30, 50),
-            [Servers.server3]: new UniformServer(Servers.server2, this, 30, 50),
-            [Servers.server4]: new UniformServer(Servers.server2, this, 30, 50),
-        };
+        this.servers = new UniformServer(1, this, 5, 9);
         this.pendingEvents = [];
         this.statsObserver = new StatsObserver();
         this.generateNextArrive();
     }
 
-    public setRungeServer(
-        t: number,
-        x: number,
-        y: number,
-        h: number
-    ) {
-        this.servers[Servers.server4] = new RungeKuta(Servers.server4, this, t, x, y, h);
-    }
 
     private nextStep(s: Servers, objAs: AssemblyObject) {
         /*if (s === Servers.server1) {

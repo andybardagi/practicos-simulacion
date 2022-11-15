@@ -1,10 +1,8 @@
 import { isThisTypeNode } from 'typescript';
-import { Coordinator } from '../Coordinator';
-import { Servers } from '../enum/Servers';
-import { Server } from '../Server';
-import { RungeKuttaLine } from '../types/rungeKuttaEvolution';
 
-export class RungeKuta extends Server {
+import { RungeKuttaLine } from './types/rungeKuttaEvolution';
+
+export class RungeKuta  {
     private t: number;
     private x: number;
     private y: number;
@@ -21,14 +19,11 @@ export class RungeKuta extends Server {
     private evolution: RungeKuttaLine[];
 
     constructor(
-        id: Servers,
-        coord: Coordinator,
         t: number,
         x: number,
         y: number,
         h: number
     ) {
-        super(id, coord);
         this.t = t;
         this.x = x;
         this.y = y;

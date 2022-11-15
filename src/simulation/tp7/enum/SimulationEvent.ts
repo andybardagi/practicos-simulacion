@@ -1,20 +1,18 @@
-import { Servers } from './Servers';
 
 export enum EventType {
     finishTask = "finishTask",
-    orderArrive = "orderArrival",
+    truckArrive = "truckArrival",
 }
 
-type OrderArrive = {
-    type: EventType.orderArrive;
+type truckArrive = {
+    type: EventType.truckArrive;
     time: number;
-    orderQuantity: number;
+    tons: number;
 };
 
 type FinishTask = {
     type: EventType.finishTask;
     time: number;
-    server: Servers;
 };
 
-export type SimulationEvent = OrderArrive | FinishTask;
+export type SimulationEvent = truckArrive | FinishTask;
