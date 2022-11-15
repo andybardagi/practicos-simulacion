@@ -1,5 +1,6 @@
 import { Box, ChakraProvider, Flex, HStack, Text } from '@chakra-ui/react';
 import '@fontsource/roboto';
+import '@fontsource/montserrat';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -11,6 +12,7 @@ import { NavigationProvider, useNavigationContext } from './hooks/NavigationCont
 import TP4 from './components/TP4/TP4';
 import TP5 from './components/TP5/TP5';
 import TP6 from './components/TP6/TP6';
+import TP7Andy from './components/TP7-Andy/TP7Andy';
 
 // #0295A9
 // #12ADC1
@@ -36,14 +38,12 @@ function App() {
                             <Route path="/tp3" element={<TP3 />} />
                             <Route path="/tp4" element={<TP4 />} />
                             <Route path="/tp5" element={<TP5 />} />
-                            <Route
-                                path="/tp6"
-                                element={<TP6 />}
-                            />
+                            <Route path="/tp6" element={<TP6 />} />
                             <Route
                                 path="/tp7"
                                 element={<Text>Trabajo práctico N° 7 pendiente :)</Text>}
                             />
+                            <Route path="/tp7/andy" element={<TP7Andy />} />
                         </Routes>
                     </Box>
                 </HStack>
