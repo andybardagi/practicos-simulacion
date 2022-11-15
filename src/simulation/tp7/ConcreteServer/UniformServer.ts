@@ -1,5 +1,5 @@
 import { Coordinator } from '../Coordinator';
-import { Server } from '../Server';
+import { Server } from '../Silo';
 
 export class UniformServer extends Server {
     private min: number;

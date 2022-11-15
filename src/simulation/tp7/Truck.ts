@@ -1,40 +1,41 @@
+import { RungeKuta } from "./RungeKuta";
 
 export class Truck {
     public id: number;
-    private assemblyDuration: number = -1;
+    private quantity: number;
     private arriveTime: number;
+    private attendedTime: number = -1;
     private finishTime: number = -1;
 
-    constructor(id: number, arriveTime: number) {
+    constructor(id: number, arriveTime: number, quantity: number) {
         this.id = id;
         this.arriveTime = arriveTime;
+        this.quantity = quantity;
+        this.calculateDuration;
     }
 
-    public calculateAssembyDuration(): number {
-        this.assemblyDuration = 0; // calcular
-        return this.assemblyDuration;
+    public calculateDuration(): number {
+        let rk: RungeKuta = new RungeKuta(0, 0, 0, 0.5, this.quantity);
+        return rk.calculateDuration();
     }
 
-    public setQueueTime(server: Servers, clock: number): void {
-        this.queueTimes[server] = clock - this.arriveToQueueTimes[server];
-    }
-    public setServerTime(server: Servers, duration: number): void {
-        this.serverTimes[server] = duration;
-    }
-    public setArriveToQueueTime(server: Servers, duration: number): void {
-        this.arriveToQueueTimes[server] = duration;
+    public setQueueTime(clock: number): void {
+        this.attendedTime = clock - this.arriveTime;
     }
 
     public setFinishTime(n: number) {
         this.finishTime = n;
     }
 
-    public hasFinishedServer(s: Servers): boolean {
-        return this.serverTimes[s] != -1;
+    public hasFinished(): boolean {
+        return this.finishTime != -1;
     }
 
     public getTotalDuration() {
         return this.finishTime - this.arriveTime;
+    }
+    public getQueueDuration(): number{
+        return this.attendedTime - this.arriveTime;
     }
 
     public getId() {

@@ -2,7 +2,7 @@ import { AssemblyObject } from './Truck';
 import { UniformServer } from './ConcreteServer/UniformServer';
 import { Servers } from './enum/Servers';
 import { EventType, SimulationEvent } from './enum/SimulationEvent';
-import { Server } from './Server';
+import { Server } from './Silo';
 import { stateVector } from './types/stateVector.type';
 import { StatsObserver } from './StatsObserver';
 import { RungeKuta } from './RungeKuta';

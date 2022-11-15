@@ -7,6 +7,7 @@ export class RungeKuta  {
     private x: number;
     private y: number;
     private h: number;
+    private k: number;
     private k1: number = 0;
     private k2: number = 0;
     private k3: number = 0;
@@ -22,13 +23,15 @@ export class RungeKuta  {
         t: number,
         x: number,
         y: number,
-        h: number
+        h: number,
+        k: number
     ) {
         this.t = t;
         this.x = x;
         this.y = y;
         this.h = h;
-        console.log(t, x, y, h);
+        this.k = k,
+        console.log(t, x, y, h, k);
         this.initialValues = {
             t,
             x,
@@ -113,24 +116,16 @@ export class RungeKuta  {
         this.evolution = [];
     }
 
-    public calculateTaskDuration(): number {
-        return 3;
-        /*
+    public calculateDuration(): number {
         this.resetValues();
         let mayor: number = 0;
-
-        let n1: number = this.x;
-        let n2: number = -Infinity; // two numbers extremely small to not activate bigger condition
-        let n3: number = -Infinity; // two numbers extremely small to not activate bigger condition
-
-        while (mayor < 2) {
-            n1 = n2;
-            n2 = n3;
-            n3 = this.calculateLine();
-
-            mayor += n1 < n2 && n3 < n2 ? 1 : 0;
+        
+        while (mayor < this.k){
+            this.calculateLine();
+            mayor = this.y;
         }
-        console.log(this.t, n1,n2,n3);
-        return this.t-this.h;*/
+        
+        console.log(this.t, this.x, this.y, this.k);
+        return this.t;
     }
 }
