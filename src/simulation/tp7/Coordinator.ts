@@ -57,14 +57,19 @@ export class Coordinator {
 
             let actualEvent = this.processNextEvent();
 
+            let clonePending = this.pendingEvents.slice();
+            let cantidades = this.getQuan().slice();
+            let estados = this.getEstados().slice();
+
             if (this.currentTruck == null) {throw new Error("no hay camion")};
             this.vectorState.push({
-                states: this.silos,
-                queue: this.queue,
-                currentEvent: actualEvent,
-                current: this.currentTruck,
-                rungeKuttaEvolution: rkEvo,
-                events: this.pendingEvents,
+                states: estados,
+                queue: structuredClone(this.queue),
+                quantity: cantidades,
+                currentEvent: structuredClone(actualEvent),
+                current: structuredClone(this.currentTruck),
+                rungeKuttaEvolution: structuredClone(rkEvo),
+                events: clonePending,
                 clock: this.clock,
             });
 
@@ -116,15 +121,6 @@ export class Coordinator {
 
             this.generateNextUsage();
         }
-        /*console.log(this.silos);
-        const busy1 = this.silos[Silos.silo1].getState();
-        const busy2 = this.silos[Silos.silo2].getState();
-        const busy3 = this.silos[Silos.silo3].getState();
-        const busy4 = this.silos[Silos.silo4].getState();
-        this.statsObserver.notifyServerOcupation(Silos.silo1, oldClock, this.clock, busy1);
-        this.statsObserver.notifyServerOcupation(Silos.silo2, oldClock, this.clock, busy2);
-        this.statsObserver.notifyServerOcupation(Silos.silo3, oldClock, this.clock, busy3);
-        this.statsObserver.notifyServerOcupation(Silos.silo4, oldClock, this.clock, busy4);*/
 
         return nextEvent;
     }
@@ -240,11 +236,29 @@ export class Coordinator {
     }
 
     private todosLLenos(): boolean{
+        let flag = true;
         this.silos.forEach(silo => {
-            if (silo.getEspacio() == 0) return false;
+            if (!silo.estaLLeno()) {flag = false};
         });
-        return true;
+        return flag;
     }
+
+    private getQuan(): number[]{
+        let quant: number[] = [];
+        this.silos.forEach(silo => {
+            quant.push(silo.getQuantity())
+        });
+        return quant;
+    }
+
+    private getEstados(): states[]{
+        let estados: states[] = [];
+        this.silos.forEach(silo => {
+            estados.push(silo.getState())
+        });
+        return estados;
+    }
+
 
     public getStateVector(): stateVector[] {
         return this.vectorState;

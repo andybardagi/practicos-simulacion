@@ -22,7 +22,7 @@ export default function EventShower({ event }: Props) {
     if (event.type === EventType.useSilo) {
         return (
             <ListItem>
-                {event.time.toFixed(2)} - Se consumio 1/2 Tn del silo {event.silo.getId()}
+                {event.time.toFixed(2)} - Consumo de 1/2 Tn del silo {event.silo.getId()}
             </ListItem>
         );
     }

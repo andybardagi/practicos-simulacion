@@ -4,7 +4,7 @@ import { states } from "./enum/States";
 export class Silo {
     private id: number;
     private state: states;
-    private quantity : number = 10;
+    private quantity : number = 5;
     private maxQuantity : number = 20;
 
     constructor(id: number) {
@@ -49,8 +49,17 @@ export class Silo {
         return this.maxQuantity - this.quantity;
     }
 
+    public getQuantity(): number{
+        return this.quantity;
+    }
+
     public getId(): number {
         return this.id;
+    }
+
+    public estaLLeno(): boolean{
+        if (this.maxQuantity == this.quantity) return true;
+        else return false;
     }
 
 }

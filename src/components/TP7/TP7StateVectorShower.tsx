@@ -46,82 +46,12 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                         ))}
                                     </UnorderedList>
                                 </Box>
-                                {/*<Box py={4}>
-                                    <Text fontSize={'18px'}>
-                                        <b>Estadísticas parciales</b>
-                                    </Text>
-                                </Box>
-                                <Box>
-                                    <Text fontSize={'18px'}>
-                                        <b>Porcentaje de ocupación de servidores</b>
-                                    </Text>
-                                     <UnorderedList>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 1:{' '}
-                                                {(
-                                                    s.serversOccupation[Silos.silo1] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 2:{' '}
-                                                {(
-                                                    s.serversOccupation[Silos.silo2] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 3:{' '}
-                                                {(
-                                                    s.serversOccupation[Silos.silo3] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 4:{' '}
-                                                {(
-                                                    s.serversOccupation[Silos.silo4] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                    </UnorderedList> 
-                                </Box>
-                                <Box mt={6}>
-                                    <Text fontSize={'18px'}>
-                                        <b>Cantidad promedio de ensambles por hora: </b>
-                                        {Number.isNaN(s.averageAssembliesPerHour)
-                                            ? 'Sin datos'
-                                            : s.averageAssembliesPerHour.toFixed(2)}
-                                    </Text>
-                                </Box>
-                                <Box mt={6}>
-                                    <Text fontSize={'18px'}>
-                                        <b>Ensambles por hora</b>
-                                    </Text>
-                                    <UnorderedList>
-                                        {Object.entries(s.assembliesQuantPerHour).map(
-                                            ([hora, cantidad], i) => (
-                                                <ListItem key={i}>
-                                                    {hora}° hora: {cantidad} ensambles.
-                                                </ListItem>
-                                            ),
-                                        )}
-                                    </UnorderedList>
-                                </Box>*/}
 
                                 <Box mt={6}>
                                     <Text fontSize={'18px'}>
                                         <b>Estado Silos</b>
                                     </Text>
-                                    <QueuesShower queue={s.queue} states={s.states}/>
+                                    <QueuesShower quantity={s.quantity} states={s.states}/>
                                 </Box>
 
                                 {s.rungeKuttaEvolution.length > 0 ? (

@@ -4,10 +4,10 @@ import { stateVector } from '../../simulation/tp7/types/stateVector.type';
 import { Silos } from '../../simulation/tp7/enum/Silos';
 
 type Props = {
-    queue: stateVector['queue'];
+    quantity: stateVector['quantity'];
     states: stateVector['states'];
 };
-export default function queueShower({ queue, states: states }: Props) {
+export default function queueShower({ quantity, states: states }: Props) {
     return (
         <Box>
             <Table>
@@ -21,31 +21,16 @@ export default function queueShower({ queue, states: states }: Props) {
                 </Thead>
                 <Tbody>
                     <Tr bgColor={"#22ff2266"}>
-                        <Td py={1} textAlign="center">{states[Silos.silo1] != null ? states[Silos.silo1]?.getState() : "Libre" }</Td>
-                        <Td py={1} textAlign="center">{states[Silos.silo2] != null ? states[Silos.silo2]?.getState() : "Libre" }</Td>
-                        <Td py={1} textAlign="center">{states[Silos.silo3] != null ? states[Silos.silo3]?.getState() : "Libre" }</Td>
-                        <Td py={1} textAlign="center">{states[Silos.silo4] != null ? states[Silos.silo4]?.getState() : "Libre" }</Td>
+                        <Td py={1} textAlign="center">{states[Silos.silo1] }</Td>
+                        <Td py={1} textAlign="center">{states[Silos.silo2] }</Td>
+                        <Td py={1} textAlign="center">{states[Silos.silo3] }</Td>
+                        <Td py={1} textAlign="center">{states[Silos.silo4] }</Td>
                     </Tr>
                     <Tr>
-                        <Td>
-                            <Box>
-                                {queue.map((s, i) => (
-                                    <Box
-                                        key={i}
-                                        w={'100%'}
-                                        py={1}
-                                        onClick={() => {
-                                            console.log(s);
-                                        }}
-                                        textAlign={'center'}
-                                        _hover={{ background: '#f1f1f1' }}
-                                    >
-                                        {s.id}
-                                    </Box>
-                                ))}
-                            </Box>
-                        </Td>
-
+                        <Td py={1} textAlign="center"><Box>{quantity[Silos.silo1] } Tn</Box></Td>
+                        <Td py={1} textAlign="center"><Box>{quantity[Silos.silo2] } Tn</Box></Td>
+                        <Td py={1} textAlign="center"><Box>{quantity[Silos.silo3] } Tn</Box></Td>
+                        <Td py={1} textAlign="center"><Box>{quantity[Silos.silo4] } Tn</Box></Td>
                     </Tr>
                 </Tbody>
             </Table>
