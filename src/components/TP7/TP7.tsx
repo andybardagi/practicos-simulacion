@@ -2,6 +2,9 @@ import { Heading, UnorderedList, ListItem, Text, Box, Button, InputGroup, Flex, 
 import { useRef, useState } from 'react';
 import { Coordinator } from '../../simulation/tp7/Coordinator';
 import FormulaDisplay from './FormulaDisplay';
+import TP7StateVectorShower from './TP7StateVectorShower';
+import { stateVector } from '../../simulation/tp7/types/stateVector.type';
+import { tp7StatsType } from '../../simulation/tp7/types/stats.type';
 
 //import Ec.Diferencial from '../TP7';
 // 
@@ -9,6 +12,7 @@ import FormulaDisplay from './FormulaDisplay';
 export default function TP7() {
     const coordinator = useRef<Coordinator>();
     const [flagSim, setFlagSim] = useState(false);
+    const [stats, setStats] = useState<tp7StatsType>();
     
     const [form, setForm] = useState({
         cant: '10000',
@@ -16,8 +20,10 @@ export default function TP7() {
     
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFlagSim(false);
+        setStats(undefined);
         setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
     };
+    const [stateVector, setStateVector] = useState<stateVector[]>();
 
     const simulate = () => {
         coordinator.current = new Coordinator();
@@ -27,17 +33,15 @@ export default function TP7() {
                 .map((v) => v.replace(',', '.'))
                 .map((v) => Number(v))
                 .filter((v) => Number.isNaN(v)).length > 0;
-        console.log(
-            Object.values(form)
-                .map((v) => v.replace(',', '.'))
-                .map((v) => Number(v)),
-        );
+
         if (isIncorrect) {
             alert('Error en los valores ingresados');
             return;
         }
         const res = coordinator.current.simulate(Number(form.cant));
         setFlagSim(true);
+        setStats(res);
+        setStateVector(coordinator.current.getStateVector());
     };
 
     return (

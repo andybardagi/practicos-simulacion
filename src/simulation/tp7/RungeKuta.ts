@@ -28,7 +28,6 @@ export class RungeKuta  {
         this.x = x;
         this.y = y;
         this.h = h;
-        console.log(t, x, y, h);
         this.initialValues = {
             t,
             x,
@@ -122,7 +121,6 @@ export class RungeKuta  {
             mayor = this.y;
         }
         
-        console.log(this.t, this.x, this.y);
         return this.t;
     }
 }

@@ -11,7 +11,7 @@ import {
     UnorderedList,
 } from '@chakra-ui/react';
 import { Servers } from '../../simulation/tp6/enum/Servers';
-import { stateVector } from '../../simulation/tp6/types/stateVector.type';
+import { stateVector } from '../../simulation/tp7/types/stateVector.type';
 import EventShower from './EventShower';
 import QueuesShower from './QueuesShower';
 import RungeKuttaEvolution from './RungeKuttaEvolution';
@@ -27,10 +27,7 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                 <Box flex="1" textAlign="left">
                                     <Flex justifyContent={'space-between'}>
                                         <Text>
-                                            <b>Reloj de simulación:</b> {s.clock.toFixed(2)} minutos
-                                        </Text>
-                                        <Text>
-                                            <b>Ensambles finalizados:</b> {s.finishedAssemblies}
+                                            <b>Reloj de simulación:</b> {s.clock.toFixed(2)} minutos <b> Evento:</b> {s.currentEvent.type}
                                         </Text>
                                     </Flex>
                                 </Box>
@@ -49,7 +46,7 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                         ))}
                                     </UnorderedList>
                                 </Box>
-                                <Box py={4}>
+                                {/*<Box py={4}>
                                     <Text fontSize={'18px'}>
                                         <b>Estadísticas parciales</b>
                                     </Text>
@@ -58,12 +55,12 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                     <Text fontSize={'18px'}>
                                         <b>Porcentaje de ocupación de servidores</b>
                                     </Text>
-                                    <UnorderedList>
+                                     <UnorderedList>
                                         <ListItem>
                                             <Text>
                                                 Servidor 1:{' '}
                                                 {(
-                                                    s.serversOccupation[Servers.server1] * 100
+                                                    s.serversOccupation[Silos.silo1] * 100
                                                 ).toFixed(4)}
                                                 %
                                             </Text>
@@ -72,7 +69,7 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                             <Text>
                                                 Servidor 2:{' '}
                                                 {(
-                                                    s.serversOccupation[Servers.server2] * 100
+                                                    s.serversOccupation[Silos.silo2] * 100
                                                 ).toFixed(4)}
                                                 %
                                             </Text>
@@ -81,7 +78,7 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                             <Text>
                                                 Servidor 3:{' '}
                                                 {(
-                                                    s.serversOccupation[Servers.server3] * 100
+                                                    s.serversOccupation[Silos.silo3] * 100
                                                 ).toFixed(4)}
                                                 %
                                             </Text>
@@ -90,30 +87,12 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                             <Text>
                                                 Servidor 4:{' '}
                                                 {(
-                                                    s.serversOccupation[Servers.server4] * 100
+                                                    s.serversOccupation[Silos.silo4] * 100
                                                 ).toFixed(4)}
                                                 %
                                             </Text>
                                         </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 5:{' '}
-                                                {(
-                                                    s.serversOccupation[Servers.server5] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 6:{' '}
-                                                {(
-                                                    s.serversOccupation[Servers.server6] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                    </UnorderedList>
+                                    </UnorderedList> 
                                 </Box>
                                 <Box mt={6}>
                                     <Text fontSize={'18px'}>
@@ -136,13 +115,13 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                             ),
                                         )}
                                     </UnorderedList>
-                                </Box>
+                                </Box>*/}
 
                                 <Box mt={6}>
                                     <Text fontSize={'18px'}>
-                                        <b>Objetos en cola</b>
+                                        <b>Estado Silos</b>
                                     </Text>
-                                    <QueuesShower queues={s.queues} current={s.current}/>
+                                    <QueuesShower queue={s.queue} states={s.states}/>
                                 </Box>
 
                                 {s.rungeKuttaEvolution.length > 0 ? (

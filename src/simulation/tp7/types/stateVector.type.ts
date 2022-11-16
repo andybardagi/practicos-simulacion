@@ -1,11 +1,13 @@
-import { AssemblyObject } from '../Truck';
-import { Servers } from '../enum/Servers';
+import { Truck } from '../Truck';
+import { Silos } from '../enum/Silos';
 import { SimulationEvent } from '../enum/SimulationEvent';
-import { tp6StatsType } from './stats.type';
 import { RungeKuttaLine } from './rungeKuttaEvolution';
-export type stateVector = tp6StatsType & {
-    queues: Record<Servers, AssemblyObject[]>;
-    current: Record<Servers, AssemblyObject | null>;
+import { Silo } from '../Silo';
+export type stateVector = {
+    states: Silo[];
+    queue: Truck[];
+    currentEvent: SimulationEvent;
+    current: Truck;
     events: SimulationEvent[];
     clock: number;
     rungeKuttaEvolution: RungeKuttaLine[];

@@ -1,10 +1,10 @@
-import { states } from './enum/states';
+import { states } from "./enum/States";
 
 
 export class Silo {
     private id: number;
     private state: states;
-    private quantity : number = 0;
+    private quantity : number = 10;
     private maxQuantity : number = 20;
 
     constructor(id: number) {
@@ -26,7 +26,7 @@ export class Silo {
     }
     
     public descargar(){
-        this.quantity -= 0,5;
+        this.quantity = this.quantity - 0.5;
     }
 
     public setState(estado: states){
@@ -47,6 +47,10 @@ export class Silo {
 
     public getEspacio(): number{
         return this.maxQuantity - this.quantity;
+    }
+
+    public getId(): number {
+        return this.id;
     }
 
 }

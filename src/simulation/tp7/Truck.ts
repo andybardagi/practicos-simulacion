@@ -7,6 +7,7 @@ export class Truck {
     private queueTime: number = -1;
     private finishTime: number = -1;
     private duration: number = -1;
+    private rk: RungeKuta = new RungeKuta(0, 0, 0, 0.5);
 
     constructor(id: number, clock: number) {
         this.id = id;
@@ -23,8 +24,7 @@ export class Truck {
     }
 
     public calculateDuration(cant: number): number {
-        let rk: RungeKuta = new RungeKuta(0, 0, 0, 0.5);
-        return rk.calculateDuration(cant);
+        return this.rk.calculateDuration(cant);
     }
 
     public getQuantity(): number{
@@ -60,7 +60,9 @@ export class Truck {
     public setArrivalTime(clock: number){
         this.arriveTime = clock;
     }
-
+    public getArrive() {
+        return this.arriveTime;
+    }
     public getId() {
         return this.id;
     }

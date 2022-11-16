@@ -3,9 +3,9 @@ import { Silo } from "../Silo";
 import { Truck } from "../Truck";
 
 export enum EventType {
-    finishDischarge = "finishDischarge",
-    truckArrive = "truckArrival",
-    useSilo = "useSilo",
+    finishDischarge = "Fin de descarga",
+    truckArrive = "Llegada de camión",
+    useSilo = "Uso se silo",
 }
 
 type truckArrive = {

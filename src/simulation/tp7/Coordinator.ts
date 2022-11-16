@@ -5,7 +5,9 @@ import { EventType, SimulationEvent } from './enum/SimulationEvent';
 import { Silo } from './Silo';
 import { stateVector } from './types/stateVector.type';
 import { StatsObserver } from './StatsObserver';
-import { states } from './enum/states';
+import { states } from './enum/States';
+import { RungeKuta } from './RungeKuta';
+import { R } from 'lib-r-math.js';
 
 export class Coordinator {
     private clock: number;
@@ -25,59 +27,84 @@ export class Coordinator {
 
     constructor() {
         this.clock = 0;
-        this.usageClock = 0;
+        this.usageClock = 1;
         this.lastTruckId = 0;
         this.arrivals = new UniformServer(this, 5, 9);
         this.pendingEvents = [];
         this.statsObserver = new StatsObserver();
-        this.silos = new Array (new Silo(1), new Silo(2), new Silo(3), new Silo(4),);
+        this.silos = [ new Silo(1), new Silo(2), new Silo(3), new Silo(4) ];
         this.usingSilo = this.silos[0];
         this.usingSilo.setState(states.usando);
         this.usingSilo = this.silos[1];
         this.generateNextUsage();
         this.generateNextArrive();
         this.ocupado = false;
+        this.currentTruck = new Truck(0,0);
     }
 
 
     public simulate(orders: number) {
         while (this.descargas < orders) {
             //Genero simulaciones hasta cumplir con el límite de simulaciones solicitadas.
-            this.processNextEvent();
+            let rkEvo: any;
+            if (this.pendingEvents[0].type == EventType.finishDischarge){
+                rkEvo = new RungeKuta(0,0,0,0.5);
+                rkEvo.calculateDuration(this.pendingEvents[0].cant)
+            }
+            else{
+                rkEvo = [];
+            }
+
+            let actualEvent = this.processNextEvent();
+
+            if (this.currentTruck == null) {throw new Error("no hay camion")};
+            this.vectorState.push({
+                states: this.silos,
+                queue: this.queue,
+                currentEvent: actualEvent,
+                current: this.currentTruck,
+                rungeKuttaEvolution: rkEvo,
+                events: this.pendingEvents,
+                clock: this.clock,
+            });
+
+            this.descargas++;
         }
 
         return this.statsObserver.getFinalStats(this.clock);
     }
 
-    private processNextEvent() {
+    private processNextEvent(): SimulationEvent {
         const oldClock = this.clock;
         const nextEvent = this.getNextEvent();
         this.clock = nextEvent.time;
 
         if (nextEvent.type === EventType.truckArrive) {
             
-            let truck: Truck;
-            truck = this.generateNextArrive();
+            this.generateNextArrive();
 
-            if(this.ocupado){
-                this.queue.push(truck);
+            if(!this.ocupado){
+                this.ocupado = true;
+                this.currentTruck = nextEvent.truck;
+                if (this.currentTruck == null) {throw new Error("no hay camion")};
+                this.atenderTruck(this.currentTruck);
             }
             else{
-                this.ocupado = true;
-                this.atenderTruck(truck);
+                this.queue.push(nextEvent.truck);
             }
 
         } else if (nextEvent.type === EventType.finishDischarge) {
-
+            
             let silo: Silo = nextEvent.silo;
             silo.setState(states.libre);
             silo.cargar(nextEvent.cant);
-            this.currentTruck.setFinishTime(this.clock);
-            if ( this.queue.length == 0){
+            this.currentTruck?.setFinishTime(this.clock);
+            if ( this.queue.length == 0 ){
                 this.ocupado = false;
             }
             else{
                 this.currentTruck = this.queue.shift();
+                if (this.currentTruck == null) {throw new Error("no hay camion")};
                 this.atenderTruck(this.currentTruck);
             }
             
@@ -89,7 +116,7 @@ export class Coordinator {
 
             this.generateNextUsage();
         }
-
+        /*console.log(this.silos);
         const busy1 = this.silos[Silos.silo1].getState();
         const busy2 = this.silos[Silos.silo2].getState();
         const busy3 = this.silos[Silos.silo3].getState();
@@ -97,36 +124,41 @@ export class Coordinator {
         this.statsObserver.notifyServerOcupation(Silos.silo1, oldClock, this.clock, busy1);
         this.statsObserver.notifyServerOcupation(Silos.silo2, oldClock, this.clock, busy2);
         this.statsObserver.notifyServerOcupation(Silos.silo3, oldClock, this.clock, busy3);
-        this.statsObserver.notifyServerOcupation(Silos.silo4, oldClock, this.clock, busy4);
+        this.statsObserver.notifyServerOcupation(Silos.silo4, oldClock, this.clock, busy4);*/
+
+        return nextEvent;
     }
 
     private atenderTruck(truck: Truck) {
         this.deschargingSilo = this.findFreeSilo();
         this.deschargingSilo.setState(states.descarga);
-        this.currentTruck = truck;
 
         if (truck.getQueueDuration() == -1) truck.setQueueTime(this.clock);
-        
-        let cant: number 
-        if (this.deschargingSilo.getEspacio() < truck.getQuantity()){
-            cant = this.deschargingSilo.getEspacio();
-            
-            this.addPendingEvent({
-                type: EventType.truckArrive,
-                time: this.clock + 1/6,
-                truck: truck,
-            });
-        }
-        else{
-            cant = truck.getQuantity()
-        }
 
-        this.addPendingEvent({
-            type: EventType.finishDischarge,
-            time: truck.calculateDuration(cant),
-            silo: this.deschargingSilo,
-            cant: cant,
-        });
+        let cant: number 
+        
+            if (this.deschargingSilo.getEspacio() < truck.getQuantity()){
+                cant = this.deschargingSilo.getEspacio();
+                truck.setQuantity(truck.getQuantity() - cant);
+                this.addPendingEvent({
+                    type: EventType.truckArrive,
+                    time: this.clock + truck.calculateDuration(cant) + 1/6,
+                    truck: truck,
+                });
+            }
+            else{
+                cant = truck.getQuantity()
+                truck.setQuantity(0);
+            }
+
+            this.addPendingEvent({
+                type: EventType.finishDischarge,
+                time: this.clock + truck.calculateDuration(cant),
+                silo: this.deschargingSilo,
+                cant: cant,
+            });
+        
+        
     }
 
     public addPendingEvent(e: SimulationEvent) {
@@ -160,8 +192,10 @@ export class Coordinator {
 
     private generateNextArrive(): Truck {
         let duracion: number = this.arrivals.calculateTaskDuration();
-        let truck: Truck = new Truck(this.lastTruckId, this.clock);
-        
+        let truck: Truck = new Truck(this.lastTruckId, this.clock + duracion);
+
+        if (this.todosLLenos()) truck.setQuantity(0);
+
         this.lastTruckId++;
 
         this.addPendingEvent({
@@ -186,7 +220,7 @@ export class Coordinator {
             silo: this.usingSilo,
         });
 
-        this.usageClock += 60;
+        this.usageClock += 1;
     }
 
     private findUsableSilo(): Silo{
@@ -203,6 +237,13 @@ export class Coordinator {
             if (silo.libre()) return silo;
         }
         return this.silos[0];
+    }
+
+    private todosLLenos(): boolean{
+        this.silos.forEach(silo => {
+            if (silo.getEspacio() == 0) return false;
+        });
+        return true;
     }
 
     public getStateVector(): stateVector[] {
