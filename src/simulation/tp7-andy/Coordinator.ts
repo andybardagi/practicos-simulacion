@@ -133,13 +133,17 @@ export class Coordinator {
     }
 
     public activateEmergencyFurnace() {
-        //Delete all furnaceStart events
-        this.pendingEvents = this.pendingEvents.filter(
-            (e) => e.eventType !== BakeryEventType.furnaceStart,
-        );
-
         //Queue a new furnaceStart event
-        this.queueFurnaceStart(this.clock, 45);
+        if (
+            this.pendingEvents.filter((e) => e.eventType === BakeryEventType.furnaceFinish)
+                .length === 0
+        ) {
+            //Delete all furnaceStart events
+            this.pendingEvents = this.pendingEvents.filter(
+                (e) => e.eventType !== BakeryEventType.furnaceStart,
+            );
+            this.queueFurnaceStart(this.clock, 45);
+        }
     }
 
     private handleFurnaceFinish(event: FurnaceFinishEvent) {

@@ -47,7 +47,7 @@ export default function TP7Andy() {
             </Box>
             <Box border="1px solid #efefef" borderRadius={8} p={4} my={2}>
                 <InputGroup>
-                    <InputLeftAddon>N</InputLeftAddon>
+                    <InputLeftAddon>Eventos a simular</InputLeftAddon>
                     <Input
                         placeholder="Cantidad de eventos"
                         name="n"
@@ -69,14 +69,14 @@ export default function TP7Andy() {
                 </Flex>
             </Box>
             {stats != null ? (
-                <Flex border="1px solid #efefef" borderRadius={8} my={2} height="500px">
-                    <Center width="50px" height={'100%'} _hover={{ bgColor: '#dfdfdf' }}>
+                <Flex border="1px solid #efefef" borderRadius={8} my={2} alignItems="stretch">
+                    <Center width="50px"  _hover={{ bgColor: '#dfdfdf' }}>
                         <ArrowLeftIcon />{' '}
                     </Center>
                     <Box w={'100%'}>
                         <BakeryStatShower stats={stats} />
                     </Box>
-                    <Center width="50px" height={'100%'} _hover={{ bgColor: '#dfdfdf' }}>
+                    <Center width="50px"  _hover={{ bgColor: '#dfdfdf' }}>
                         <ArrowRightIcon />
                     </Center>
                 </Flex>
