@@ -18,7 +18,6 @@ import QueueFlow from './QueueFlow';
 import JuaniStateVectorShower from './JuaniStateVectorShower';
 import { Flex } from '@chakra-ui/react';
 
-
 export default function Juani() {
     const coordinator = useRef<Coordinator>();
     const [flagSim, setFlagSim] = useState(false);
@@ -44,7 +43,7 @@ export default function Juani() {
                 .map((v) => v.replace(',', '.'))
                 .map((v) => Number(v))
                 .filter((v) => Number.isNaN(v)).length > 0;
-       
+
         if (isIncorrect) {
             alert('Error en los valores ingresados');
             return;
@@ -62,13 +61,35 @@ export default function Juani() {
 
     return (
         <Box p={4} w="100%">
-            <Heading>Trabajo Práctico 6</Heading>
+            <Heading>Trabajo Práctico 7 - BERTOLA, Juan Ignacio - 88850</Heading>
             <Box border="1px solid #efefef" borderRadius={8} p={4}>
                 <Text color="#444444"></Text>
                 <Text color="#444444"></Text>
                 <Text color="#444444">
                     Al momento de inicio no hay ningún proceso realizado, incompleto ni pendiente y
-                    tampoco hay productos en cola. Los servidores están libres
+                    tampoco hay productos en cola. Los servidores están libres. 
+                    <br />
+                    Cuando los autos llegan, un empleado quita las alfombras (QA) y las deriva al área de aspirado
+                    (AA). Llegan autos a un lavadero con una distribución exponencial negativa de
+                    media 10 minutos. Si el operario QA ya está ocupado quitando alfombras, los
+                    autos deben esperar a que se desocupe. Las carrocerías son derivadas al área
+                    de lavado (L) y secado (S), la cual tiene lugar para lavar dos autos a la vez, 
+                    pero solo puede secar uno a la vez. Esto quiere decir que si una carrocería
+                    termina su lavado, y la secadora está ocupada, deberá esperar. Una vez en la
+                    secadora, la tasa de pérdida de humedad responde a la siguiente ecuación:
+                    <br />
+                    <b>dH/dt = -5*t^2 + 2*H - 200</b>
+                    <br />
+                    Se considera una unidad de integración igual a 1
+                    minuto. Una carrocería está seca, cuando su humedad llega al 0,0%. Los
+                    espacios para lavado, no se liberan hasta que la carrocería este completamente
+                    seca. Las carrocerías que son derivadas a LS deben esperar si los dos lugares
+                    están ocupados. Lo mismo sucede con las alfombras si el AA está ocupada. Una
+                    vez que la carrocería ha sido lavada y secada, un operario (PA) coloca las
+                    alfombras correspondientes si es que ya han sido aspiradas, sino espera a que la
+                    operación se realice. Las alfombras que han sido aspiradas antes que su
+                    correspondiente carrocería haya sido lavada y secada, deben esperar a que
+                    esto ocurra. Los tiempos de proceso de cada sección son:
                 </Text>
                 <Box mx="auto" w="fit-content" my={4}>
                     <Text color="#444444" mb={2}>
@@ -105,7 +126,7 @@ export default function Juani() {
                 <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
                     Simular {form.cant} lavados
                 </Button>
-            </Box>           
+            </Box>
             {flagSim && stateVector ? <JuaniStateVectorShower stateVectors={stateVector} /> : null}
             {/* {flagSim && stats ? <TP7StatsShower stats={stats} /> : null} */}
         </Box>
