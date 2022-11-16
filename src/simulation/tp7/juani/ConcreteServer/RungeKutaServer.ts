@@ -14,6 +14,7 @@ export class RungeKutaServer extends Server {
     private k4: number = 0;
     private readonly initialValues;
     private evolution: RungeKuttaLine[];
+    private res? :number;
 
     constructor(
         id: Servers,
@@ -65,7 +66,7 @@ export class RungeKutaServer extends Server {
         this.k4 = this.calculateK(nexX, thrY);
 
         const resY: number =
-            this.x + (this.h / 6) * (this.k1 + 2 * this.k2 + 2 * this.k3 + this.k4);
+            this.y + (this.h / 6) * (this.k1 + 2 * this.k2 + 2 * this.k3 + this.k4);
 
         this.evolution.push({
             x: this.x,
@@ -91,12 +92,17 @@ export class RungeKutaServer extends Server {
     }
 
     public calculateTaskDuration(): number {
+        if (this.res != null) {
+            return this.res;
+        }
         this.resetValues();
         let valor: number = 100;
 
         while (valor > 0) {
             valor = this.calculateLine();
+            //console.log(this.x, this.y, valor);
         }
-        return this.x - this.h;
+        this.res = this.x;
+        return this.res;
     }
 }

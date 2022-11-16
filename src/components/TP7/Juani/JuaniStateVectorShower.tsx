@@ -22,7 +22,7 @@ export default function JuaniStateVectorShower({ stateVectors }: { stateVectors:
         <Box mb={16}>
             <Accordion defaultIndex={[0]} allowMultiple>
                 {stateVectors.map((s, i) => (
-                    <AccordionItem>
+                    <AccordionItem key={i}>
                         <h2>
                             <AccordionButton bgColor={s.rungeKuttaEvolution.length > 0 ? "#00FFFF66" : ""}>
                                 <Box flex="1" textAlign="left">
@@ -31,7 +31,7 @@ export default function JuaniStateVectorShower({ stateVectors }: { stateVectors:
                                             <b>Reloj de simulación:</b> {s.clock.toFixed(2)} minutos
                                         </Text>
                                         <Text>
-                                            <b>Ensambles finalizados:</b> {s.finishedAssemblies}
+                                            <b>Lavados finalizados:</b> {s.finishedAssemblies}
                                         </Text>
                                     </Flex>
                                 </Box>
@@ -55,6 +55,12 @@ export default function JuaniStateVectorShower({ stateVectors }: { stateVectors:
                                         <b>Estadísticas parciales</b>
                                     </Text>
                                     <JuaniStatsShower stats={s}></JuaniStatsShower>
+                                </Box>
+                                <Box mt={6}>
+                                    <Text fontSize={'18px'}>
+                                        <b>Objetos en cola</b>
+                                    </Text>
+                                    <QueuesShower queues={s.queues} current={s.current}/>
                                 </Box>
                                 <Box>
                                     <Text fontSize={'18px'}>
@@ -81,9 +87,18 @@ export default function JuaniStateVectorShower({ stateVectors }: { stateVectors:
                                         </ListItem>
                                         <ListItem>
                                             <Text>
-                                                Servidor 3:{' '}
+                                                Servidor 3A:{' '}
                                                 {(
                                                     s.serversOccupation[Servers.server3] * 100
+                                                ).toFixed(4)}
+                                                %
+                                            </Text>
+                                        </ListItem>
+                                        <ListItem>
+                                            <Text>
+                                                Servidor 3B:{' '}
+                                                {(
+                                                    s.serversOccupation[Servers.server32] * 100
                                                 ).toFixed(4)}
                                                 %
                                             </Text>

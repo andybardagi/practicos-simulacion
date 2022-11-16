@@ -13,7 +13,7 @@ import { useRef, useState } from 'react';
 import { Coordinator } from '../../../simulation/tp7/juani/Coordinator';
 import { stateVector } from '../../../simulation/tp7/juani/types/stateVector.type';
 import { tp7StatsType } from '../../../simulation/tp7/juani/types/stats.type';
-import { estimators, activities } from '../../TP6/ConsignasTP6';
+import { activities } from '../../TP7/Juani/ConsignasTP7-Juani';
 import QueueFlow from './QueueFlow';
 import JuaniStateVectorShower from './JuaniStateVectorShower';
 import TP7StatsShower from './JuaniStatsShower';
@@ -28,8 +28,7 @@ export default function Juani() {
     const [form, setForm] = useState({
         cant: '10000',
         h: '0,05',
-        x_0: '0',
-        x_d_0: '0',
+        x_0: '100',
     });
     const [stateVector, setStateVector] = useState<stateVector[]>();
 
@@ -59,7 +58,7 @@ export default function Juani() {
         coordinator.current.setRungeServer(
             0,
             Number(form.x_0.replace(',', '.')),
-            Number(form.x_d_0.replace(',', '.')),
+            Number(form.h.replace(',', '.')),
         );
         const res = coordinator.current.simulate(Number(form.cant));
         setFlagSim(true);
@@ -72,14 +71,10 @@ export default function Juani() {
             <Heading>Trabajo Práctico 6</Heading>
             <Box border="1px solid #efefef" borderRadius={8} p={4}>
                 <Text color="#444444">
-                    Simule el siguiente Modelo dinámico obteniendo los estimadores solicitados y
-                    luego responda las preguntas.
+                    
                 </Text>
                 <Text color="#444444">
-                    Para todas las actividades utilice los datos en minutos y en unidades; el
-                    proceso se desarrolla en forma continua en todas las secciones. Como se
-                    trabajara las 24 horas del día no se hará distinción de días y usando solamente
-                    minutos. Todas las secciones tienen capacidad de almacenamiento ilimitada.
+                    
                 </Text>
                 <Text color="#444444">
                     Al momento de inicio no hay ningún proceso realizado, incompleto ni pendiente y
@@ -99,26 +94,15 @@ export default function Juani() {
                     ))}
                 </UnorderedList>
                 <Text color="#444444">
-                    Llamaremos <b>duración de la tarea de ensamble</b> al "tiempo mínimo" en que
-                    puede completarse dicha tarea.
+                   
                 </Text>
                 <Text color="#444444">
-                    <b>
-                        Se considera completada la tarea de ensamble cuando completamos las 6
-                        actividades considerando sus precedencias
-                    </b>
-                </Text>
-                <UnorderedList>
-                    {estimators.map((e, i) => (
-                        <ListItem key={i}>
-                            <Text color={e.done == 1 ? '#444444' : 'red'}>{e.text}</Text>
-                        </ListItem>
-                    ))}
-                </UnorderedList>
+                    
+                </Text>             
             </Box>
             <Flex direction={['column', 'column', 'row', 'row']} gap="2" my={2}>
                 <InputGroup>
-                    <InputLeftAddon>b</InputLeftAddon>
+                    <InputLeftAddon>n</InputLeftAddon>
                     <Input value={form.cant} onChange={handleFormChange} name="cant"></Input>
                 </InputGroup>
                 <InputGroup>
@@ -127,21 +111,15 @@ export default function Juani() {
                 </InputGroup>
                 <InputGroup>
                     <InputLeftAddon>
-                        x<sub>0</sub>
+                        y
                     </InputLeftAddon>
                     <Input value={form.x_0} onChange={handleFormChange} name="x_0"></Input>
-                </InputGroup>
-                <InputGroup>
-                    <InputLeftAddon>
-                        x'<sub>0</sub>
-                    </InputLeftAddon>
-                    <Input value={form.x_d_0} onChange={handleFormChange} name="x_d_0"></Input>
-                </InputGroup>
+                </InputGroup>                
             </Flex>
 
             <Box>
                 <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
-                    Simular {form.cant} ensambles
+                    Simular {form.cant} lavados
                 </Button>
             </Box>
             {flagSim && stateVector ? <JuaniStateVectorShower stateVectors={stateVector} /> : null}

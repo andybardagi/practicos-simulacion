@@ -1,3 +1,12 @@
+export const activities = [
+    'A0 - Llegada: Distribución exponencial con media de 10 minutos',
+    'A1 - Quitar alfombras (QA): 2 minutos',
+    'A2 - Área de aspirado (AA): U(3;5) minutos',
+    'A3 - Lavado (L): U(6;12) minutos',
+    'A4 - Secado (S): dH/dt = -5*t^2 + 2*H - 200',
+    'A5 - Pone alfombras (PA): 3 minutos',
+];
+
 "Cuando los autos llegan, un empleado quita las alfombras (QA) y las deriva al área de aspirado (AA). "
 "Llegan autos a un lavadero con una distribución exponencial negativa de media 10 minutos."
 "Si el operario QA ya está ocupado quitando alfombras, los autos deben esperar a que se desocupe. "

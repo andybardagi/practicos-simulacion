@@ -20,6 +20,7 @@ export class Coordinator {
     private lastAssemblyId: number;
     private statsObserver: StatsObserver;
     private vectorState: stateVector[] = [];
+    private queueLav: AssemblyObject[] = [];
 
     constructor() {
         this.clock = 0;
@@ -30,7 +31,8 @@ export class Coordinator {
             [Servers.server1]: new ConstantServer(Servers.server1, this, 2),
             [Servers.server2]: new UniformServer(Servers.server2, this, 3, 5),
             [Servers.server3]: new UniformServer(Servers.server3, this, 6, 12),
-            [Servers.server4]: new RungeKutaServer(Servers.server4, this, 0, 100, 0.05),
+            [Servers.server32]: new UniformServer(Servers.server32, this, 6, 12),
+            [Servers.server4]: new RungeKutaServer(Servers.server4, this, 0, 100, 0.5),
             [Servers.server5]: new ConstantServer(Servers.server5, this, 3),
         };
         this.pendingEvents = [];
@@ -38,11 +40,7 @@ export class Coordinator {
         this.generateNextArrive();
     }
 
-    public setRungeServer(
-        x: number,
-        y: number,
-        h: number,
-    ) {
+    public setRungeServer(x: number, y: number, h: number) {
         this.servers[Servers.server4] = new RungeKutaServer(Servers.server4, this, x, y, h);
     }
 
@@ -50,40 +48,59 @@ export class Coordinator {
         if (s === Servers.server1) {
             const q2 = this.servers[Servers.server2].queueAssembly(objAs, this.clock);
             this.statsObserver.notifyQueueQuantity(Servers.server2, q2);
-            const q3 = this.servers[Servers.server3].queueAssembly(objAs, this.clock);
-            this.statsObserver.notifyQueueQuantity(Servers.server3, q3);
-            const q3_2 = this.servers[Servers.server3].queueAssembly(objAs, this.clock);
-            this.statsObserver.notifyQueueQuantity(Servers.server3, q3_2);
+            if (!this.servers[Servers.server3].isBusy()) {
+                const q3 = this.servers[Servers.server3].queueAssembly(objAs, this.clock);
+                this.statsObserver.notifyQueueQuantity(Servers.server3, q3);
+                return;
+            }
+            if (!this.servers[Servers.server32].isBusy()) {
+                const q32 = this.servers[Servers.server32].queueAssembly(objAs, this.clock);
+                this.statsObserver.notifyQueueQuantity(Servers.server32, q32);
+                return;
+            }
+            this.queueLav.push(objAs);
             return;
         }
         if (s === Servers.server2) {
-            if (objAs.hasFinishedServer(Servers.server1)) {
+            if (objAs.hasFinishedServer(Servers.server4)) {
                 const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
                 this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
             }
             return;
         }
         if (s === Servers.server3) {
-            if (objAs.hasFinishedServer(Servers.server2)) {
-                const q4 = this.servers[Servers.server4].queueAssembly(objAs, this.clock);
-                this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
+            const q4 = this.servers[Servers.server4].queueAssembly(objAs, this.clock);
+            this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
+            if (this.queueLav.length > 0) {
+                this.servers[Servers.server3].queueAssembly(
+                    this.queueLav.shift() as AssemblyObject,
+                    this.clock,
+                );
+            }
+            return;
+        }
+        if (s === Servers.server32) {
+            const q4 = this.servers[Servers.server4].queueAssembly(objAs, this.clock);
+            this.statsObserver.notifyQueueQuantity(Servers.server4, q4);
+            if (this.queueLav.length > 0) {
+                this.servers[Servers.server32].queueAssembly(
+                    this.queueLav.shift() as AssemblyObject,
+                    this.clock,
+                );
             }
             return;
         }
         if (s === Servers.server4) {
-            if (objAs.hasFinishedServer(Servers.server3)) {
+            if (objAs.hasFinishedServer(Servers.server2)) {
                 const q5 = this.servers[Servers.server5].queueAssembly(objAs, this.clock);
                 this.statsObserver.notifyQueueQuantity(Servers.server5, q5);
             }
             return;
         }
         if (s === Servers.server5) {
-            if (objAs.hasFinishedServer(Servers.server4)) {
-                objAs.setFinishTime(this.clock);
+            objAs.setFinishTime(this.clock);
             this.finishedAssemblies.push(objAs);
             this.statsObserver.notifyAssemblyFinish(objAs, this.clock);
-            return;
-            }
             return;
         }
     }
@@ -96,8 +113,10 @@ export class Coordinator {
                 this.pendingEvents[0].server == Servers.server4;
 
             this.processNextEvent();
+            
 
             if (this.finishedAssemblies.length <= 5) {
+                //console.log(this.servers[Servers.server4].getRungeKuttaEvolution());
                 const stats = structuredClone(this.statsObserver.getFinalStats(this.clock));
                 this.vectorState.push({
                     ...stats,
@@ -109,7 +128,10 @@ export class Coordinator {
                             this.servers[Servers.server2].getQueueObjects(),
                         ),
                         [Servers.server3]: structuredClone(
-                            this.servers[Servers.server3].getQueueObjects(),
+                            this.queueLav,
+                        ),
+                        [Servers.server32]: structuredClone(
+                            this.queueLav,
                         ),
                         [Servers.server4]: structuredClone(
                             this.servers[Servers.server4].getQueueObjects(),
@@ -117,6 +139,7 @@ export class Coordinator {
                         [Servers.server5]: structuredClone(
                             this.servers[Servers.server5].getQueueObjects(),
                         ),
+                        
                     },
                     current: {
                         [Servers.server1]: structuredClone(
@@ -127,6 +150,9 @@ export class Coordinator {
                         ),
                         [Servers.server3]: structuredClone(
                             this.servers[Servers.server3].getCurrent(),
+                        ),
+                        [Servers.server32]: structuredClone(
+                            this.servers[Servers.server32].getCurrent(),
                         ),
                         [Servers.server4]: structuredClone(
                             this.servers[Servers.server4].getCurrent(),
@@ -164,13 +190,12 @@ export class Coordinator {
             }
 
             this.generateNextArrive();
-
         } else if (nextEvent.type === EventType.finishTask) {
             //procesar finalizacion tarea en servidor.
             const objAssembly = this.servers[nextEvent.server].finishCurrentTask(this.clock);
             this.nextStep(nextEvent.server, objAssembly);
         }
-        const busy1 = this.servers[Servers.server1].isBusy();        
+        const busy1 = this.servers[Servers.server1].isBusy();
         const busy2 = this.servers[Servers.server2].isBusy();
         const busy3 = this.servers[Servers.server3].isBusy();
         const busy4 = this.servers[Servers.server4].isBusy();
@@ -217,9 +242,9 @@ export class Coordinator {
             time: this.orderArriveClock,
             orderQuantity: 1,
         });
-        this.orderArriveClock += (-10 * Math.log(Math.random()));
+        this.orderArriveClock += -10 * Math.log(Math.random());
     }
-/*
+    /*
     private generateQuantityArrive(): number {
         // Se asume llegan pedidos en números enteros... 1,2,4 o 10 pedidos. No 0.1 ni 3.75
         //Generate exponential random. Media = 3  → Lambda = 1/3

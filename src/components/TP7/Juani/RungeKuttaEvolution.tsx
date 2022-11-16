@@ -11,9 +11,6 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
             <Thead>
                 <Tr>
                     <Th textAlign={'center'}>
-                        t <sub>i</sub>
-                    </Th>
-                    <Th textAlign={'center'}>
                         x <sub>i</sub>
                     </Th>
                     <Th textAlign={'center'}>
@@ -24,16 +21,13 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
                     <Th textAlign={'center'}>k3</Th>
                     <Th textAlign={'center'}>k4</Th>
                     <Th textAlign={'center'}>
-                        x <sub>i+1</sub>
-                    </Th>
-                    <Th textAlign={'center'}>
-                        y<sub>i+1</sub>
+                        y <sub>i+1</sub>
                     </Th>
                 </Tr>
             </Thead>
             <Tbody>
                 {evolution.map((e, i) => (
-                    <Tr>
+                    <Tr key={i}>
                         <Td>{Math.round(e.x * 100000) / 100000}</Td>
                         <Td>{Math.round(e.y * 100000) / 100000}</Td>
                         <Td>{Math.round(e.k1 * 100000) / 100000}</Td>

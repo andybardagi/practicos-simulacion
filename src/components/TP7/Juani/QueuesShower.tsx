@@ -13,12 +13,12 @@ export default function QueuesShower({ queues, current }: Props) {
             <Table>
                 <Thead>
                     <Tr>
-                        <Th textAlign={'center'}>Servidor 1</Th>
-                        <Th textAlign={'center'}>Servidor 2</Th>
-                        <Th textAlign={'center'}>Servidor 3</Th>
-                        <Th textAlign={'center'}>Servidor 4</Th>
-                        <Th textAlign={'center'}>Servidor 5</Th>
-                        <Th textAlign={'center'}>Servidor 6</Th>
+                        <Th textAlign={'center'}>QA</Th>
+                        <Th textAlign={'center'}>AA</Th>
+                        <Th textAlign={'center'}>L 1</Th>
+                        <Th textAlign={'center'}>L 2</Th>
+                        <Th textAlign={'center'}>S</Th>
+                        <Th textAlign={'center'}>PA</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -26,6 +26,7 @@ export default function QueuesShower({ queues, current }: Props) {
                         <Td py={1} textAlign="center">{current[Servers.server1] != null ? current[Servers.server1]?.id : "Libre" }</Td>
                         <Td py={1} textAlign="center">{current[Servers.server2] != null ? current[Servers.server2]?.id : "Libre" }</Td>
                         <Td py={1} textAlign="center">{current[Servers.server3] != null ? current[Servers.server3]?.id : "Libre" }</Td>
+                        <Td py={1} textAlign="center">{current[Servers.server32] != null ? current[Servers.server32]?.id : "Libre" }</Td>
                         <Td py={1} textAlign="center">{current[Servers.server4] != null ? current[Servers.server4]?.id : "Libre" }</Td>
                         <Td py={1} textAlign="center">{current[Servers.server5] != null ? current[Servers.server5]?.id : "Libre" }</Td>
                     </Tr>
@@ -69,6 +70,24 @@ export default function QueuesShower({ queues, current }: Props) {
                         <Td>
                             <Box>
                                 {queues[Servers.server3].map((s, i) => (
+                                    <Box
+                                        key={i}
+                                        w={'100%'}
+                                        py={1}
+                                        onClick={() => {
+                                            console.log(s);
+                                        }}
+                                        textAlign={'center'}
+                                        _hover={{ background: '#f1f1f1' }}
+                                    >
+                                        {s.id}
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Td>
+                        <Td>
+                            <Box>
+                                {queues[Servers.server32].map((s, i) => (
                                     <Box
                                         key={i}
                                         w={'100%'}
