@@ -27,7 +27,7 @@ export default function TP7StateVectorShower({ stateVectors }: { stateVectors: s
                                 <Box flex="1" textAlign="left">
                                     <Flex justifyContent={'space-between'}>
                                         <Text>
-                                            <b>Reloj de simulación:</b> {s.clock.toFixed(2)} minutos <b> Evento:</b> {s.currentEvent.type}
+                                            <b>Reloj de simulación:</b> {s.clock.toFixed(2)} horas <b> Evento:</b> {s.currentEvent.type}
                                         </Text>
                                     </Flex>
                                 </Box>

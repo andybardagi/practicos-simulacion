@@ -53,7 +53,7 @@ export class RungeKuta  {
     }
 
     private calculateK(t: number, x: number, y: number): number {
-        const res: number = 4 *  Math.pow(y, 2) - 6 * x - 8 * t;
+        const res: number = 4 *  Math.pow(y, 2) + 6 * x + 8 * t;
         return res;
     }
 
@@ -89,10 +89,10 @@ export class RungeKuta  {
             t: this.t,
             x: this.x,
             y: this.y,
-            k1: this.k1,
-            k2: this.k2,
-            k3: this.k3,
-            k4: this.k4,
+            k1: this.r1,
+            k2: this.r2,
+            k3: this.r3,
+            k4: this.r4,
             xi_1: resX,
             yi_1: resY,
         });

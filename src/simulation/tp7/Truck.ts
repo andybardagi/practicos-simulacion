@@ -7,6 +7,7 @@ export class Truck {
     private queueTime: number = -1;
     private finishTime: number = -1;
     private duration: number = -1;
+    private suma: number = 1;
     private rk: RungeKuta = new RungeKuta(0, 0, 0, 0.5);
 
     constructor(id: number, clock: number) {
@@ -18,9 +19,9 @@ export class Truck {
     public calculateTrackTons(): number{
         let x: number = Math.random()
         if (x > 0.5) {
-            return 10;
+            return 100;
         }
-        return 12;
+        return 120;
     }
 
     public calculateDuration(cant: number): number {
@@ -63,8 +64,15 @@ export class Truck {
     public getArrive() {
         return this.arriveTime;
     }
+
     public getId() {
         return this.id;
+    }
+    public sumar(){
+        this.suma++;
+    }
+    public todos():boolean{
+        return this.suma <= 3;
     }
 
 }

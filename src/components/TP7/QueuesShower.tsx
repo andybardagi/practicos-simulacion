@@ -20,11 +20,11 @@ export default function queueShower({ quantity, states: states }: Props) {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    <Tr bgColor={"#22ff2266"}>
-                        <Td py={1} textAlign="center">{states[Silos.silo1] }</Td>
-                        <Td py={1} textAlign="center">{states[Silos.silo2] }</Td>
-                        <Td py={1} textAlign="center">{states[Silos.silo3] }</Td>
-                        <Td py={1} textAlign="center">{states[Silos.silo4] }</Td>
+                    <Tr>
+                        <Td py={1} textAlign="center" bgColor={states[Silos.silo1] == "descarga" ? "##61DBC9" : states[Silos.silo1] == "usando" ? "#F5A329" : "#51DB05"}>{states[Silos.silo1] }</Td>
+                        <Td py={1} textAlign="center" bgColor={states[Silos.silo2] == "descarga" ? "##61DBC9" : states[Silos.silo2] == "usando" ? "#F5A329" : "#51DB05"} >{states[Silos.silo2] }</Td>
+                        <Td py={1} textAlign="center" bgColor={states[Silos.silo3] == "descarga" ? "##61DBC9" : states[Silos.silo3] == "usando" ? "#F5A329" : "#51DB05"} >{states[Silos.silo3] }</Td>
+                        <Td py={1} textAlign="center" bgColor={states[Silos.silo4] == "descarga" ? "##61DBC9" : states[Silos.silo4] == "usando" ? "#F5A329" : "#51DB05"} >{states[Silos.silo4] }</Td>
                     </Tr>
                     <Tr>
                         <Td py={1} textAlign="center"><Box>{quantity[Silos.silo1] } Tn</Box></Td>

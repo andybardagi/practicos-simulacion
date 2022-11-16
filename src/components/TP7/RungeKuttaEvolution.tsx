@@ -53,7 +53,7 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
                     ))}
                 </Tbody>
             </Table>
-            <Box>
+            {/* <Box>
                 <DoubleFunctionGraph
                     title="x'' y x' en funcion de x"
                     evolutionX={evolution
@@ -62,8 +62,8 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
                     evolutionY2={evolution.map((e) => e.x)}
                     evolutionY={evolution.map((e) => e.y)}
                 />
-            </Box>
-            <Box>
+            </Box> */}
+            {/* <Box>
                 <FuntionGraph
                     title="x' en funcion de x"
                     evolutionX={evolution.map((e) => Math.round(e.t * 100) / 100)}
@@ -83,7 +83,7 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
                     evolutionX={evolutionSortedByX.map((e) => Math.round(e.x * 10000) / 10000)}
                     evolutionY={evolution.map((e) => e.y)}
                 />
-            </Box>
+            </Box> */}
         </Box>
     );
 }
