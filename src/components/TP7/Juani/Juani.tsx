@@ -17,6 +17,8 @@ import { activities } from './ConsignasTP7-Juani';
 import QueueFlow from './QueueFlow';
 import JuaniStateVectorShower from './JuaniStateVectorShower';
 import { Flex } from '@chakra-ui/react';
+import React from 'react';
+import Latex from 'react-latex';
 
 export default function Juani() {
     const coordinator = useRef<Coordinator>();
@@ -78,7 +80,7 @@ export default function Juani() {
                     termina su lavado, y la secadora está ocupada, deberá esperar. Una vez en la
                     secadora, la tasa de pérdida de humedad responde a la siguiente ecuación:
                     <br />
-                    <b>dH/dt = -5*t^2 + 2*H - 200</b>
+                    <Latex displayMode={true}>{"$$\\frac{dH}{dt} = -5\\cdot t^2 + 2\\cdot H - 200$$"}</Latex>
                     <br />
                     Se considera una unidad de integración igual a 1
                     minuto. Una carrocería está seca, cuando su humedad llega al 0,0%. Los
