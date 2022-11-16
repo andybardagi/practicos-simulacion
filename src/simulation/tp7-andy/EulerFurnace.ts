@@ -2,12 +2,18 @@ export class EulerFurnace {
     private hStep: number;
     private initialTemperature: number = 5;
     private initialTime: number = 5;
+    private calculatedValues: Record<number, number> = {};
 
     constructor(hStep: number) {
         this.hStep = hStep;
     }
 
-    private getFurnaceFinishTime(productQuantity: number) {
+    public getFurnaceFinishTime(productQuantity: number) {
+
+        if(this.calculatedValues[productQuantity] != null) {
+            return this.calculatedValues[productQuantity];
+        }
+
         let T_temperature = this.initialTemperature;
         let t_time = this.initialTime;
         let tempDifference: number = Infinity;
@@ -19,8 +25,11 @@ export class EulerFurnace {
             t_time += this.hStep;
 
             // If the difference with previos value is less than 10^-3 → Max temperature, add time.
-            timeInMaxTemp += tempDifference < 0.001 ? this.hStep : 0;
+            timeInMaxTemp += tempDifference < 0.01 ? this.hStep : 0;
         }
+
+        this.calculatedValues[productQuantity] = t_time;
+
         return t_time;
     }
 }

@@ -1,6 +1,6 @@
 import { Box, ChakraProvider, Flex, HStack, Text } from '@chakra-ui/react';
 import '@fontsource/roboto';
-import '@fontsource/montserrat';
+//import '@fontsource/montserrat';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';

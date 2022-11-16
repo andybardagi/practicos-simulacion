@@ -22,7 +22,7 @@
         "@fontsource/montserrat": "^4.5.12",
         "@fontsource/roboto": "^4.5.8",
         "buffer": "^6.0.3",
-        "chart.js": "^4.0.1",
+        "chart.js": "^3.5.0",
         "lib-r-math.js": "^1.0.89",
         "normal-distribution": "^1.1.1",
         "react": "^18.2.0",
@@ -36,6 +36,7 @@
         "yup": "^0.32.11"
     },
     "devDependencies": {
+        "@types/random-name": "^0.1.0",
         "@types/react": "^18.0.15",
         "@types/react-dom": "^18.0.6",
         "@types/react-latex": "^2.0.0",

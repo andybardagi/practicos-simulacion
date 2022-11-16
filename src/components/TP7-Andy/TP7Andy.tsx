@@ -1,37 +1,86 @@
-import { Box, Heading, ListItem, Text, UnorderedList } from '@chakra-ui/react';
-import Latex from 'react-latex';
-import QueueFlow from '../TP6/QueueFlow';
+import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
+import {
+    Box,
+    Button,
+    Center,
+    Flex,
+    Heading,
+    Input,
+    InputGroup,
+    InputLeftAddon,
+    Text,
+} from '@chakra-ui/react';
+import { useEffect, useState, useRef } from 'react';
+import Consignas from './Consignas';
+import { Coordinator } from '../../simulation/tp7-andy/Coordinator';
+import { BakeryStats } from '../../simulation/tp7-andy/types/bakeryStatsType';
+import BakeryStatShower from './BakeryStatShower';
 
 export default function TP7Andy() {
+    const [form, setForm] = useState({
+        n: '10000',
+    });
+
+    const [isValid, setIsValid] = useState(true);
+    const [stats, setStats] = useState<BakeryStats>();
+
+    useEffect(() => {
+        setIsValid(form.n != '' && !isNaN(Number(form.n)) && Number(form.n) > 20);
+    }, [form.n]);
+
+    const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setForm((f) => ({ ...f, [name]: value }));
+    };
+    const coordinator = useRef<Coordinator>();
+    const handleSimulate = () => {
+        coordinator.current = new Coordinator(0.2, Number(form.n));
+        coordinator.current.simulateUntilFinish();
+        setStats(coordinator.current.getStats());
+    };
+
     return (
         <Box p={4} w="100%">
             <Heading>Trabajo Práctico 7 - Andrés Bardagí Inchaurrondo (86069)</Heading>
             <Box border="1px solid #efefef" borderRadius={8} p={4}>
-                <Text color="#444444">
-                    A una panadería llegan clientes con una distribución exponencial negativa de
-                    media 3 minutos. Esta panadería cuenta con dos empleados, cualquiera de los
-                    cuales demora entre 0,5 y 1,5 minutos (distribución uniforme) en atender a un
-                    cliente, independientemente de cuántas cosas compre el cliente (compran entre 1
-                    y 3 productos). La panadería posee un horno que genera productos una vez que los
-                    mismos están cocinados. El horno se enciende cada 45 minutos o cuando la
-                    panadería se queda sin stock de productos. La cocción de los productos finaliza
-                    cuando el horno permanece 15 minutos en temperatura máxima. La tasa de cambio de
-                    la temperatura del horno está representada por la siguiente ecuación:
-                </Text>
-                <Latex displayMode={true}>{`$$\\frac{dT}{dt} = -0,5 T + \\frac{900}{P}$$`}</Latex>
-                <Text color="#444444">
-                    Donde <b>la constante P</b> representa la cantidad de productos que se están
-                    cocinando. Inicialmente, el horno siempre tiene 5 grados. La cantidad de
-                    productos a cocinar depende del stock de la panadería al momento de encender el
-                    horno. Si hay productos para vender, se cargan 30 unidades para cocinar. En
-                    cambio, si no hay stock, se cargan 45 unidades. Cuando un cliente llega, si no
-                    hay productos para vender en los próximos 5 minutos, se retira. Si estaba
-                    esperando su turno, y se terminan los productos, se retira. Si le toca su turno,
-                    y quedan menos productos de la cantidad que pensaba comprar, compra lo que
-                    queda. Se desea saber el porcentaje de clientes que se pierden por no haber
-                    existencia de productos.
-                </Text>
+                <Consignas />
             </Box>
+            <Box border="1px solid #efefef" borderRadius={8} p={4} my={2}>
+                <InputGroup>
+                    <InputLeftAddon>N</InputLeftAddon>
+                    <Input
+                        placeholder="Cantidad de eventos"
+                        name="n"
+                        onChange={handleFormChange}
+                        isInvalid={isNaN(Number(form.n))}
+                        value={form.n}
+                    ></Input>
+                </InputGroup>
+                <Text color={'#777777'} fontSize="small">
+                    Debe ingresar un número mayor a 20
+                </Text>
+                <Flex justifyContent={'end'} mt={2} gap={4}>
+                    <Button colorScheme="facebook" disabled={!isValid}>
+                        Simular 1
+                    </Button>
+                    <Button colorScheme="linkedin" disabled={!isValid} onClick={handleSimulate}>
+                        Simular {form.n}
+                    </Button>
+                </Flex>
+            </Box>
+            {stats != null ? (
+                <Flex border="1px solid #efefef" borderRadius={8} my={2} height="500px">
+                    <Center width="50px" height={'100%'} _hover={{ bgColor: '#dfdfdf' }}>
+                        <ArrowLeftIcon />{' '}
+                    </Center>
+                    <Box w={'100%'}>
+                        <BakeryStatShower stats={stats} />
+                    </Box>
+                    <Center width="50px" height={'100%'} _hover={{ bgColor: '#dfdfdf' }}>
+                        <ArrowRightIcon />
+                    </Center>
+                </Flex>
+            ) : null}
         </Box>
     );
 }
