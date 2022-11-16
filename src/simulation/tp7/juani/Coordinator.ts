@@ -169,6 +169,7 @@ export class Coordinator {
                 });
             }
         }
+        
 
         return this.statsObserver.getFinalStats(this.clock);
     }
@@ -198,11 +199,13 @@ export class Coordinator {
         const busy1 = this.servers[Servers.server1].isBusy();
         const busy2 = this.servers[Servers.server2].isBusy();
         const busy3 = this.servers[Servers.server3].isBusy();
+        const busy32 = this.servers[Servers.server32].isBusy();
         const busy4 = this.servers[Servers.server4].isBusy();
         const busy5 = this.servers[Servers.server5].isBusy();
         this.statsObserver.notifyServerOcupation(Servers.server1, oldClock, this.clock, busy1);
         this.statsObserver.notifyServerOcupation(Servers.server2, oldClock, this.clock, busy2);
         this.statsObserver.notifyServerOcupation(Servers.server3, oldClock, this.clock, busy3);
+        this.statsObserver.notifyServerOcupation(Servers.server32, oldClock, this.clock, busy32);
         this.statsObserver.notifyServerOcupation(Servers.server4, oldClock, this.clock, busy4);
         this.statsObserver.notifyServerOcupation(Servers.server5, oldClock, this.clock, busy5);
     }

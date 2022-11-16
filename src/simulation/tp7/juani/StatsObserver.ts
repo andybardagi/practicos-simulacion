@@ -16,6 +16,7 @@ export class StatsObserver {
             [Servers.server1]: 0,
             [Servers.server2]: 0,
             [Servers.server3]: 0,
+            [Servers.server32]: 0,
             [Servers.server4]: 0,
             [Servers.server5]: 0,
         };
@@ -39,6 +40,7 @@ export class StatsObserver {
         this.queueDurationAcumulator[Servers.server1] += queueTimes[Servers.server1];
         this.queueDurationAcumulator[Servers.server2] += queueTimes[Servers.server2];
         this.queueDurationAcumulator[Servers.server3] += queueTimes[Servers.server3];
+        this.queueDurationAcumulator[Servers.server32] += queueTimes[Servers.server32];
         this.queueDurationAcumulator[Servers.server4] += queueTimes[Servers.server4];
         this.queueDurationAcumulator[Servers.server5] += queueTimes[Servers.server5];
 
@@ -78,6 +80,8 @@ export class StatsObserver {
                     this.queueDurationAcumulator[Servers.server2] / this.finishedAssemblies,
                 [Servers.server3]:
                     this.queueDurationAcumulator[Servers.server3] / this.finishedAssemblies,
+                [Servers.server32]:
+                    this.queueDurationAcumulator[Servers.server32] / this.finishedAssemblies,
                 [Servers.server4]:
                     this.queueDurationAcumulator[Servers.server4] / this.finishedAssemblies,
                 [Servers.server5]:

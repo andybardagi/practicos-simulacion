@@ -34,7 +34,7 @@ export abstract class Server {
 
     public finishCurrentTask(clock: number): AssemblyObject {
         if (this.currentAssembly == null) {
-            console.log(this.id);
+            //console.log(this.id);
             throw Error('Finalizando evento fantasma');
         }
         //Finalizo el ensamble.

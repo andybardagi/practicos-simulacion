@@ -44,11 +44,7 @@ export default function Juani() {
                 .map((v) => v.replace(',', '.'))
                 .map((v) => Number(v))
                 .filter((v) => Number.isNaN(v)).length > 0;
-        console.log(
-            Object.values(form)
-                .map((v) => v.replace(',', '.'))
-                .map((v) => Number(v)),
-        );
+       
         if (isIncorrect) {
             alert('Error en los valores ingresados');
             return;
