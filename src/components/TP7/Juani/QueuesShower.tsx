@@ -13,12 +13,12 @@ export default function QueuesShower({ queues, current }: Props) {
             <Table>
                 <Thead>
                     <Tr>
-                        <Th textAlign={'center'}>QA</Th>
-                        <Th textAlign={'center'}>AA</Th>
-                        <Th textAlign={'center'}>L 1</Th>
-                        <Th textAlign={'center'}>L 2</Th>
-                        <Th textAlign={'center'}>S</Th>
-                        <Th textAlign={'center'}>PA</Th>
+                        <Th textAlign={'center'}>Servidor 1 - QA</Th>
+                        <Th textAlign={'center'}>Servidor 2 - AA</Th>
+                        <Th textAlign={'center'}>Servidor 3 - L 1</Th>
+                        <Th textAlign={'center'}>Servidor 32 - L 2</Th>
+                        <Th textAlign={'center'}>Servidor 4 - S</Th>
+                        <Th textAlign={'center'}>Servidor 5 - PA</Th>
                     </Tr>
                 </Thead>
                 <Tbody>

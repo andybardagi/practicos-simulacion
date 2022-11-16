@@ -115,7 +115,7 @@ export class Coordinator {
             this.processNextEvent();
             
 
-            if (this.finishedAssemblies.length <= 5) {
+            if (this.finishedAssemblies.length <= 5  || (this.finishedAssemblies.length > orders - 5)) {
                 //console.log(this.servers[Servers.server4].getRungeKuttaEvolution());
                 const stats = structuredClone(this.statsObserver.getFinalStats(this.clock));
                 this.vectorState.push({

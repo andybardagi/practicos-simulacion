@@ -34,15 +34,15 @@ export default function RungeKuttaEvolution({ evolution }: Props) {
             <Tbody>
                 {evolution.map((e, i) => (
                     <Tr>
-                        <Td>{Math.round(e.t * 100) / 100}</Td>
-                        <Td>{Math.round(e.x * 100000) / 100000}</Td>
-                        <Td>{Math.round(e.y * 100000) / 100000}</Td>
-                        <Td>{Math.round(e.k1 * 100000) / 100000}</Td>
-                        <Td>{Math.round(e.k2 * 100000) / 100000}</Td>
-                        <Td>{Math.round(e.k3 * 100000) / 100000}</Td>
-                        <Td>{Math.round(e.k4 * 100000) / 100000}</Td>
-                        <Td>{Math.round(e.xi_1 * 100000) / 100000}</Td>
-                        <Td>{Math.round(e.yi_1 * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.t * 100) / 100}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.x * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.y * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.k1 * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.k2 * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.k3 * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.k4 * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.xi_1 * 100000) / 100000}</Td>
+                        <Td textAlign={'center'}>{Math.round(e.yi_1 * 100000) / 100000}</Td>
                     </Tr>
                 ))}
             </Tbody>

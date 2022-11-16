@@ -131,19 +131,7 @@ export default function JuaniStatsShower({ stats }: { stats: tp7StatsType }) {
                         {stats.pGreaterOrEqualThan3}
                     </Text>
                 </ListItem>
-            </UnorderedList>
-            <Box mt={6}>
-                <Text fontSize={'18px'}>
-                    <b>Ensambles por hora</b>
-                </Text>
-                <UnorderedList>
-                    {Object.entries(stats.assembliesQuantPerHour).map(([hora, cantidad], i) => (
-                        <ListItem key={i}>
-                            {hora}° hora: {cantidad} ensambles.
-                        </ListItem>
-                    ))}
-                </UnorderedList>
-            </Box>
+            </UnorderedList>            
         </Box>
     );
 }

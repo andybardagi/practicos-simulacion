@@ -15,6 +15,7 @@ export class AssemblyObject {
             [Servers.server1]: -1,
             [Servers.server2]: -1,
             [Servers.server3]: -1,
+            [Servers.server32]: -1,
             [Servers.server4]: -1,
             [Servers.server5]: -1,
         };
@@ -22,6 +23,7 @@ export class AssemblyObject {
             [Servers.server1]: -1,
             [Servers.server2]: -1,
             [Servers.server3]: -1,
+            [Servers.server32]: -1,
             [Servers.server4]: -1,
             [Servers.server5]: -1,
         };
@@ -29,6 +31,7 @@ export class AssemblyObject {
             [Servers.server1]: -1,
             [Servers.server2]: -1,
             [Servers.server3]: -1,
+            [Servers.server32]: -1,
             [Servers.server4]: -1,
             [Servers.server5]: -1,
         };
@@ -62,6 +65,7 @@ export class AssemblyObject {
             this.hasFinishedServer(Servers.server1) &&
             this.hasFinishedServer(Servers.server2) &&
             this.hasFinishedServer(Servers.server3) &&
+            this.hasFinishedServer(Servers.server32) &&
             this.hasFinishedServer(Servers.server4) &&
             this.hasFinishedServer(Servers.server5)
         );

@@ -13,13 +13,11 @@ import { useRef, useState } from 'react';
 import { Coordinator } from '../../../simulation/tp7/juani/Coordinator';
 import { stateVector } from '../../../simulation/tp7/juani/types/stateVector.type';
 import { tp7StatsType } from '../../../simulation/tp7/juani/types/stats.type';
-import { activities } from '../../TP7/Juani/ConsignasTP7-Juani';
+import { activities } from './ConsignasTP7-Juani';
 import QueueFlow from './QueueFlow';
 import JuaniStateVectorShower from './JuaniStateVectorShower';
-import TP7StatsShower from './JuaniStatsShower';
 import { Flex } from '@chakra-ui/react';
-import { RungeKutaServer } from '../../../simulation/tp7/juani/ConcreteServer/RungeKutaServer';
-import { Servers } from '../../../simulation/tp7/juani/enum/Servers';
+
 
 export default function Juani() {
     const coordinator = useRef<Coordinator>();
@@ -70,12 +68,8 @@ export default function Juani() {
         <Box p={4} w="100%">
             <Heading>Trabajo Práctico 6</Heading>
             <Box border="1px solid #efefef" borderRadius={8} p={4}>
-                <Text color="#444444">
-                    
-                </Text>
-                <Text color="#444444">
-                    
-                </Text>
+                <Text color="#444444"></Text>
+                <Text color="#444444"></Text>
                 <Text color="#444444">
                     Al momento de inicio no hay ningún proceso realizado, incompleto ni pendiente y
                     tampoco hay productos en cola. Los servidores están libres
@@ -93,12 +87,8 @@ export default function Juani() {
                         </ListItem>
                     ))}
                 </UnorderedList>
-                <Text color="#444444">
-                   
-                </Text>
-                <Text color="#444444">
-                    
-                </Text>             
+                <Text color="#444444"></Text>
+                <Text color="#444444"></Text>
             </Box>
             <Flex direction={['column', 'column', 'row', 'row']} gap="2" my={2}>
                 <InputGroup>
@@ -110,20 +100,18 @@ export default function Juani() {
                     <Input value={form.h} onChange={handleFormChange} name="h"></Input>
                 </InputGroup>
                 <InputGroup>
-                    <InputLeftAddon>
-                        y
-                    </InputLeftAddon>
+                    <InputLeftAddon>y</InputLeftAddon>
                     <Input value={form.x_0} onChange={handleFormChange} name="x_0"></Input>
-                </InputGroup>                
+                </InputGroup>
             </Flex>
 
             <Box>
                 <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
                     Simular {form.cant} lavados
                 </Button>
-            </Box>
+            </Box>           
             {flagSim && stateVector ? <JuaniStateVectorShower stateVectors={stateVector} /> : null}
-            {flagSim && stats ? <TP7StatsShower stats={stats} /> : null}
+            {/* {flagSim && stats ? <TP7StatsShower stats={stats} /> : null} */}
         </Box>
     );
 }
