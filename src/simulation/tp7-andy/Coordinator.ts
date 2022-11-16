@@ -36,22 +36,6 @@ export class Coordinator {
         this.queueFurnaceStart(45 * 60, 30);
     }
 
-    private scheduleClientArrival() {
-        const exponTime = -(3 * 60) * Math.log(1 - Math.random());
-        this.addPendingEvent({
-            eventType: BakeryEventType.clientArrive,
-            time: this.clock + exponTime,
-        });
-    }
-
-    private queueFurnaceStart(clock: number, quantity: number) {
-        this.addPendingEvent({
-            eventType: BakeryEventType.furnaceStart,
-            time: clock,
-            quantity: quantity,
-        });
-    }
-
     public simulateUntilFinish() {
         while (this.roundsSimulated < this.targetEvents) {
             this.processEvent();
@@ -113,6 +97,14 @@ export class Coordinator {
         return start;
     }
 
+    private queueFurnaceStart(clock: number, quantity: number) {
+        this.addPendingEvent({
+            eventType: BakeryEventType.furnaceStart,
+            time: clock,
+            quantity: quantity,
+        });
+    }
+
     public queueClientExit(duration: number, employeeId: number) {
         this.addPendingEvent({
             eventType: BakeryEventType.clientExit,
@@ -121,42 +113,11 @@ export class Coordinator {
         });
     }
 
-    private handleClientExit(event: ClientExitEvent) {
-        const client = this.employees[event.employee].exitClient(this.clock);
-        if (this.currentProductStock > client.getProductQuantity()) {
-            this.currentProductStock -= client.getProductQuantity();
-        } else {
-            this.currentProductStock = 0;
-            this.activateEmergencyFurnace();
-        }
-        this.clientsCounters.served++;
-    }
-
-    public activateEmergencyFurnace() {
-        //Queue a new furnaceStart event
-        if (
-            this.pendingEvents.filter((e) => e.eventType === BakeryEventType.furnaceFinish)
-                .length === 0
-        ) {
-            //Delete all furnaceStart events
-            this.pendingEvents = this.pendingEvents.filter(
-                (e) => e.eventType !== BakeryEventType.furnaceStart,
-            );
-            this.queueFurnaceStart(this.clock, 45);
-        }
-    }
-
-    private handleFurnaceFinish(event: FurnaceFinishEvent) {
-        this.currentProductStock += event.quantity;
-        this.queueFurnaceStart(this.clock + 45 * 60, 30);
-    }
-
-    private handleFurnaceStart(event: FurnaceStartEvent) {
-        const duration = this.furnace.getFurnaceFinishTime(event.quantity);
+    private scheduleClientArrival() {
+        const exponTime = -(3 * 60) * Math.log(1 - Math.random());
         this.addPendingEvent({
-            eventType: BakeryEventType.furnaceFinish,
-            time: this.clock + duration,
-            quantity: event.quantity,
+            eventType: BakeryEventType.clientArrive,
+            time: this.clock + exponTime,
         });
     }
 
@@ -187,6 +148,43 @@ export class Coordinator {
         this.queue.push(client);
     }
 
+    private handleClientExit(event: ClientExitEvent) {
+        const client = this.employees[event.employee].exitClient(this.clock);
+
+        if (this.currentProductStock > 0) {
+            this.currentProductStock =
+                this.currentProductStock - client.getProductQuantity() > 0
+                    ? this.currentProductStock - client.getProductQuantity()
+                    : 0;
+            if (this.currentProductStock === 0) {
+                this.activateEmergencyFurnace();
+            }
+            this.clientsCounters.served++;
+        } else {
+            this.clientsCounters.left++;
+        }
+
+        if (this.queue.length > 0) {
+            const nwClient = this.queue.shift() as Client;
+            const duration = this.employees[event.employee].assignClient(nwClient, this.clock);
+            this.queueClientExit(duration, event.employee);
+        }
+    }
+
+    private handleFurnaceStart(event: FurnaceStartEvent) {
+        const duration = this.furnace.getFurnaceFinishTime(event.quantity);
+        this.addPendingEvent({
+            eventType: BakeryEventType.furnaceFinish,
+            time: this.clock + duration,
+            quantity: event.quantity,
+        });
+    }
+
+    private handleFurnaceFinish(event: FurnaceFinishEvent) {
+        this.currentProductStock += event.quantity;
+        this.queueFurnaceStart(this.clock + 45 * 60, 30);
+    }
+
     private willHaveStockIn5Minutes(): boolean {
         for (let i = 0; i < this.pendingEvents.length; i++) {
             if (this.clock - this.pendingEvents[i].time >= 5 * 60) {
@@ -199,6 +197,20 @@ export class Coordinator {
         return false;
     }
 
+    public activateEmergencyFurnace() {
+        //Check if the furnace is not turned on
+        if (
+            this.pendingEvents.filter((e) => e.eventType === BakeryEventType.furnaceFinish)
+                .length === 0
+        ) {
+            //Delete all furnaceStart events
+            this.pendingEvents = this.pendingEvents.filter(
+                (e) => e.eventType !== BakeryEventType.furnaceStart,
+            );
+            this.queueFurnaceStart(this.clock, 45);
+        }
+    }
+
     public getStats(): BakeryStats {
         return {
             clock: this.clock,
@@ -206,17 +218,28 @@ export class Coordinator {
             roundsSimulated: this.roundsSimulated,
             clientsCounters: structuredClone(this.clientsCounters),
             currentProductStock: this.currentProductStock,
-            queue: structuredClone(this.queue),
+            queue: structuredClone(
+                this.queue.slice().map((c) => ({
+                    name: c.getFullName(),
+                    quantity: c.getProductQuantity(),
+                })),
+            ),
             employees: {
                 1: {
                     id: this.employees[1].getId(),
                     isFree: this.employees[1].isFree(),
                     currentClient: this.employees[1].getCurrentClient()?.getFullName(),
+                    wantedProducts: Number(
+                        this.employees[1].getCurrentClient()?.getProductQuantity() as number,
+                    ),
                 },
                 2: {
                     id: this.employees[2].getId(),
                     isFree: this.employees[2].isFree(),
                     currentClient: this.employees[2].getCurrentClient()?.getFullName(),
+                    wantedProducts: this.employees[2]
+                        .getCurrentClient()
+                        ?.getProductQuantity() as number,
                 },
             },
         };

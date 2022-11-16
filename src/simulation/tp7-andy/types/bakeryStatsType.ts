@@ -12,7 +12,7 @@ export type BakeryStats = {
         left: number;
     };
     currentProductStock: number;
-    queue: Client[];
+    queue: { quantity: number; name: string }[];
     employees: Record<number, EmployeeInfo>;
 };
 
@@ -20,4 +20,5 @@ type EmployeeInfo = {
     id: number;
     isFree: boolean;
     currentClient?: string;
-}
+    wantedProducts: number;
+};
