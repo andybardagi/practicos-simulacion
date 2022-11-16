@@ -1,10 +1,45 @@
-import { Heading, UnorderedList, ListItem, Text, Box, Button } from '@chakra-ui/react';
+import { Heading, UnorderedList, ListItem, Text, Box, Button, InputGroup, Flex, InputLeftAddon, Input } from '@chakra-ui/react';
+import { useRef, useState } from 'react';
+import { Coordinator } from '../../simulation/tp7/Coordinator';
 import FormulaDisplay from './FormulaDisplay';
 
 //import Ec.Diferencial from '../TP7';
 // 
 
 export default function TP7() {
+    const coordinator = useRef<Coordinator>();
+    const [flagSim, setFlagSim] = useState(false);
+    
+    const [form, setForm] = useState({
+        cant: '10000',
+        });
+    
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFlagSim(false);
+        setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+    };
+
+    const simulate = () => {
+        coordinator.current = new Coordinator();
+
+        const isIncorrect =
+            Object.values(form)
+                .map((v) => v.replace(',', '.'))
+                .map((v) => Number(v))
+                .filter((v) => Number.isNaN(v)).length > 0;
+        console.log(
+            Object.values(form)
+                .map((v) => v.replace(',', '.'))
+                .map((v) => Number(v)),
+        );
+        if (isIncorrect) {
+            alert('Error en los valores ingresados');
+            return;
+        }
+        const res = coordinator.current.simulate(Number(form.cant));
+        setFlagSim(true);
+    };
+
     return (
         <Box p={4} w="100%">
             <Heading>Trabajo Práctico 7</Heading>
@@ -37,9 +72,20 @@ export default function TP7() {
                     </Text>
                     <FormulaDisplay></FormulaDisplay>
                 </Box>
-                
+                <Flex direction={'row'} mt={4} flexWrap="wrap" maxW="15%" gap={'5%'}>
+                <InputGroup>
+                    <InputLeftAddon>Cantidad</InputLeftAddon>
+                    <Input value={form.cant} onChange={handleFormChange} name="cant"></Input>
+                </InputGroup>
+                </Flex>
+                    <Box>
+                        <Button colorScheme={'linkedin'} onClick={simulate} mt={3} mb={3}>
+                            Simular {form.cant} eventos
+                        </Button>
+                    </Box>
                 
             </Box>
+            {flagSim && stateVector ? <TP7StateVectorShower stateVectors={stateVector} /> : null}
         </Box>
     );
 }

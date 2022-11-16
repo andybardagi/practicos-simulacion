@@ -13,7 +13,7 @@ export class Coordinator {
     private arrivals: UniformServer;
     private pendingEvents: SimulationEvent[];
     private queue: Truck[] = [];
-    private currentTruck: Truck;
+    private currentTruck: Truck | undefined;
     private lastTruckId: number;
     private statsObserver: StatsObserver;
     private vectorState: stateVector[] = [];
@@ -34,8 +34,6 @@ export class Coordinator {
         this.usingSilo = this.silos[0];
         this.usingSilo.setState(states.usando);
         this.usingSilo = this.silos[1];
-        this.currentTruck = new Truck(0, 0);
-        this.currentTruck.setQuantity(0);
         this.generateNextUsage();
         this.generateNextArrive();
         this.ocupado = false;
@@ -74,13 +72,13 @@ export class Coordinator {
             let silo: Silo = nextEvent.silo;
             silo.setState(states.libre);
             silo.cargar(nextEvent.cant);
-
+            this.currentTruck.setFinishTime(this.clock);
             if ( this.queue.length == 0){
                 this.ocupado = false;
             }
             else{
-                let truck: Truck = this.queue.shift();
-                this.atenderTruck(truck);
+                this.currentTruck = this.queue.shift();
+                this.atenderTruck(this.currentTruck);
             }
             
         }
@@ -103,12 +101,15 @@ export class Coordinator {
     }
 
     private atenderTruck(truck: Truck) {
-        let silo: Silo = this.findFreeSilo();
-        silo.setState(states.descarga);
+        this.deschargingSilo = this.findFreeSilo();
+        this.deschargingSilo.setState(states.descarga);
+        this.currentTruck = truck;
 
+        if (truck.getQueueDuration() == -1) truck.setQueueTime(this.clock);
+        
         let cant: number 
-        if (silo.getEspacio() < truck.getQuantity()){
-            cant = silo.getEspacio();
+        if (this.deschargingSilo.getEspacio() < truck.getQuantity()){
+            cant = this.deschargingSilo.getEspacio();
             
             this.addPendingEvent({
                 type: EventType.truckArrive,
@@ -123,7 +124,7 @@ export class Coordinator {
         this.addPendingEvent({
             type: EventType.finishDischarge,
             time: truck.calculateDuration(cant),
-            silo: silo,
+            silo: this.deschargingSilo,
             cant: cant,
         });
     }

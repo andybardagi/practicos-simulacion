@@ -4,7 +4,7 @@ export class Truck {
     public id: number;
     private quantity: number;
     private arriveTime: number = -1;
-    private attendedTime: number = -1;
+    private queueTime: number = -1;
     private finishTime: number = -1;
     private duration: number = -1;
 
@@ -35,7 +35,7 @@ export class Truck {
     }
 
     public setQueueTime(clock: number): void {
-        this.attendedTime = clock - this.arriveTime;
+        this.queueTime = clock - this.arriveTime;
     }
 
     public setQuantity(n: number) {
@@ -54,7 +54,7 @@ export class Truck {
         return this.finishTime - this.arriveTime;
     }
     public getQueueDuration(): number{
-        return this.attendedTime - this.arriveTime;
+        return this.queueTime;
     }
 
     public setArrivalTime(clock: number){
