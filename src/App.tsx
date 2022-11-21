@@ -11,6 +11,7 @@ import { NavigationProvider, useNavigationContext } from './hooks/NavigationCont
 import TP4 from './components/TP4/TP4';
 import TP5 from './components/TP5/TP5';
 import TP6 from './components/TP6/TP6';
+import TP7Juan from './components/TP7-Juan/TP7Juan';
 
 // #0295A9
 // #12ADC1
@@ -41,8 +42,8 @@ function App() {
                                 element={<TP6 />}
                             />
                             <Route
-                                path="/tp7"
-                                element={<Text>Trabajo práctico N° 7 pendiente :)</Text>}
+                                path="/tp7/juan"
+                                element={<TP7Juan />}
                             />
                         </Routes>
                     </Box>
