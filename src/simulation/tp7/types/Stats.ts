@@ -7,9 +7,9 @@ export type Stats = {
     pendingEvents: BakeEvent[];
     simulationsCount: number;
     customersCount:{
-        arrived: number;
-        attended: number;
-        left: number;
+        arrived: number,
+        attended: number,
+        gone: number,
     };
     actualStock: number;
     queue: {quantity: number; name: string}[];

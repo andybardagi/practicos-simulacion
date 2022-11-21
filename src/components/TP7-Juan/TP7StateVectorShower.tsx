@@ -15,7 +15,6 @@ import { stateVector } from '../../simulation/tp6/types/stateVector.type';
 import EventShower from './EventShower';
 import QueuesShower from './QueuesShower';
 import TP6StatsShower from './TP6StatsShower';
-import RungeKuttaEvolution from './RungeKuttaEvolution';
 
 export default function TP6StateVectorShower({ stateVectors }: { stateVectors: stateVector[] }) {
     return (
@@ -23,24 +22,9 @@ export default function TP6StateVectorShower({ stateVectors }: { stateVectors: s
             <Accordion defaultIndex={[0]} allowMultiple>
                 {stateVectors.map((s, i) => (
                     <AccordionItem>
-                        <h2>
-                            <AccordionButton bgColor={s.rungeKuttaEvolution.length > 0 ? "#00FFFF66" : ""}>
-                                <Box flex="1" textAlign="left">
-                                    <Flex justifyContent={'space-between'}>
-                                        <Text>
-                                            <b>Reloj de simulación:</b> {s.clock.toFixed(2)} minutos
-                                        </Text>
-                                        <Text>
-                                            <b>Ensambles finalizados:</b> {s.finishedAssemblies}
-                                        </Text>
-                                    </Flex>
-                                </Box>
-                                <AccordionIcon />
-                            </AccordionButton>
-                        </h2>
                         <AccordionPanel pb={4}>
                             <Box>
-                                <Box p={8} bgColor="cyan.100" borderRadius={4}>
+                                {/* <Box p={8} bgColor="cyan.100" borderRadius={4}>
                                     <Text>
                                         <b>Eventos pendientes</b>
                                     </Text>
@@ -70,51 +54,6 @@ export default function TP6StateVectorShower({ stateVectors }: { stateVectors: s
                                                 %
                                             </Text>
                                         </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 2:{' '}
-                                                {(
-                                                    s.serversOccupation[Servers.server2] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 3:{' '}
-                                                {(
-                                                    s.serversOccupation[Servers.server3] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 4:{' '}
-                                                {(
-                                                    s.serversOccupation[Servers.server4] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 5:{' '}
-                                                {(
-                                                    s.serversOccupation[Servers.server5] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
-                                        <ListItem>
-                                            <Text>
-                                                Servidor 6:{' '}
-                                                {(
-                                                    s.serversOccupation[Servers.server6] * 100
-                                                ).toFixed(4)}
-                                                %
-                                            </Text>
-                                        </ListItem>
                                     </UnorderedList>
                                 </Box>
                                 <Box mt={6}>
@@ -138,23 +77,13 @@ export default function TP6StateVectorShower({ stateVectors }: { stateVectors: s
                                             ),
                                         )}
                                     </UnorderedList>
-                                </Box>
-
+                                </Box> */}
                                 <Box mt={6}>
                                     <Text fontSize={'18px'}>
                                         <b>Objetos en cola</b>
                                     </Text>
                                     <QueuesShower queues={s.queues} current={s.current}/>
                                 </Box>
-
-                                {s.rungeKuttaEvolution.length > 0 ? (
-                                    <Box mt={6}>
-                                        <Text fontSize={'18px'}>
-                                            <b>Evolución de Runge Kutta</b>
-                                        </Text>
-                                        <RungeKuttaEvolution evolution={s.rungeKuttaEvolution} />
-                                    </Box>
-                                ) : null}
                             </Box>
                         </AccordionPanel>
                     </AccordionItem>

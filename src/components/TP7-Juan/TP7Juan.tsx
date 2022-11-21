@@ -13,13 +13,12 @@ import { useRef, useState } from 'react';
 import { Coordinator } from '../../simulation/tp7/Coordinator';
 import { stateVector } from '../../simulation/tp6/types/stateVector.type';
 import { Stats } from '../../simulation/tp7/types/Stats';
-import { estimators, activities } from '../TP6/ConsignasTP6';
-import QueueFlow from './QueueFlow';
 import TP6StateVectorShower from '../TP6/TP6StateVectorShower';
 import TP6StatsShower from './TP6StatsShower';
 import { Flex } from '@chakra-ui/react';
 import { RungeKuta } from '../../simulation/tp6/ConcreteServer/RungeKuta';
 import { Servers } from '../../simulation/tp6/enum/Servers';
+import Latex from 'react-latex';
 
 export default function TP7Juan() {
     const coordinator = useRef<Coordinator>();
@@ -67,9 +66,7 @@ export default function TP7Juan() {
                     la temperatura del horno está representada por la siguiente ecuación:
                 </Text>
                 <Box mx="auto" w="fit-content" my={4}>
-                    <Text color="#444444" mb={2}>
-                        dT/dt = -0,5T + 900/P
-                    </Text>
+                <Latex displayMode={true}>{`$$\\frac{dT}{dt} = -0,5 T + \\frac{900}{P}$$`}</Latex>
                 </Box>
                 <Text color="#444444">
                     Donde la constante P representa la cantidad de productos que se están cocinando.

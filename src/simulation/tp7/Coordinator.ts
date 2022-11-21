@@ -1,7 +1,7 @@
-import { Customer } from "./Customer";
-import { Worker } from "./Worker";
-import { Oven } from "./Oven";
-import { Stats } from "./types/Stats";
+import { Customer } from './Customer';
+import { Worker } from './Worker';
+import { Oven } from './Oven';
+import { Stats } from './types/Stats';
 import {
     BakeEvent,
     EventsType,
@@ -26,7 +26,7 @@ export class Coordinator {
     private customerCounter = {
         arrived: 0,
         attended: 0,
-        left: 0,
+        gone: 0,
     };
 
     constructor(ovenStep: number, targetSimulations: number) {
@@ -37,7 +37,7 @@ export class Coordinator {
     }
 
     public simulateAll() {
-        while (this.simulationsCount < this.targetSimulations){
+        while (this.simulationsCount < this.targetSimulations) {
             this.processEvent();
         }
     }
@@ -61,11 +61,11 @@ export class Coordinator {
                 this.handleCustomerExit(event);
                 break;
         }
-
     }
 
-    private addPendingEvent(e: BakeEvent){
-        if (this.eventsToProcess.length == 0){
+    private addPendingEvent(e: BakeEvent) {
+        console.log(this.actualStock);
+        if (this.eventsToProcess.length == 0) {
             this.eventsToProcess.push(e);
             return;
         }
@@ -74,10 +74,11 @@ export class Coordinator {
     }
 
     private getInsertionIndex(insertionTime: number): number {
-        let start = 0, end = this.eventsToProcess.length - 1;
+        let start = 0,
+            end = this.eventsToProcess.length - 1;
 
-        while(start <= end) {
-            let mid = Math.floor((start + end) / 2)
+        while (start <= end) {
+            let mid = Math.floor((start + end) / 2);
             if (this.eventsToProcess[mid].time === insertionTime) return mid;
             else if (this.eventsToProcess[mid].time < insertionTime) {
                 start = mid + 1;
@@ -88,7 +89,7 @@ export class Coordinator {
         return start;
     }
 
-    private startOvenQueue(clock: number, quantity: number){
+    private startOvenQueue(clock: number, quantity: number) {
         this.addPendingEvent({
             eventType: EventsType.ovenStart,
             time: clock,
@@ -96,7 +97,7 @@ export class Coordinator {
         });
     }
 
-    public queueCustomerExit(duration: number, workerId: number){
+    public queueCustomerExit(duration: number, workerId: number) {
         this.addPendingEvent({
             eventType: EventsType.customerExit,
             time: this.clock + duration,
@@ -104,7 +105,7 @@ export class Coordinator {
         });
     }
 
-    private calculateClientArrival(){
+    private calculateClientArrival() {
         const exponTime = -(3 * 60) * Math.log(1 - Math.random());
         this.addPendingEvent({
             eventType: EventsType.customerArrive,
@@ -120,7 +121,8 @@ export class Coordinator {
 
         if (!(this.actualStock > 0 || this.willHaveStockIn5Minutes())) {
             customer.setExitTime(this.clock);
-            this.customerCounter.left++;
+            console.log('b');
+            this.customerCounter.gone++;
             return;
         }
 
@@ -133,7 +135,6 @@ export class Coordinator {
                 return;
             }
         }
-
     }
 
     private handleCustomerExit(e: CustomerExitEvent) {
@@ -144,20 +145,20 @@ export class Coordinator {
                 this.actualStock - customer.getUnities() > 0
                     ? this.actualStock - customer.getUnities()
                     : 0;
-            if (this.actualStock === 0){
+            if (this.actualStock === 0) {
                 this.activateEmergencyOven();
             }
             this.customerCounter.attended++;
         } else {
-            this.customerCounter.left++;
+            console.log('a');
+            this.customerCounter.gone++;
         }
 
-        if (this.queue.length > 0){
+        if (this.queue.length > 0) {
             const newCustomer = this.queue.shift() as Customer;
             const duration = this.workers[e.worker].assignClient(newCustomer, this.clock);
             this.queueCustomerExit(duration, e.worker);
         }
-
     }
 
     private handleOvenStart(e: OvenStartEvent) {
@@ -171,15 +172,16 @@ export class Coordinator {
 
     private handleOvenFinish(e: OvenFinishEvent) {
         this.actualStock += e.quantity;
-        this.startOvenQueue(this.clock + 45 * 60, 30)
+        this.startOvenQueue(this.clock + 45 * 60, 30);
     }
 
     private willHaveStockIn5Minutes(): boolean {
+        console.log('c');
         for (let i = 0; i < this.eventsToProcess.length; i++) {
-            if (this.clock - this.eventsToProcess[i].time >= 5 * 60){
+            if (this.clock - this.eventsToProcess[i].time >= 5 * 60) {
                 return false;
             }
-            if (this.eventsToProcess[i].eventType === EventsType.ovenFinish){
+            if (this.eventsToProcess[i].eventType === EventsType.ovenFinish) {
                 return true;
             }
         }
@@ -188,11 +190,11 @@ export class Coordinator {
 
     private activateEmergencyOven() {
         if (
-            this.eventsToProcess.filter((e) => e.eventType === EventsType.ovenFinish)
-            .length === 0
+            this.eventsToProcess.filter((e) => e.eventType === EventsType.ovenFinish).length === 0
         ) {
             this.eventsToProcess = this.eventsToProcess.filter(
-                (e) => e.eventType !== EventsType.ovenStart,);
+                (e) => e.eventType !== EventsType.ovenStart,
+            );
             this.startOvenQueue(this.clock, 45);
         }
     }
@@ -230,5 +232,4 @@ export class Coordinator {
             },
         };
     }
-
 }
