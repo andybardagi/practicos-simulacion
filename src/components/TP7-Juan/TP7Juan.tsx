@@ -37,7 +37,7 @@ export default function TP7Juan() {
 
     const handleSimulate = () => {
         if (!flagSim) {
-            coordinator.current = new Coordinator(0.2, Number(form.cant));
+            coordinator.current = new Coordinator(1, Number(form.cant));
         }
         if (coordinator.current == null) return;
 
@@ -46,7 +46,6 @@ export default function TP7Juan() {
         setFlagSim(true);
         setStats(thisStats);
         //setStateVector(coordinator.current.getStateVector());
-        console.log(thisStats);
     };
 
     return (
@@ -88,7 +87,7 @@ export default function TP7Juan() {
             </Flex>
             <Box>
                 <Button colorScheme={'linkedin'} onClick={handleSimulate} mt={3} mb={3}>
-                    Simular {form.cant} ensambles
+                    Simular {form.cant} eventos
                 </Button>
             </Box>
             {flagSim && stats ? <TP7StateVectorShower stats={stats} /> : null}

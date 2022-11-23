@@ -24,6 +24,7 @@ export class Oven {
             t_time += this.hourStep;
 
             timeMax += tempDiff < 0.01 ? this.hourStep : 0;
+            console.log(`Tiempo: ${Math.round(t_time*100)/100} - Temperatura: ${Math.round(T_temperature*100)/100} - Tiempo en TMAX: ${Math.round(timeMax*100)/100}`);
         }
 
         this.calculatedValues[quantity] = t_time;

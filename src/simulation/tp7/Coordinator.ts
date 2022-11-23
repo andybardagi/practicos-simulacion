@@ -178,7 +178,6 @@ export class Coordinator {
     }
 
     private willHaveStockIn5Minutes(): boolean {
-        console.log('c');
         for (let i = 0; i < this.eventsToProcess.length; i++) {
             if (this.clock - this.eventsToProcess[i].time >= 5 * 60) {
                 return false;
