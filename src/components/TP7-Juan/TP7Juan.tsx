@@ -13,8 +13,8 @@ import { useRef, useState } from 'react';
 import { Coordinator } from '../../simulation/tp7/Coordinator';
 import { stateVector } from '../../simulation/tp6/types/stateVector.type';
 import { Stats } from '../../simulation/tp7/types/Stats';
-import TP6StateVectorShower from '../TP6/TP6StateVectorShower';
-import TP6StatsShower from './TP6StatsShower';
+import TP7StateVectorShower from '../TP7-Juan/TP7StateVectorShower';
+import TP6StatsShower from './TP7StatsShower';
 import { Flex } from '@chakra-ui/react';
 import { RungeKuta } from '../../simulation/tp6/ConcreteServer/RungeKuta';
 import { Servers } from '../../simulation/tp6/enum/Servers';
@@ -23,36 +23,35 @@ import Latex from 'react-latex';
 export default function TP7Juan() {
     const coordinator = useRef<Coordinator>();
     const [flagSim, setFlagSim] = useState(false);
-    const [stats, setStats] = useState<Stats[]>([]);
     const [form, setForm] = useState({
         cant: '10000',
     });
+    const [stats, setStats] = useState<Stats[]>();
     const [stateVector, setStateVector] = useState<stateVector[]>();
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFlagSim(false);
-        setStats([]);
+        setStats(undefined);
         setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
     };
 
     const handleSimulate = () => {
         if (!flagSim) {
             coordinator.current = new Coordinator(0.2, Number(form.cant));
-            setStats([]);
         }
         if (coordinator.current == null) return;
 
         coordinator.current.simulateAll();
-        const thisStats = coordinator.current.getStats();
+        const thisStats = coordinator.current.getStatsList();
         setFlagSim(true);
-        setStats((s) => [...s, thisStats]);
+        setStats(thisStats);
         //setStateVector(coordinator.current.getStateVector());
         console.log(thisStats);
     };
 
     return (
         <Box p={4} w="100%">
-            <Heading>Trabajo Práctico 7</Heading>
+            <Heading>Trabajo Práctico 7 - Juan Ezequiel Tamosaitis - 86570</Heading>
             <Box border="1px solid #efefef" borderRadius={8} p={4}>
                 <Text color="#444444">
                     A una panadería llegan clientes con una distribución exponencial negativa de
@@ -92,7 +91,7 @@ export default function TP7Juan() {
                     Simular {form.cant} ensambles
                 </Button>
             </Box>
-            {flagSim && stateVector ? <TP6StateVectorShower stateVectors={stateVector} /> : null}
+            {flagSim && stats ? <TP7StateVectorShower stats={stats} /> : null}
             {/* {flagSim && stats ? <TP6StatsShower stats={stats} /> : null} */}
         </Box>
     );

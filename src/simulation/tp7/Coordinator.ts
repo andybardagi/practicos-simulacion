@@ -28,6 +28,7 @@ export class Coordinator {
         attended: 0,
         gone: 0,
     };
+    private statsList: Stats[] = [];
 
     constructor(ovenStep: number, targetSimulations: number) {
         this.oven = new Oven(ovenStep);
@@ -39,6 +40,9 @@ export class Coordinator {
     public simulateAll() {
         while (this.simulationsCount < this.targetSimulations) {
             this.processEvent();
+            if (this.simulationsCount <= 100 || this.simulationsCount + 100 >= this.targetSimulations) {
+                this.statsList.push(this.getStats());
+            }
         }
     }
 
@@ -64,7 +68,6 @@ export class Coordinator {
     }
 
     private addPendingEvent(e: BakeEvent) {
-        console.log(this.actualStock);
         if (this.eventsToProcess.length == 0) {
             this.eventsToProcess.push(e);
             return;
@@ -121,7 +124,6 @@ export class Coordinator {
 
         if (!(this.actualStock > 0 || this.willHaveStockIn5Minutes())) {
             customer.setExitTime(this.clock);
-            console.log('b');
             this.customerCounter.gone++;
             return;
         }
@@ -135,6 +137,7 @@ export class Coordinator {
                 return;
             }
         }
+        this.queue.push(customer);
     }
 
     private handleCustomerExit(e: CustomerExitEvent) {
@@ -150,7 +153,6 @@ export class Coordinator {
             }
             this.customerCounter.attended++;
         } else {
-            console.log('a');
             this.customerCounter.gone++;
         }
 
@@ -230,6 +232,11 @@ export class Coordinator {
                     ),
                 },
             },
+            percenteageGone: Math.round(this.customerCounter.gone * 10000 / this.customerCounter.arrived)/100,
         };
+    }
+
+    public getStatsList(){
+        return this.statsList;
     }
 }

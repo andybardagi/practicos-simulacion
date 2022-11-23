@@ -14,6 +14,7 @@ export type Stats = {
     actualStock: number;
     queue: {quantity: number; name: string}[];
     workers: Record<number, WorkerInfo>;
+    percenteageGone: number;
 };
 
 type WorkerInfo = {
